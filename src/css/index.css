@@ -1,0 +1,24 @@
+@import "./tailwind.css";
+@import "./fonts.css";
+@import "./typography.css";
+
+@layer base {
+  *:focus {
+    outline: none;
+  }
+
+  body {
+    font-family: "Pretendard Variable", sans-serif;
+    font-synthesis: none;
+    background-color: #ffffff;
+    color: #33363d;
+  }
+
+  .mainpage-banner-shadow {
+    box-shadow: 0px -144px 146px 0px rgba(32, 51, 73, 0.76) inset;
+  }
+
+  .info-postcard-shadow {
+    box-shadow: 0px -85px 50px 0px rgba(32, 51, 73, 0.75) inset;
+  }
+}
