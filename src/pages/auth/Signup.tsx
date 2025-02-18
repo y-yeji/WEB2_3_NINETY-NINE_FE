@@ -3,12 +3,12 @@ import CustomButton from "../../components/ui/CustomButton";
 
 const SignUp = () => {
   return (
-    <div className="max-w-[1200px] mx-10 w-full flex flex-col items-center justify-center h-screen">
+    <div className="mx-10 w-full flex flex-col items-center justify-center ">
       <h2 className="text-4xl mt-[264px] mb-[250px] font-serif italic text-blue-1">
         On culture
       </h2>
 
-      <div className="w-full max-w-md p-8 rounded-[8px] flex flex-col items-center ">
+      <div className="w-full max-w-md flex flex-col items-center gap-8">
         <InputField
           label="이메일"
           name="email"
@@ -33,18 +33,18 @@ const SignUp = () => {
           placeholder="비밀번호를 다시 입력하세요."
           errorMessage="비밀번호가 일치하지 않습니다."
         />
-
-        <CustomButton
-          text="회원가입"
-          bgColor="bg-blue-7"
-          onClick={() => console.log("회원가입 클릭")}
-          customStyle="mt-10 mb-11"
-        />
-        <CustomButton
-          text="로그인 하러 가기"
-          bgColor="bg-blue-7"
-          onClick={() => console.log("로그인 하러가기 클릭")}
-        />
+        <div className="w-full max-w-md flex flex-col items-center gap-10">
+          <CustomButton
+            text="회원가입"
+            bgColor="bg-blue-7"
+            onClick={() => console.log("회원가입 클릭")}
+          />
+          <CustomButton
+            text="로그인 하러 가기"
+            bgColor="bg-blue-7"
+            onClick={() => console.log("로그인 하러가기 클릭")}
+          />
+        </div>
       </div>
     </div>
   );
