@@ -12,10 +12,10 @@ const InputField = ({
   errorMessage,
 }: InputFieldProps) => {
   return (
-    <div className="mb-4 w-[500px]">
+    <div className="w-[500px] ">
       <label
         htmlFor={name}
-        className="block mt-6 pl-2 text-blue-1 body-l-r mb-2"
+        className="block pl-2 text-blue-1 body-l-r mb-2"
       >
         {label}
       </label>

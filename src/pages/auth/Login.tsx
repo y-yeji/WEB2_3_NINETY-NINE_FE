@@ -5,12 +5,12 @@ import CustomButton from "../../components/ui/CustomButton";
 
 const Login = () => {
   return (
-    <div className="max-w-[1200px] mx-10 w-full flex flex-col items-center justify-center h-screen">
+    <div className="mx-10 w-full flex flex-col items-center justify-center ">
       <h2 className="text-4xl mt-[264px] mb-[250px] font-serif italic text-blue-1">
         On culture
       </h2>
 
-      <div className="w-full max-w-md p-8 rounded-[8px] flex flex-col items-center ">
+      <div className="w-full max-w-md flex flex-col items-center gap-10 ">
         <InputField
           label="이메일"
           name="email"
@@ -35,7 +35,7 @@ const Login = () => {
           onClick={() => console.log("이메일 회원가입 클릭")}
         />
         {/* 구분선 */}
-        <div className="mb-8 flex items-center w-[500px]">
+        <div className="flex items-center w-[500px]">
           <hr className="flex-grow border-gray-300" />
           <span className="mx-4 text-gray-500 text-sm">간편 로그인</span>
           <hr className="flex-grow border-gray-300" />
