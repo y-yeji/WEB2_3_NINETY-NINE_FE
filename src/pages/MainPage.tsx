@@ -18,10 +18,8 @@ const categoryRoutes: CategoryRoutes = {
   "페스티벌 | 콘서트": "festival",
 };
 const MainPage = () => {
-  // ✅ "맨 위로 가기" 버튼 표시 여부 상태
   const [showScroll, setShowScroll] = useState(false);
 
-  // ✅ 스크롤 이벤트 감지 (최상단에서 300px 이상 내려가면 버튼 보이기)
   useEffect(() => {
     const handleScroll = () => {
       setShowScroll(window.scrollY > 300);
@@ -30,7 +28,6 @@ const MainPage = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ✅ 맨 위로 스크롤 함수
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -94,7 +91,6 @@ const MainPage = () => {
           </section>
         )
       )}
-      {/* ✅ "맨 위로 가기" 버튼 (우측 하단 고정) */}
       {showScroll && (
   <button
     onClick={scrollToTop}
