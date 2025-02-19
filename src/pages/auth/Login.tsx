@@ -1,5 +1,5 @@
-import GoogleLogo from "../../assets/GoogleLogo.svg";
-import KakaoLogo from "../../assets/KakaoLogo.svg";
+import googlelogo from "../../assets/google.svg";
+import kakaologo from "../../assets/kakao.svg";
 import InputField from "../../components/common/InputField";
 import CustomButton from "../../components/ui/CustomButton";
 
@@ -44,14 +44,14 @@ const Login = () => {
           text="Google로 시작하기"
           bgColor="bg-white"
           borderColor="border-blue-1"
-          iconSrc={GoogleLogo}
+          iconSrc={googlelogo}
           onClick={() => console.log("구글 로그인 클릭")}
         />
         <CustomButton
           text="Kakao로 시작하기"
           bgColor="bg-white"
           borderColor="border-blue-1"
-          iconSrc={KakaoLogo}
+          iconSrc={kakaologo}
           onClick={() => console.log("카카오 로그인 클릭")}
         />
       </div>
