@@ -17,20 +17,15 @@ const MyPage = () => {
               On culture
             </div>
             <div className="flex flex-col justify-center h-[150px]">
-              {/* 닉네임 + 설정 아이콘 */}
               <div className="flex items-center">
                 <h2 className="text-lg font-semibold w-[240px]">NINETY9</h2>
                 <img src={setting} alt="로고" className="w-6 h-6 ml-[15px]" />
               </div>
-
-              {/* 아이콘을 왼쪽 정렬로 배치 */}
               <div className="flex justify-start gap-[10px] mt-[24px] w-[280px]">
                 <img src={concert} alt="콘서트" />
                 <img src={play} alt="연극" />
                 <img src={musical} alt="뮤지컬" />
               </div>
-
-              {/* 자기소개 문구 */}
               <p className="text-gray-40 body-n-r w-[280px] mt-[24px]">
                 자신을 한 문장으로 소개해주세요.
               </p>
