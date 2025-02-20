@@ -13,6 +13,8 @@ import PopupStore from "../pages/informations/PopupStore";
 import MapSearch from "../pages/mapsearch/MapSearch";
 import RootLayout from "../layouts/RootLayout";
 import InfoCardDetail from "../pages/informations/InfoCardDetail";
+import MyPage from "../pages/user/MyPage";
+import UserPage from "../pages/user/UserPage";
 
 const Router = () => {
   return (
@@ -30,6 +32,8 @@ const Router = () => {
         <Route path="/popupstore" element={<PopupStore />} />
         <Route path="/mapsearch" element={<MapSearch />} />
         <Route path="/infocarddetail" element={<InfoCardDetail />} />
+        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/userpage/:id" element={<UserPage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
