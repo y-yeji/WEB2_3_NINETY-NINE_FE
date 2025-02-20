@@ -1,4 +1,10 @@
 @layer base {
+  .logo {
+    font-size: 50px;
+    font-weight: 400;
+    /* line-height: 65px; */
+  }
+
   .h1-b {
     font-size: 32px;
     font-weight: 700;
