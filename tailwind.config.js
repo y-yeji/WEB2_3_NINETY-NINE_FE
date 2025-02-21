@@ -42,6 +42,9 @@ export default {
         dm: ["DM Serif Text", "serif"],
         pretendard: ["Pretendard Variable", "sans-serif"],
       },
+      boxShadow: {
+        "user-postcard-shadow": "5px 6px 25px 0px rgba(0, 0, 0, 0.1)",
+      },
     },
   },
   plugins: [],
