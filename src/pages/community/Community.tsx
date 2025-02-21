@@ -20,7 +20,8 @@ const Temp_PostCard = [
   },
 ];
 const Community = () => {
-  const [posts, setPosts] = useState(Temp_PostCard);
+  const postCount = 9;
+  const [posts, setPosts] = useState(Array(postCount).fill(Temp_PostCard[0]));
 
   const handleLikeChange = (postId: number, newLikeCount: number) => {
     setPosts((prevPosts) =>
@@ -32,17 +33,22 @@ const Community = () => {
 
   return (
     <div>
-      <h1>Community</h1>
-      {posts.map((post) => (
-        <PostCard
-          key={post.postId}
-          user={post.user}
-          post={post.post}
-          initialLike={post.like}
-          initialComment={post.comment}
-          onLikeChange={handleLikeChange}
-        />
-      ))}
+      <div className="flex justify-end mt-[188px]">정렬</div>
+      <div className="grid grid-cols-3 grid-rows-3 gap-[70px] place-items-center mt-9 ">
+        {posts.map((post) => (
+          <PostCard
+            key={post.postId}
+            user={post.user}
+            post={post.post}
+            initialLike={post.like}
+            initialComment={post.comment}
+            onLikeChange={handleLikeChange}
+          />
+        ))}
+      </div>
+      <div className="flex justify-center mt-[104px] mb-[108px]">
+        페이지 네이션
+      </div>
     </div>
   );
 };

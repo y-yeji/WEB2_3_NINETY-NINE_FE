@@ -43,7 +43,7 @@ export default function PostCard({
   return (
     <>
       <div
-        className="w-[300px] h-[362px] pt-[17px] px-[13.5px] rounded-[10px] bg-white border border-gray-20 mt-[100px] hover:shadow-user-postcard-shadow transition-shadow duration-300 cursor-pointer"
+        className="w-[300px] h-[362px] pt-[17px] px-[13.5px] rounded-[10px] bg-white border border-gray-20 hover:shadow-user-postcard-shadow transition-shadow duration-300 cursor-pointer"
         onClick={handlePostCardClick}
       >
         <div className="w-[265px] h-[265px] relative overflow-hidden">
