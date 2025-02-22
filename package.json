@@ -13,6 +13,8 @@
     "axios": "^1.7.9",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-quill": "^2.0.0",
+    "react-quill-new": "^3.3.3",
     "react-router-dom": "^7.1.5",
     "swiper": "^11.2.4",
     "tailwind-merge": "^3.0.1",
