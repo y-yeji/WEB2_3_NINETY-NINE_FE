@@ -1,9 +1,6 @@
 import React from "react";
-import calendarIcon from "../../assets/calendar_1.5.svg";
-import locationIcon from "../../assets/mappin_1.5.svg";
-import bookmarkIcon from "../../assets/bookmark_1.svg";
-import bookmarkFillIcon from "../../assets/bookmark_1_fill.svg";
 import { useNavigate } from "react-router-dom";
+import Icon from "../../assets/icons/Icon";
 
 interface PerformanceCardProps {
   imageUrl: string;
@@ -45,27 +42,30 @@ const PerformanceCard: React.FC<PerformanceCardProps> = ({
             <p className="body-normal-b text-white line-clamp-1">{title}</p>
 
             <div className="flex items-center w-full mt-1">
-              <img
-                src={calendarIcon}
-                alt="달력 아이콘"
-                className="w-3.5 h-3.5 filter invert"
+              <Icon
+                name="CalendarRange"
+                size={14}
+                strokeWidth={1.5}
+                className="text-white"
               />
               <p className="caption-r text-white ml-1">{date}</p>
             </div>
             <div className="flex items-center mt-1">
-              <img
-                src={locationIcon}
-                alt="위치 아이콘"
-                className="w-3.5 h-3.5 filter invert"
+              <Icon
+                name="MapPin"
+                size={14}
+                strokeWidth={1.5}
+                className="text-white"
               />
               <p className="caption-r text-white ml-1">{location}</p>
             </div>
           </div>
-
-          <img
-            src={isBookmarked ? bookmarkFillIcon : bookmarkIcon}
-            alt="북마크 아이콘"
-            className={`w-6 h-6 ml-1 cursor-pointer ${isBookmarked ? "" : "filter invert"}`}
+          <Icon
+            name="Bookmark"
+            size={24}
+            strokeWidth={1}
+            fill={isBookmarked ? "white" : "none"}
+            className="text-white ml-1"
           />
         </div>
       </div>
@@ -73,7 +73,6 @@ const PerformanceCard: React.FC<PerformanceCardProps> = ({
   );
 };
 
-// 테스트용 더미 데이터
 const DummyCard = () => {
   return (
     <PerformanceCard
@@ -81,7 +80,7 @@ const DummyCard = () => {
       title="케르종 X 비클린 팝업스토어"
       date="2025.02.14 - 2025.06.30"
       location="경기 성남시"
-      isBookmarked={true}
+      isBookmarked={false}
     />
   );
 };
