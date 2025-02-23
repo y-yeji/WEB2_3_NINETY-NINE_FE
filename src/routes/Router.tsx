@@ -6,10 +6,7 @@ import SignUp from "../pages/auth/SignUp";
 import Community from "../pages/community/Community";
 import CommunityDetail from "../pages/community/CommunityDetail";
 import CommunityEditor from "../pages/community/CommunityEditor";
-import Exhibition from "../pages/informations/Informations";
-import Festival from "../pages/informations/Festival";
-import Musical from "../pages/informations/Musical";
-import PopupStore from "../pages/informations/PopupStore";
+import Informations from "../pages/informations/Informations";
 import MapSearch from "../pages/mapsearch/MapSearch";
 import RootLayout from "../layouts/RootLayout";
 import InfoCardDetail from "../pages/informations/InfoCardDetail";
@@ -26,10 +23,7 @@ const Router = () => {
         <Route path="/community" element={<Community />} />
         <Route path="/community/detail" element={<CommunityDetail />} />
         <Route path="/community/editor" element={<CommunityEditor />} />
-        <Route path="/exhibition" element={<Exhibition />} />
-        <Route path="/festival" element={<Festival />} />
-        <Route path="/musical" element={<Musical />} />
-        <Route path="/popupstore" element={<PopupStore />} />
+        <Route path="/informations" element={<Informations />} />
         <Route path="/mapsearch" element={<MapSearch />} />
         <Route path="/infocarddetail" element={<InfoCardDetail />} />
         <Route path="/mypage" element={<MyPage />} />
