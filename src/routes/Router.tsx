@@ -6,7 +6,7 @@ import SignUp from "../pages/auth/SignUp";
 import Community from "../pages/community/Community";
 import CommunityDetail from "../pages/community/CommunityDetail";
 import CommunityEditor from "../pages/community/CommunityEditor";
-import Exhibition from "../pages/informations/Exhibition";
+import Exhibition from "../pages/informations/Informations";
 import Festival from "../pages/informations/Festival";
 import Musical from "../pages/informations/Musical";
 import PopupStore from "../pages/informations/PopupStore";
