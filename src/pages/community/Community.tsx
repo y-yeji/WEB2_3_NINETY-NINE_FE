@@ -5,20 +5,25 @@ import Pagination from "../../components/ui/Pagination";
 
 const Temp_PostCard = [
   {
-    postId: 1,
-    user: {
-      profileImage: "/default-image.png",
-      username: "NINETY9",
-    },
     post: {
-      postId: 1,
-      date: "2025.02.27",
+      id: 1,
       title: "우연히 웨스 앤더슨 2 같이 가실분!",
-      content: "게시글 내용",
-      thumbnail: "/default-image.png",
+      content: "우연히 웨스 앤더슨 2 같이 가실분!...",
+      imageUrl: "/default-image.png",
+      createdAt: "2025-02-24",
+      viewCount: 100,
+      commentCount: 5,
+      likeCount: 10,
     },
-    like: 0,
-    comment: 10,
+    user: {
+      id: 1,
+      username: "NINETY9",
+      profileImage: "/default-image.png",
+    },
+    isLiked: false,
+    onLikeChange: (postId: number, liked: boolean) => {
+      console.log(`Post ${postId} liked status changed to ${liked}`);
+    },
   },
 ];
 const Community = () => {
@@ -31,10 +36,21 @@ const Community = () => {
   const postCount = 9;
   const [posts, setPosts] = useState(Array(postCount).fill(Temp_PostCard[0]));
 
-  const handleLikeChange = (postId: number, newLikeCount: number) => {
+  const handleLikeChange = (postId: number, liked: boolean) => {
     setPosts((prevPosts) =>
       prevPosts.map((post) =>
-        post.postId === postId ? { ...post, like: newLikeCount } : post
+        post.id === postId
+          ? {
+              ...post,
+              post: {
+                ...post.post,
+                likeCount: liked
+                  ? post.post.likeCount + 1
+                  : post.post.likeCount - 1,
+              },
+              isLiked: liked,
+            }
+          : post
       )
     );
   };
@@ -59,8 +75,7 @@ const Community = () => {
             key={post.postId}
             user={post.user}
             post={post.post}
-            initialLike={post.like}
-            initialComment={post.comment}
+            isLiked={post.isLiked}
             onLikeChange={handleLikeChange}
           />
         ))}

@@ -1,45 +1,67 @@
-import { useState } from "react";
 import Icon from "../../assets/icons/Icon";
 import { useNavigate } from "react-router-dom";
 
+const Temp_PostCard = [
+  {
+    post: {
+      id: 1,
+      title: "우연히 웨스 앤더슨 2 같이 가실분!",
+      content: "우연히 웨스 앤더슨 2 같이 가실분!...",
+      imageUrl: "/default-image.png",
+      createdAt: "2025-02-24",
+      viewCount: 100,
+      commentCount: 5,
+      likeCount: 10,
+    },
+    user: {
+      id: 1,
+      username: "NINETY9",
+      profileImage: "/default-image.png",
+    },
+    isLiked: false,
+    onLikeChange: (postId: number, liked: boolean) => {
+      console.log(`Post ${postId} liked status changed to ${liked}`);
+    },
+  },
+];
+
 interface PostCardProps {
   post: {
-    postId: number;
-    thumbnail: string;
+    id: number;
     title: string;
-    date: string;
+    content: string;
+    imageUrl: string;
+    createdAt: string;
+    viewCount: number;
+    commentCount: number;
+    likeCount: number;
   };
   user: {
-    profileImage: string;
+    id: number;
     username: string;
+    profileImage: string;
   };
-  initialLike: number;
-  initialComment: number;
-  onLikeChange: (postId: number, newLikeCount: number) => void;
+  isLiked: boolean;
+  onLikeChange: (postId: number, liked: boolean) => void;
 }
 
 export default function PostCard({
-  post,
-  user,
-  initialLike,
-  initialComment,
-  onLikeChange,
+  post = Temp_PostCard[0].post,
+  user = Temp_PostCard[0].user,
+  isLiked = Temp_PostCard[0].isLiked,
+  onLikeChange = Temp_PostCard[0].onLikeChange,
 }: PostCardProps) {
-  const [likeCount, setLikeCount] = useState(initialLike);
-  const [isLiked, setIsLiked] = useState(false);
-
   const handleToggleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    const newLikeCount = isLiked ? likeCount - 1 : likeCount + 1;
-    setLikeCount(newLikeCount);
-    setIsLiked(!isLiked);
-    onLikeChange(post.postId, newLikeCount);
+    onLikeChange(post.id, !isLiked);
   };
+
   const navigate = useNavigate();
   const handlePostCardClick = () => {
     navigate("/community/detail");
   };
+
   return (
     <>
       <div
@@ -49,7 +71,7 @@ export default function PostCard({
         <div className="w-[265px] h-[265px] relative overflow-hidden">
           <div className="w-full h-full">
             <img
-              src={post.thumbnail}
+              src={post.imageUrl}
               className="w-full h-full object-cover bg-center"
               alt="게시글 카드 이미지"
             />
@@ -64,9 +86,9 @@ export default function PostCard({
                   className={isLiked ? "fill-white text-white" : "text-white"}
                 />
               </button>
-              <span className="caption-r text-white">{likeCount}</span>
+              <span className="caption-r text-white">{post.likeCount}</span>
             </div>
-            <div className=" flex gap-[2px] items-center">
+            <div className="flex gap-[2px] items-center">
               <Icon
                 name="MessageCircle"
                 size={18}
@@ -74,7 +96,7 @@ export default function PostCard({
                 className="text-white"
                 style={{ transform: "scaleX(-1)" }}
               />
-              <span className="caption-r text-white">{initialComment}</span>
+              <span className="caption-r text-white">{post.commentCount}</span>
             </div>
           </div>
         </div>
@@ -92,7 +114,7 @@ export default function PostCard({
             </div>
             <div className="flex items-center gap-[1.5px]">
               <Icon name="CalendarRange" size={14} strokeWidth={1.5} />
-              <span className="caption-r">{post.date}</span>
+              <span className="caption-r">{post.createdAt}</span>
             </div>
           </div>
           <p className="caption-r line-clamp-1">{post.title}</p>
