@@ -16,31 +16,31 @@ const OAuthCallback = () => {
 
     console.log("인가 코드:", code);
 
-    const sendCodeToBackend = async () => {
-      try {
-        const response = await axios.get(
-          `http://15.164.154.120:8080/api/social-login?code=${code}`
-        );
+    // const sendCodeToBackend = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       `http://15.164.154.120:8080/api/social-login?code=${code}`
+    //     );
 
-        console.log("백엔드 응답 데이터:", response.data);
+    //     console.log("백엔드 응답 데이터:", response.data);
 
-        if (response.data.token) {
-          console.log("JWT 토큰:", response.data.token);
+    //     if (response.data.token) {
+    //       console.log("JWT 토큰:", response.data.token);
 
-          localStorage.setItem("jwt", response.data.token);
+    //       localStorage.setItem("jwt", response.data.token);
 
-          navigate("/");
-        } else {
-          console.error("로그인 실패");
-          navigate("/login");
-        }
-      } catch (error) {
-        console.error("백엔드 요청 중 오류 발생:", error);
-        navigate("/login");
-      }
-    };
+    //       navigate("/");
+    //     } else {
+    //       console.error("로그인 실패");
+    //       navigate("/login");
+    //     }
+    //   } catch (error) {
+    //     console.error("백엔드 요청 중 오류 발생:", error);
+    //     navigate("/login");
+    //   }
+    // };
 
-    sendCodeToBackend();
+    // sendCodeToBackend();
   }, [navigate]);
 
   return (

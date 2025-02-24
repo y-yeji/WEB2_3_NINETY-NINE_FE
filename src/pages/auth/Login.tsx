@@ -7,7 +7,12 @@ import DividerWithText from "../../components/common/DividerWithText";
 import InputField from "../../components/common/InputField";
 import CustomButton from "../../components/ui/CustomButton";
 
-const API_BASE_URL = "http://15.164.154.120:8080";
+const KAKAO_REST_API_KEY = import.meta.env.VITE_K_REST_API_KEY;
+const GOOGLE_AUTH_CLIENT_ID = import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID;
+const KAKAO_REDIRECT_URI = "http://localhost:5173/oauth/callback";
+const GOOGLE_REDIRECT_URI = "http://localhost:5173/oauth/callback";
+const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+const googleUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_AUTH_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=email profile`;
 
 const Login = () => {
   const navigate = useNavigate();
@@ -30,26 +35,26 @@ const Login = () => {
       return;
     }
 
-    try {
-      const response = await axios.post(`${API_BASE_URL}/api/login`, {
-        email: form.email,
-        password: form.password,
-      });
+    // try {
+    //   const response = await axios.post(`${API_BASE_URL}/api/login`, {
+    //     email: form.email,
+    //     password: form.password,
+    //   });
 
-      console.log("로그인 성공:", response.data);
-      localStorage.setItem("jwt", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+    //   console.log("로그인 성공:", response.data);
+    //   localStorage.setItem("jwt", response.data.token);
+    //   localStorage.setItem("user", JSON.stringify(response.data.user));
 
-      alert("로그인 성공!");
-      navigate("/");
-    } catch (error) {
-      console.error("로그인 실패:", error);
+    //   alert("로그인 성공!");
+    //   navigate("/");
+    // } catch (error) {
+    //   console.error("로그인 실패:", error);
 
-      setErrors({
-        email: "",
-        password: "이메일 또는 비밀번호가 잘못되었습니다.",
-      });
-    }
+    //   setErrors({
+    //     email: "",
+    //     password: "이메일 또는 비밀번호가 잘못되었습니다.",
+    //   });
+    // }
   };
 
   return (
@@ -92,16 +97,14 @@ const Login = () => {
           bgColor="bg-white"
           borderColor="border-blue-1"
           iconSrc={googlelogo}
-          onClick={() =>
-            (window.location.href = `${API_BASE_URL}/oauth/google`)
-          }
+          onClick={() => (window.location.href = googleUrl)}
         />
         <CustomButton
           text="Kakao로 시작하기"
           bgColor="bg-white"
           borderColor="border-blue-1"
           iconSrc={kakaologo}
-          onClick={() => (window.location.href = `${API_BASE_URL}/oauth/kakao`)}
+          onClick={() => (window.location.href = kakaoUrl)}
         />
       </div>
     </div>
