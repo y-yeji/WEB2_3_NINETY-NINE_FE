@@ -14,7 +14,7 @@ const OAuthCallback = () => {
       return;
     }
 
-    console.log("카카오 인가 코드:", code);
+    console.log("인가 코드:", code);
 
     const sendCodeToBackend = async () => {
       try {
