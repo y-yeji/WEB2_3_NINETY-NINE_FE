@@ -15,7 +15,7 @@ const ShortButton = ({
 }: ShortButtonProps) => {
   return (
     <button
-      className={`w-[120px] h-[40px] flex items-center justify-center text-${textColor} body-s-r bg-${bgColor} border border-blue-1 rounded-[8px] 
+      className={`w-[120px] h-[40px] flex items-center justify-center text-${textColor} body-s-r bg-${bgColor} border border-blue-1 rounded
                       hover:bg-${hoverColor} transition `}
       onClick={onClick}
     >
