@@ -15,6 +15,7 @@ import RootLayout from "../layouts/RootLayout";
 import InfoCardDetail from "../pages/informations/InfoCardDetail";
 import MyPage from "../pages/user/MyPage";
 import UserPage from "../pages/user/UserPage";
+import OAuthCallback from "../pages/auth/OAuthCallback";
 
 const Router = () => {
   return (
@@ -22,6 +23,7 @@ const Router = () => {
       <Route element={<RootLayout />}>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/oauth/callback" element={<OAuthCallback />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/community" element={<Community />} />
         <Route path="/community/detail" element={<CommunityDetail />} />
