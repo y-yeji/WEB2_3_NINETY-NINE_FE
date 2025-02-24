@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import InformationCard from "../../components/common/InformationCard";
 import Dropdown from "../../components/ui/Dropdown";
 import Pagination from "../../components/ui/Pagination";
