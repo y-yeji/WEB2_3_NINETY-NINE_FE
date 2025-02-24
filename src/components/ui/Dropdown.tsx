@@ -4,9 +4,14 @@ import Icon from "../../assets/icons/Icon";
 interface DropdownProps {
   data: string[];
   onSelect?: (selected: string) => void;
+  sizeClassName?: string;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ data, onSelect }) => {
+const Dropdown: React.FC<DropdownProps> = ({
+  data,
+  onSelect,
+  sizeClassName = "",
+}) => {
   const selectRef = useRef<HTMLDivElement>(null);
   const [currentValue, setCurrentValue] = useState<string>(data[0]);
   const [showOptions, setShowOptions] = useState<boolean>(false);
@@ -37,13 +42,13 @@ const Dropdown: React.FC<DropdownProps> = ({ data, onSelect }) => {
 
   return (
     <div
-      className="relative w-[172px] h-[40px] p-2 border border-blue-7 rounded-md bg-white cursor-pointer"
+      className={`relative ${sizeClassName} p-[2px] border border-blue-7 rounded bg-white cursor-pointer z-10 `}
       onClick={() => setShowOptions((prev) => !prev)}
       ref={selectRef}
     >
-      <label className="body-small-r ml-6">{currentValue}</label>
+      <label className="align-middle body-small-r ml-6">{currentValue}</label>
 
-      <span className="absolute top-2 right-3 text-blue-7 text-lg">
+      <span className="absolute top-1 right-3 text-blue-7 text-lg">
         <Icon
           name="ChevronDown"
           size={24}
@@ -53,13 +58,13 @@ const Dropdown: React.FC<DropdownProps> = ({ data, onSelect }) => {
       </span>
 
       {showOptions && (
-        <ul className="absolute left-0 top-10 w-full bg-white border border-blue-7 rounded-md max-h-40 overflow-y-auto shadow-lg z-10 custom-scrollbar">
+        <ul className="absolute left-0 top-[30px] w-full bg-white border border-blue-7 rounded max-h-40 overflow-y-auto shadow-lg custom-scrollbar">
           {data.map((item, index) => (
             <li
               key={index}
               data-value={item}
               onClick={handleOnChangeSelectValue}
-              className="p-2 body-small-r ml-6 hover:text-blue-4 transition cursor-pointer"
+              className="p-2 body-small-r ml-4 hover:text-blue-4 transition cursor-pointer"
             >
               {item}
             </li>
