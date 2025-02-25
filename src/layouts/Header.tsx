@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import Icon from "../assets/icons/Icon";
 import Sidebar from "./Sidebar";
+import Notification from "../components/notification/notification";
 
 const Header: React.FC = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement | null>(null);
+
   const handleNotificationClick = () => {
-    setShowNotification(true);
+    setShowNotification(!showNotification);
   };
 
   const toggleSidebar = () => {
@@ -59,12 +61,10 @@ const Header: React.FC = () => {
         isOpen={isSidebarOpen}
         onClose={toggleSidebar}
       />
-      {/* {isSidebarOpen && (
-        <div
-          className="fixed0 z-10 transition-opacity duration-300"
-          onClick={toggleSidebar}
-        ></div>
-      )} */}
+      <Notification
+        isOpen={showNotification}
+        onClose={() => setShowNotification(false)}
+      />
     </>
   );
 };
