@@ -35,26 +35,33 @@ const Login = () => {
       return;
     }
 
-    // try {
-    //   const response = await axios.post(`${API_BASE_URL}/api/login`, {
-    //     email: form.email,
-    //     password: form.password,
-    //   });
+    try {
+      const response = await axios.post(
+        "http://15.164.154.120:8080/api/login",
+        {
+          email: form.email,
+          password: form.password,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
-    //   console.log("로그인 성공:", response.data);
-    //   localStorage.setItem("jwt", response.data.token);
-    //   localStorage.setItem("user", JSON.stringify(response.data.user));
+      console.log(response.data);
+      console.log(`email: ${form.email} , password: ${form.password}`);
+      // localStorage.setItem("jwt", response.data.token);
+      // localStorage.setItem("user", JSON.stringify(response.data.user));
 
-    //   alert("로그인 성공!");
-    //   navigate("/");
-    // } catch (error) {
-    //   console.error("로그인 실패:", error);
+      alert("로그인 성공!");
+      navigate("/");
+    } catch (error) {
+      console.error("로그인 실패:", error);
 
-    //   setErrors({
-    //     email: "",
-    //     password: "이메일 또는 비밀번호가 잘못되었습니다.",
-    //   });
-    // }
+      setErrors({
+        email: "",
+        password: "이메일 또는 비밀번호가 잘못되었습니다.",
+      });
+    }
   };
 
   return (
