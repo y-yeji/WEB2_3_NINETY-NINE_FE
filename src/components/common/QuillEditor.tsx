@@ -4,7 +4,11 @@ import "react-quill-new/dist/quill.snow.css";
 import "../../css/quill.css";
 import ReactModule from "../../utils/QuillModule";
 
-const ReactEditor = () => {
+interface QuillEditorProps {
+  value: string;
+  onChange: (content: string) => void;
+}
+const QuillEditor = ({ value, onChange }: QuillEditorProps) => {
   const formats: string[] = [
     "header",
     "size",
@@ -40,9 +44,15 @@ const ReactEditor = () => {
       >
         <ReactModule />
       </div>
-      <ReactQuill theme="snow" modules={modules} formats={formats} />
+      <ReactQuill
+        theme="snow"
+        modules={modules}
+        value={value}
+        onChange={onChange}
+        formats={formats}
+      />
     </div>
   );
 };
 
-export default ReactEditor;
+export default QuillEditor;

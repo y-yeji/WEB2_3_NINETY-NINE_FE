@@ -3,9 +3,11 @@ import trash from "../../assets/trash.svg";
 import imagePlus from "../../assets/image-plus.svg";
 import imagePlusHover from "../../assets/image-plus2.svg";
 
-interface ImageUploaderProps {}
+interface ImageUploaderProps {
+  onUpload: (images: string[]) => void;
+}
 
-const ImageUploader = ({}: ImageUploaderProps) => {
+const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
   const [images, setImages] = useState<string[]>([]);
   const [plusIcon, setPlusIcon] = useState(imagePlus);
 
@@ -17,7 +19,9 @@ const ImageUploader = ({}: ImageUploaderProps) => {
       );
       const newImages = filesArray.map((file) => URL.createObjectURL(file));
 
-      setImages((prevImages) => [...prevImages, ...newImages].slice(0, 4));
+      const updatedImages = [...images, ...newImages].slice(0, 4);
+      setImages(updatedImages);
+      onUpload(updatedImages);
     }
   };
 
@@ -64,7 +68,7 @@ const ImageUploader = ({}: ImageUploaderProps) => {
               type="file"
               accept="image/*"
               multiple
-              onChange={handleImageUpload} // 파일 선택 시 실행
+              onChange={handleImageUpload} 
               className="hidden"
             />
           </label>
