@@ -22,7 +22,6 @@ const SignUp = () => {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
     setErrors({ ...errors, [name]: "" });
@@ -69,24 +68,28 @@ const SignUp = () => {
   const handleSignUp = async () => {
     if (!validate()) return;
 
-    // try {
-    //   console.log(form);
-    //   const response = await axios.post(
-    //     "http://15.164.154.120:8080/api/signup",
-    //     {
-    //       email: form.email,
-    //       nickname: form.nickname,
-    //       password: form.password,
-    //     }
-    //   );
-
-    //   console.log("회원가입 성공:", response.data);
-    //   alert("회원가입이 완료되었습니다.");
-    //   navigate("/login");
-    // } catch (error) {
-    //   console.error("회원가입 실패:", error);
-    //   alert("회원가입에 실패했습니다.");
-    // }
+    try {
+      console.log(form);
+      const response = await axios.post(
+        "http://15.164.154.120:8080/api/signup",
+        {
+          email: form.email,
+          nickname: form.nickname,
+          password: form.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("회원가입 성공:", response.data);
+      alert("회원가입이 완료되었습니다.");
+      navigate("/login");
+    } catch (error) {
+      console.error("회원가입 실패:", error);
+      alert("회원가입에 실패했습니다.");
+    }
   };
 
   return (
