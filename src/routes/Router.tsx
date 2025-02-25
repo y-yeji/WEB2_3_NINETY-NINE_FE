@@ -13,6 +13,7 @@ import InfoCardDetail from "../pages/informations/InfoCardDetail";
 import MyPage from "../pages/user/MyPage";
 import UserPage from "../pages/user/UserPage";
 import OAuthCallback from "../pages/auth/OAuthCallback";
+import ProfileEdit from "../pages/user/ProfileEdit";
 
 const Router = () => {
   return (
@@ -29,6 +30,7 @@ const Router = () => {
         <Route path="/mapsearch" element={<MapSearch />} />
         <Route path="/infocarddetail" element={<InfoCardDetail />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage/edit" element={<ProfileEdit />} />
         <Route path="/userpage/:id" element={<UserPage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
