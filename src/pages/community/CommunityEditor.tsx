@@ -10,7 +10,7 @@ const CommunityEditor = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState<string[]>([]);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     if (!title.trim() || !content.trim()) {
@@ -40,19 +40,21 @@ const CommunityEditor = () => {
       );
       console.log("게시글 등록 완료", response.data);
       alert("게시글이 등록되었습니다.");
-      navigate("/"); 
+      navigate("/");
     } catch (error) {
       console.error("에러 발생", error);
     }
   };
 
   const handleCancel = () => {
-    const confirmCancel = window.confirm("정말로 게시글 작성을 취소하시겠습니까?");
+    const confirmCancel = window.confirm(
+      "정말로 게시글 작성을 취소하시겠습니까?"
+    );
     if (confirmCancel) {
       setTitle("");
       setContent("");
       setImageUrl([]);
-      navigate("/"); 
+      navigate("/");
     }
   };
 
@@ -84,7 +86,7 @@ const CommunityEditor = () => {
               bgColor="blue-1"
               textColor="base-1"
               hoverColor="blue-4"
-              onClick={handleSubmit} 
+              onClick={handleSubmit}
             />
           </div>
         </div>
