@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
-import eyeOn from "../../assets/eye-on.svg"; 
-import eyeOff from "../../assets/eye-off.svg";
+import Icon from "../../assets/icons/Icon";
 
 interface InputFieldProps {
   label?: string;
@@ -33,12 +32,12 @@ const InputField = ({
           {label}
         </label>
       )}
-      
+
       <div className="relative">
         <input
           id={name}
           name={name}
-          type={type === "password" && showPassword ? "text" : type} 
+          type={type === "password" && showPassword ? "text" : type}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
@@ -53,11 +52,7 @@ const InputField = ({
             className="absolute inset-y-0 right-3 flex items-center"
             onClick={() => setShowPassword(!showPassword)}
           >
-            <img
-              src={showPassword ? eyeOn : eyeOff}
-              alt="Toggle Password"
-              className="w-5 h-5"
-            />
+            <Icon name={showPassword ? "Eye" : "EyeOff"} />
           </button>
         )}
       </div>

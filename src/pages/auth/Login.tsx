@@ -4,7 +4,7 @@ import axios from "axios";
 import googlelogo from "../../assets/google.svg";
 import kakaologo from "../../assets/kakao.svg";
 import DividerWithText from "../../components/common/DividerWithText";
-import InputField from "../../components/common/InputField";
+import InputField from "../../components/ui/InputField";
 import CustomButton from "../../components/ui/CustomButton";
 
 const KAKAO_REST_API_KEY = import.meta.env.VITE_K_REST_API_KEY;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import InputField from "../../components/common/InputField";
+import InputField from "../../components/ui/InputField";
 import CustomButton from "../../components/ui/CustomButton";
 
 const SignUp = () => {
