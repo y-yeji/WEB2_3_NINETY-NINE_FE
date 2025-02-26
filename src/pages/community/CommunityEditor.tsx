@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ImageUploader from "../../components/common/ImageUploader";
-import InputField from "../../components/common/InputField";
-import QuillEditor from "../../components/common/QuillEditor";
+import InputField from "../../components/ui/InputField";
+import QuillEditor from "../../components/texteditor/QuillEditor"
 import ShortButton from "../../components/ui/ShortButton";
 
 const CommunityEditor = () => {

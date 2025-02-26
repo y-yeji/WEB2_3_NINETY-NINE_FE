@@ -3,10 +3,9 @@ import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/swiper-bundle.css";
 import main1 from "../assets/main1.svg";
 import main2 from "../assets/main2.svg";
-import arrowup from "../assets/arrow-up.svg";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import Icon from "../assets/icons/Icon";
 interface CategoryRoutes {
   [key: string]: string;
 }
@@ -94,12 +93,7 @@ const MainPage = () => {
           onClick={scrollToTop}
           className="fixed z-20 bottom-6 right-6 w-[45px] h-[45px] p-0  rounded-full  transition-all"
         >
-          <img
-            onClick={scrollToTop}
-            src={arrowup}
-            alt="위로 가기"
-            className="w-full h-full object-cover"
-          />
+          <Icon name="ChevronUp"/>
         </button>
       )}
     </div>

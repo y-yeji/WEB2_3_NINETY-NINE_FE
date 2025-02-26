@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import trash from "../../assets/trash.svg";
-import imagePlus from "../../assets/image-plus.svg";
-import imagePlusHover from "../../assets/image-plus2.svg";
+import Icon from "../../assets/icons/Icon";
 
 interface ImageUploaderProps {
   onUpload: (images: string[]) => void;
@@ -9,7 +7,6 @@ interface ImageUploaderProps {
 
 const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
   const [images, setImages] = useState<string[]>([]);
-  const [plusIcon, setPlusIcon] = useState(imagePlus);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -47,7 +44,12 @@ const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
               onClick={() => handleRemoveImage(index)}
               className="absolute top-2 right-2 "
             >
-              <img src={trash} alt="delete" className="w-5 h-5" />
+              <Icon
+                name="Trash2"
+                size={20}
+                strokeWidth={2}
+                className="text-blue-1 bg-base-1 border border-blue-1 rounded-full p-[3px] hover:text-base-1 hover:bg-blue-1 "
+              />
             </button>
           </div>
         ))}
@@ -55,12 +57,15 @@ const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
           <label className="relative w-60 h-60 flex items-center justify-center border-2 border-dashed rounded-lg cursor-pointer">
             <button
               type="button"
-              onMouseEnter={() => setPlusIcon(imagePlusHover)}
-              onMouseLeave={() => setPlusIcon(imagePlus)}
               onClick={() => document.getElementById("file-upload")?.click()}
               className="w-full h-full flex items-center justify-center"
             >
-              <img src={plusIcon} alt="add" className="w-16 h-16" />
+              <Icon
+                name="ImagePlus"
+                size={80}
+                strokeWidth={1}
+                className="text-gray-20 hover:text-blue-1"
+              />
             </button>
 
             <input
@@ -68,7 +73,7 @@ const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
               type="file"
               accept="image/*"
               multiple
-              onChange={handleImageUpload} 
+              onChange={handleImageUpload}
               className="hidden"
             />
           </label>

@@ -1,6 +1,6 @@
 import ShortButton from "./ShortButton";
-import exitIcon from "../../assets/exit.svg";
 import { useModalStore } from "../../stores/modalStore";
+import Icon from "../../assets/icons/Icon";
 
 const Modal = () => {
   const { isOpen, text, cancelText, confirmText, onConfirm, closeModal } =
@@ -17,7 +17,7 @@ const Modal = () => {
     <div className="fixed inset-0 bg-blue-7 bg-opacity-30 flex items-center justify-center z-50">
       <div className="w-[400px] h-[270px] border rounded-[20px] bg-blue-7 flex flex-col justify-center relative text-white z-51">
         <button className="absolute top-4 right-4" onClick={closeModal}>
-          <img src={exitIcon} alt="닫기" />
+          <Icon name="X" />
         </button>
 
         <h2 className="text-[32px] font-dm italic text-blue-1 text-center">

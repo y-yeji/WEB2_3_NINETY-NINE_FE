@@ -1,8 +1,5 @@
 import Main2 from "../../assets/Main2.svg";
-import setting from "../../assets/setting.svg";
-import concert from "../../assets/concert.svg";
-import play from "../../assets/play.svg";
-import musical from "../../assets/musical.svg";
+import Icon from "../../assets/icons/Icon";
 
 const UserPage = () => {
   return (
@@ -16,12 +13,12 @@ const UserPage = () => {
             <div className="flex flex-col justify-center h-[150px]">
               <div className="flex items-center">
                 <h2 className="text-lg font-semibold w-[240px]">NINETY9</h2>
-                <img src={setting} alt="로고" className="w-6 h-6 ml-[15px]" />
+                <Icon name="Settings" />
               </div>
-              <div className="flex justify-start gap-[10px] mt-[24px] w-[280px]">
-                <img src={concert} alt="콘서트" />
-                <img src={play} alt="연극" />
-                <img src={musical} alt="뮤지컬" />
+              <div className="flex justify-start mt-[24px] w-[280px]">
+                <p className="text-gray-40 body-n-r w-[280px]">
+                  관심있는 문화생활 카테고리를 설정해보세요.
+                </p>
               </div>
               <p className="text-gray-40 body-n-r w-[280px] mt-[24px]">
                 자신을 한 문장으로 소개해주세요.
