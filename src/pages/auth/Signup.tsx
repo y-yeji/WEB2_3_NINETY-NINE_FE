@@ -4,7 +4,7 @@ import axios from "axios";
 import InputField from "../../components/ui/InputField";
 import CustomButton from "../../components/ui/CustomButton";
 
-const SignUp = () => {
+const Signup = () => {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -150,4 +150,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Signup;
