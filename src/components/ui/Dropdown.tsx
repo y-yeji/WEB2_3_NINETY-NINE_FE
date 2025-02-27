@@ -48,7 +48,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     >
       <label className="align-middle body-small-r ml-6">{currentValue}</label>
 
-      <span className="absolute top-1 right-3 text-blue-7 text-lg">
+      <span className="absolute top-1 right-3 text-blue-7">
         <Icon
           name="ChevronDown"
           size={24}
