@@ -63,7 +63,7 @@ const MainPage = () => {
                 {category}
               </h2>
               <Link
-                to={`/${categoryRoutes[category]}`}
+                to={`/informations/${categoryRoutes[category]}`}
                 className="text-blue-2 body-s-m hover:text-gray-700 transition-all mt-[84px] flex items-center"
               >
                 더보기
@@ -79,7 +79,7 @@ const MainPage = () => {
               {[1, 2, 3, 4, 5].map((item) => (
                 <SwiperSlide
                   key={item}
-                  className="w-full h-[300px] rounded-[10px] overflow-y-auto flex flex-col justify-start items-center"
+                  className="w-full h-[300px] rounded-[10px] flex flex-col justify-start items-center"
                 >
                   <img src={main2} alt={`이벤트 ${item}`} />
                 </SwiperSlide>
@@ -93,7 +93,7 @@ const MainPage = () => {
           onClick={scrollToTop}
           className="fixed z-20 bottom-6 right-6 w-[45px] h-[45px] p-0  rounded-full  transition-all"
         >
-          <Icon name="ChevronUp"/>
+          <Icon name="ChevronUp" />
         </button>
       )}
     </div>
