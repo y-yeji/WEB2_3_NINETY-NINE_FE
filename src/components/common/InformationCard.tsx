@@ -1,26 +1,32 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "../../assets/icons/Icon";
+import { useState } from "react";
 
-interface PerformanceCardProps {
-  imageUrl: string;
-  title: string;
-  date: string;
-  location: string;
-  isBookmarked: boolean;
+interface InformationCardProps {
+  imageUrl?: string;
+  title?: string;
+  date?: string;
+  location?: string;
+  isBookmarked?: boolean;
 }
 
-const PerformanceCard: React.FC<PerformanceCardProps> = ({
-  imageUrl,
-  title,
-  date,
-  location,
-  isBookmarked,
-}) => {
+function InformationCard({
+  imageUrl = "/info-image.png",
+  title = "케르종 X 비클린 팝업스토어",
+  date = "2025.02.14 - 2025.06.30",
+  location = "경기 성남시",
+  isBookmarked = false,
+}: InformationCardProps) {
   const navigate = useNavigate();
+  const [bookmarked, setBookmarked] = useState(isBookmarked);
 
   const handleClick = () => {
-    navigate("/infocarddetail");
+    navigate("/infocard/detail/:eventId");
+  };
+
+  const toggleBookmark = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent the card click event
+    setBookmarked((prev) => !prev);
   };
 
   return (
@@ -60,29 +66,19 @@ const PerformanceCard: React.FC<PerformanceCardProps> = ({
               <p className="caption-r text-white ml-1">{location}</p>
             </div>
           </div>
-          <Icon
-            name="Bookmark"
-            size={24}
-            strokeWidth={1}
-            fill={isBookmarked ? "white" : "none"}
-            className="text-white ml-1"
-          />
+          <button onClick={toggleBookmark}>
+            <Icon
+              name="Bookmark"
+              size={24}
+              strokeWidth={1}
+              fill={bookmarked ? "white" : "none"}
+              className="text-white ml-1"
+            />
+          </button>
         </div>
       </div>
     </div>
   );
-};
+}
 
-const DummyCard = () => {
-  return (
-    <PerformanceCard
-      imageUrl="info_image.png"
-      title="케르종 X 비클린 팝업스토어"
-      date="2025.02.14 - 2025.06.30"
-      location="경기 성남시"
-      isBookmarked={false}
-    />
-  );
-};
-
-export default DummyCard;
+export default InformationCard;
