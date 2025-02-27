@@ -1,11 +1,11 @@
 interface InfoData {
-  imageUrl: string;
+  images?: string[];
   title?: string;
   description?: string;
 }
 
 const dummyInfoData: InfoData = {
-  imageUrl: "/info-ex-image.png",
+  images: ["/info-ex-image.png"],
   title: "유의 사항",
   description:
     "화,목,금 7시 30분│수 2시 30분, 7시 30분 │ 토,일, 공휴일 2시, 7시│월 공연 없음",
@@ -36,11 +36,13 @@ const InfoCardDetailInfo = () => {
         )}
 
         <div className="flex justify-center">
-          <img
-            src={dummyInfoData.imageUrl}
-            alt="예시 포스터"
-            className="w-[746px] h-auto"
-          />
+          {dummyInfoData.images && dummyInfoData.images.length > 0 && (
+            <img
+              src={dummyInfoData.images[0]}
+              alt="예시 포스터"
+              className="w-[746px] h-auto"
+            />
+          )}
         </div>
       </div>
 
