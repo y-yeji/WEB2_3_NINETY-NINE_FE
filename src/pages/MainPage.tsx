@@ -4,35 +4,34 @@ import "swiper/swiper-bundle.css";
 import main1 from "../assets/main1.svg";
 import main2 from "../assets/main2.svg";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 import Icon from "../assets/icons/Icon";
+import useScrollToTop from "../hooks/useScrollToTop";
+
 interface CategoryRoutes {
   [key: string]: string;
 }
-
 const categoryRoutes: CategoryRoutes = {
   팝업스토어: "popupstore",
   전시회: "exhibition",
   "뮤지컬 | 연극": "musical",
   "페스티벌 | 콘서트": "festival",
 };
+
 const MainPage = () => {
-  const [showScroll, setShowScroll] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScroll(window.scrollY > 300);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const { showScroll, scrollToTop, scrollTriggerRef } = useScrollToTop();
 
   return (
     <div className="w-full flex flex-col mx-auto">
+      <div
+        ref={scrollTriggerRef}
+        style={{
+          position: "absolute",
+          top: "300px",
+          left: "0",
+          opacity: 0,
+          pointerEvents: "none",
+        }}
+      ></div>
       <section className="w-full h-[647px] mt-[84px]">
         <Swiper
           modules={[Pagination, Autoplay]}
@@ -93,7 +92,10 @@ const MainPage = () => {
           onClick={scrollToTop}
           className="fixed z-20 bottom-6 right-6 w-[45px] h-[45px] p-0  rounded-full  transition-all"
         >
-          <Icon name="ChevronUp" />
+          <Icon
+            name="ChevronUp"
+            className="h-[42px] w-[42px] bg-blue-7 rounded-lg text-base-1"
+          />
         </button>
       )}
     </div>
