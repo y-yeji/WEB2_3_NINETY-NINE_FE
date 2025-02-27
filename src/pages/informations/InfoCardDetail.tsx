@@ -13,6 +13,7 @@ interface ShowInfo {
   links: string;
   price: string;
   reviewCount: number;
+  isBookmarked: boolean;
 }
 
 const dummyShowInfo: ShowInfo = {
@@ -25,11 +26,13 @@ const dummyShowInfo: ShowInfo = {
   links: "사이트 바로가기 | 예매 사이트 바로가기",
   price: "유료",
   reviewCount: 99,
+  isBookmarked: false,
 };
 
 const InfoCardDetail = () => {
   const [activeTab, setActiveTab] = useState("review");
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(dummyShowInfo.isBookmarked);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,6 +49,10 @@ const InfoCardDetail = () => {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const toggleBookmark = () => {
+    setIsBookmarked((prev) => !prev);
   };
 
   return (
@@ -104,12 +111,19 @@ const InfoCardDetail = () => {
           </div>
         </div>
         <div className="flex gap-4 mt-2 absolute bottom-7 right-7">
-          <div className="w-8 h-8 rounded-[8px] bg-blue-6 flex justify-center items-center cursor-pointer">
-            <Icon name="Bookmark" className="w-6 h-6 text-white" />
-          </div>
-          <div className="w-8 h-8 rounded-[8px] bg-blue-6 flex justify-center items-center cursor-pointer">
+          <button
+            className="w-8 h-8 rounded-[8px] bg-blue-6 hover:bg-blue-6/80 flex justify-center items-center"
+            onClick={toggleBookmark}
+          >
+            <Icon
+              name="Bookmark"
+              className="w-6 h-6 text-white"
+              fill={isBookmarked ? "white" : "none"}
+            />
+          </button>
+          <button className="w-8 h-8 rounded-[8px] bg-blue-6 hover:bg-blue-6/80 flex justify-center items-center">
             <Icon name="Share2" className="w-6 h-6 text-white" />
-          </div>
+          </button>
         </div>
       </div>
 

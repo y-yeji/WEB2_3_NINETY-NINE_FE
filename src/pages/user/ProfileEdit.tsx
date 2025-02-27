@@ -1,22 +1,24 @@
 import { useState, useEffect } from "react";
 import Icon from "../../assets/icons/Icon";
 
-const ProfileEditPage = () => {
-  const [showOptions, setShowOptions] = useState(false);
+const ProfileEdit = () => {
+  const [showImageEdit, setShowImageEdit] = useState(false);
   const [activeButtons, setActiveButtons] = useState<string[]>([]);
   const [nickname, setNickname] = useState("");
   const [introduction, setIntroduction] = useState("");
   const [nicknameError, setNicknameError] = useState("");
   const [introductionError, setIntroductionError] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   useEffect(() => {
-    // 더미 데이터 불러오기
     const fetchData = async () => {
-      // 실제 API 호출로 대체하세요
       const userData = {
         nickname: "NINETY9",
         introduction: "",
-        preferences: [], // 더미 데이터
+        preferences: [],
       };
 
       setNickname(userData.nickname);
@@ -47,8 +49,8 @@ const ProfileEditPage = () => {
     }
   };
 
-  const toggleOptions = () => {
-    setShowOptions(!showOptions);
+  const toggleImageEdit = () => {
+    setShowImageEdit(!showImageEdit);
   };
 
   const toggleButton = (button: string) => {
@@ -78,9 +80,30 @@ const ProfileEditPage = () => {
         : `bg-[${buttonColors[button]}/50] text-[${buttonColors[button]}]`
     }`;
 
-  // 프로필 섹션에 표시할 닉네임과 소개 (글자 수 제한)
   const displayNickname = nickname.slice(0, 8);
   const displayIntroduction = introduction.slice(0, 20);
+
+  const validatePassword = () => {
+    if (
+      !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/.test(
+        password
+      )
+    ) {
+      setPasswordError(
+        "8~16자의 영문 대/소문자, 숫자, 특수문자 조합으로 입력해주세요."
+      );
+    } else {
+      setPasswordError("");
+    }
+  };
+
+  const validateConfirmPassword = () => {
+    if (password !== confirmPassword) {
+      setConfirmPasswordError("비밀번호가 일치하지 않습니다.");
+    } else {
+      setConfirmPasswordError("");
+    }
+  };
 
   return (
     <div className="w-full flex flex-col mx-auto">
@@ -97,11 +120,11 @@ const ProfileEditPage = () => {
               </div>
               <button
                 className="absolute bottom-2 right-2 w-[30px] h-[30px] rounded-full bg-base-1 border border-blue-1 flex items-center justify-center"
-                onClick={toggleOptions}
+                onClick={toggleImageEdit}
               >
                 <Icon name="Pencil" className="w-[18px] h-[18px]" />
               </button>
-              {showOptions && (
+              {showImageEdit && (
                 <div className="absolute bottom-[-50px] flex flex-col justify-center items-center w-[116px] h-16 gap-2.5 px-6 py-2 rounded bg-white border border-blue-7">
                   <button className="body-small-r text-gray-90 hover:text-blue-4">
                     이미지 변경
@@ -189,19 +212,33 @@ const ProfileEditPage = () => {
           <div className="w-[784px]">
             <label className="block body-large-r text-blue-1 ml-3 mb-2">
               비밀번호 변경
+              {passwordError && (
+                <span className="text-red-500 ml-2">{passwordError}</span>
+              )}
             </label>
             <input
               type="password"
               className="w-full h-[50px] rounded-lg bg-white border border-blue-7 focus:border-blue-1 px-3"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onBlur={validatePassword}
             />
           </div>
           <div className="w-[784px]">
             <label className="block body-large-r text-blue-1 ml-3 mb-2">
               비밀번호 확인
+              {confirmPasswordError && (
+                <span className="text-red-500 ml-2">
+                  {confirmPasswordError}
+                </span>
+              )}
             </label>
             <input
               type="password"
               className="w-full h-[50px] rounded-lg bg-white border border-blue-7 focus:border-blue-1 px-3"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              onBlur={validateConfirmPassword}
             />
           </div>
           <div className="w-[784px]">
@@ -322,4 +359,4 @@ const ProfileEditPage = () => {
   );
 };
 
-export default ProfileEditPage;
+export default ProfileEdit;
