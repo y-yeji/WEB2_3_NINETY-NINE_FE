@@ -1,88 +1,112 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PostCard from "../../components/common/PostCard";
 import Dropdown from "../../components/ui/Dropdown";
 import Pagination from "../../components/ui/Pagination";
+import api from "../../api/api";
+import useLikeStore from "../../stores/likeStore";
 
-const Temp_PostCard = [
-  {
-    post: {
-      id: 1,
-      title: "우연히 웨스 앤더슨 2 같이 가실분!",
-      content: "우연히 웨스 앤더슨 2 같이 가실분!...",
-      imageUrl: "/default-image.png",
-      createdAt: "2025-02-24",
-      viewCount: 100,
-      commentCount: 5,
-      likeCount: 10,
-    },
-    user: {
-      id: 1,
-      username: "NINETY9",
-      profileImage: "/default-image.png",
-    },
-    isLiked: false,
-    onLikeChange: (postId: number, liked: boolean) => {
-      console.log(`Post ${postId} liked status changed to ${liked}`);
-    },
-  },
-];
+interface Post {
+  id: number;
+  userId: number;
+  title: string;
+  content: string;
+  imageUrl: string;
+  viewCount: number;
+  commentCount: number;
+  likeCount: number;
+  userNickname?: string;
+  userProfileImage?: string;
+  createdAt: string;
+  updatedAt: string;
+  isLiked: boolean;
+  likeId?: number;
+}
+
+interface ApiResponse {
+  posts: Post[];
+  totalElements: number;
+}
+
+const sortOptionMap: { [key: string]: string | undefined } = {
+  전체: undefined,
+  최신순: "latest",
+  인기순: "popular",
+  댓글순: "comments",
+};
+
 const Community = () => {
-  const sortOptions = ["전체", "최신순", "인기순", "댓글순"];
-  const [selectedSort, setSelectedSort] = useState(sortOptions[0]);
-  const handleSortChange = (selected: string) => {
-    setSelectedSort(selected);
-  };
-
-  const postCount = 9;
-  const [posts, setPosts] = useState(Array(postCount).fill(Temp_PostCard[0]));
-
-  const handleLikeChange = (postId: number, liked: boolean) => {
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === postId
-          ? {
-              ...post,
-              post: {
-                ...post.post,
-                likeCount: liked
-                  ? post.post.likeCount + 1
-                  : post.post.likeCount - 1,
-              },
-              isLiked: liked,
-            }
-          : post
-      )
-    );
-  };
-
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const postCardSortOptionLabels = ["전체", "최신순", "인기순", "댓글순"];
+  const [currentSortOption, setCurrentSortOption] = useState(
+    postCardSortOptionLabels[0]
+  );
   const [currentPage, setCurrentPage] = useState(1);
+
+  const { getLikeStatus, toggleLike } = useLikeStore();
+
+  const fetchPostList = useCallback(async (page: number, sort: string) => {
+    try {
+      const response = await api.get<ApiResponse>(`/api/socialPosts`, {
+        params: {
+          pageNum: page - 1,
+          pageSize: 9,
+          sort: sortOptionMap[sort],
+        },
+      });
+      if (response.data && Array.isArray(response.data.posts)) {
+        setPosts(response.data.posts);
+        setTotalItems(response.data.totalElements);
+      } else {
+        console.error("Posts 배열:", response.data);
+      }
+    } catch (error) {
+      console.error("포스트 목록을 불러오는데 실패했습니다", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPostList(currentPage, currentSortOption);
+  }, [currentPage, currentSortOption, fetchPostList]);
+
+  const handleSortChange = (selected: string) => {
+    setCurrentSortOption(selected);
+    setCurrentPage(1);
+  };
+
   const onPageChange = (page: number) => {
     setCurrentPage(page);
   };
 
+  const handleLikeUpdate = async (postId: number) => {
+    await toggleLike(postId);
+    setPosts((prevPosts) =>
+      prevPosts.map((post) => ({
+        ...post,
+        isLiked: getLikeStatus(post.id).isLiked,
+        likeCount:
+          useLikeStore.getState().likeCounts[post.id] || post.likeCount,
+      }))
+    );
+  };
+
   return (
     <div className="mt-[188px]">
-      <div className=" flex items-center justify-end mr-[39px] bg-white">
+      <div className="flex items-center justify-end mr-[39px] bg-white">
         <Dropdown
-          data={sortOptions}
+          data={postCardSortOptionLabels}
           onSelect={handleSortChange}
           sizeClassName="w-[114px] h-[30px]"
         />
       </div>
       <div className="grid grid-cols-3 grid-rows-3 gap-[70px] place-items-center mt-9">
         {posts.map((post) => (
-          <PostCard
-            key={post.postId}
-            user={post.user}
-            post={post.post}
-            isLiked={post.isLiked}
-            onLikeChange={handleLikeChange}
-          />
+          <PostCard key={post.id} post={post} onLikeUpdate={handleLikeUpdate} />
         ))}
       </div>
       <div className="flex justify-center mt-[104px] mb-[108px]">
         <Pagination
-          totalItems={posts.length}
+          totalItems={totalItems}
           itemsPerPage={9}
           currentPage={currentPage}
           onPageChange={onPageChange}
