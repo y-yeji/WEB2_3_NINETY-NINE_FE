@@ -34,14 +34,16 @@ const Exhibition = () => {
               "제주특별자치도",
             ]}
             onSelect={(value) => setSelectedLocation(value)}
+            sizeClassName="w-[164px] h-[32px]"
           />
           <Dropdown
             data={["진행 중", "진행 예정"]}
             onSelect={(value) => setSelectedStatus(value)}
+            sizeClassName="w-[124px] h-[32px]"
           />
         </div>
 
-        <div className="flex flex-wrap justify-center gap-y-[60px] mt-11">
+        <div className="flex flex-wrap justify-center gap-y-[60px] mt-[42px]">
           <div className="flex gap-x-10 justify-between">
             <InformationCard />
             <InformationCard />
