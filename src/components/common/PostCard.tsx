@@ -1,65 +1,75 @@
+import { useState } from "react";
 import Icon from "../../assets/icons/Icon";
 import { useNavigate } from "react-router-dom";
+import api from "../../api/api";
 
-const Temp_PostCard = [
-  {
-    post: {
-      id: 1,
-      title: "우연히 웨스 앤더슨 2 같이 가실분!",
-      content: "우연히 웨스 앤더슨 2 같이 가실분!...",
-      imageUrl: "/default-image.png",
-      createdAt: "2025-02-24",
-      viewCount: 100,
-      commentCount: 5,
-      likeCount: 10,
-    },
-    user: {
-      id: 1,
-      username: "NINETY9",
-      profileImage: "/default-image.png",
-    },
-    isLiked: false,
-    onLikeChange: (postId: number, liked: boolean) => {
-      console.log(`Post ${postId} liked status changed to ${liked}`);
-    },
-  },
-];
-
+// api 수정될 때 까지 쓸 임시 데이터
+const Temp_PostCard = {
+  imageUrl: [
+    "/default-image.png",
+    "/default-image.png",
+    "/default-image.png",
+    "/default-image.png",
+  ],
+  userNickname: "NINETY9",
+  userProfileImage: "/default-image.png",
+  title: "임시 제목",
+  content: "임시 내용",
+  commentCount: 0,
+  likeCount: 0,
+  createdAt: "2025-02-27",
+  isLiked: false,
+};
 interface PostCardProps {
-  post: {
+  post?: {
     id: number;
+    userId: number;
     title: string;
     content: string;
-    imageUrl: string;
-    createdAt: string;
+    imageUrl: string; //api 수정전까지 사용, 수정후 string[] 로 수정
     viewCount: number;
     commentCount: number;
     likeCount: number;
+    userNickname: string;
+    userProfileImage: string;
+    createdAt: string;
+    updatedAt: string;
+    isLiked: boolean;
+    likeId?: number;
   };
-  user: {
-    id: number;
-    username: string;
-    profileImage: string;
-  };
-  isLiked: boolean;
-  onLikeChange: (postId: number, liked: boolean) => void;
 }
 
-export default function PostCard({
-  post = Temp_PostCard[0].post,
-  user = Temp_PostCard[0].user,
-  isLiked = Temp_PostCard[0].isLiked,
-  onLikeChange = Temp_PostCard[0].onLikeChange,
-}: PostCardProps) {
-  const handleToggleLike = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-    onLikeChange(post.id, !isLiked);
-  };
+export default function PostCard({ post = {} }: PostCardProps) {
+  const mergedPost = { ...Temp_PostCard, ...post };
+  const [isLiked, setIsLiked] = useState(post.isLiked);
+  const [likeCount, setLikeCount] = useState(post.likeCount);
+  const [likeId, setLikedId] = useState(post.likeId);
 
   const navigate = useNavigate();
   const handlePostCardClick = () => {
     navigate("/community/detail");
+  };
+
+  // 좋아요 생성 및 삭제 함수
+  const handleToggleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    try {
+      if (isLiked) {
+        await api.delete(`/api/socialPosts/${post.id}/likes/${likeId}`);
+        setIsLiked(false);
+        setLikeCount((prev) => prev - 1);
+        setLikedId(undefined);
+      } else {
+        const response = await api.post(`api/socialPosts/${post.id}/likes`);
+        setIsLiked(true);
+        setLikeCount((prev) => prev + 1);
+        setLikedId(response.data.id);
+      }
+    } catch (error) {
+      console.error("좋아요 오류 발생", error);
+    }
   };
 
   return (
@@ -71,7 +81,7 @@ export default function PostCard({
         <div className="w-[265px] h-[265px] relative overflow-hidden">
           <div className="w-full h-full">
             <img
-              src={post.imageUrl}
+              src={mergedPost.imageUrl}
               className="w-full h-full object-cover bg-center"
               alt="게시글 카드 이미지"
             />
@@ -86,7 +96,9 @@ export default function PostCard({
                   className={isLiked ? "fill-white text-white" : "text-white"}
                 />
               </button>
-              <span className="caption-r text-white">{post.likeCount}</span>
+              <span className="caption-r text-white">
+                {mergedPost.likeCount}
+              </span>
             </div>
             <div className="flex gap-[2px] items-center">
               <Icon
@@ -96,7 +108,9 @@ export default function PostCard({
                 className="text-white"
                 style={{ transform: "scaleX(-1)" }}
               />
-              <span className="caption-r text-white">{post.commentCount}</span>
+              <span className="caption-r text-white">
+                {mergedPost.commentCount}
+              </span>
             </div>
           </div>
         </div>
@@ -105,19 +119,19 @@ export default function PostCard({
             <div className="flex items-center gap-1 mb-2.5">
               <div className="w-6 h-6 rounded-full overflow-hidden userProfile-shadow">
                 <img
-                  src={user.profileImage}
+                  src={mergedPost.userProfileImage}
                   className="w-full h-full object-cover bg-center"
                   alt="유저 프로필 기본 이미지"
                 />
               </div>
-              <span className="caption-r">{user.username}</span>
+              <span className="caption-r">{mergedPost.userNickname}</span>
             </div>
             <div className="flex items-center gap-[1.5px]">
               <Icon name="CalendarRange" size={14} strokeWidth={1.5} />
-              <span className="caption-r">{post.createdAt}</span>
+              <span className="caption-r">{mergedPost.createdAt}</span>
             </div>
           </div>
-          <p className="caption-r line-clamp-1">{post.title}</p>
+          <p className="caption-r line-clamp-1">{mergedPost.title}</p>
         </div>
       </div>
     </>
