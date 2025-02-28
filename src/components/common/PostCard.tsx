@@ -4,30 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../utils/dateUtils";
 import useLikeStore from "../../stores/likeStore";
 
-// api 수정될 때 까지 쓸 임시 데이터
-// const Temp_PostCard = {
-//   imageUrl: [
-//     "/default-image.png",
-//     "/default-image.png",
-//     "/default-image.png",
-//     "/default-image.png",
-//   ],
-//   userNickname: "NINETY9",
-//   userProfileImage: "/default-image.png",
-//   title: "임시 제목",
-//   content: "임시 내용",
-//   commentCount: 0,
-//   likeCount: 0,
-//   createdAt: "2025-02-27",
-//   isLiked: false,
-// };
 interface PostCardProps {
   post: {
     id: number;
     userId: number;
     title: string;
     content: string;
-    imageUrl: string; //api 수정전까지 사용, 수정후 string[] 로 수정
+    imageUrl?: string; //api 수정전까지 사용, 수정후 string[] 로 수정
     viewCount: number;
     commentCount: number;
     likeCount: number;
@@ -73,7 +56,12 @@ export default function PostCard({ post, onLikeUpdate }: PostCardProps) {
         <div className="w-[265px] h-[265px] relative overflow-hidden">
           <div className="w-full h-full">
             <img
-              src={post.imageUrl}
+              src={post.imageUrl || "/default-image.png"}
+              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                const target = e.target as HTMLImageElement;
+                target.onerror = null;
+                target.src = "/default-image.png";
+              }}
               className="w-full h-full object-cover bg-center"
               alt="게시글 카드 이미지"
             />
@@ -107,12 +95,14 @@ export default function PostCard({ post, onLikeUpdate }: PostCardProps) {
             <div className="flex items-center gap-1 mb-2.5">
               <div className="w-6 h-6 rounded-full overflow-hidden userProfile-shadow">
                 <img
-                  src={post.userProfileImage}
+                  src={post.userProfileImage || "/default-image.png"}
                   className="w-full h-full object-cover bg-center"
                   alt="유저 프로필 기본 이미지"
                 />
               </div>
-              <span className="caption-r">{post.userNickname}</span>
+              <span className="caption-r">
+                {post.userNickname || "NINETY9"}
+              </span>
             </div>
             <div className="flex items-center gap-[1.5px]">
               <Icon name="CalendarRange" size={14} strokeWidth={1.5} />
