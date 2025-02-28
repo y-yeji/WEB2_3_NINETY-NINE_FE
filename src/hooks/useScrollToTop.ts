@@ -1,13 +1,21 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 const useScrollToTop = () => {
+  const showScrollRef = useRef(false);
   const [showScroll, setShowScroll] = useState(false);
   const scrollTriggerRef = useRef<HTMLDivElement | null>(null);
+
+  const updateShowScroll = useCallback((isVisible: boolean) => {
+    if (showScrollRef.current !== isVisible) {
+      showScrollRef.current = isVisible;
+      setShowScroll(isVisible);
+    }
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setShowScroll(!entry.isIntersecting);
+        updateShowScroll(!entry.isIntersecting);
       },
       { threshold: 0.1 }
     );
@@ -21,10 +29,11 @@ const useScrollToTop = () => {
         observer.unobserve(scrollTriggerRef.current);
       }
     };
-  }, []);
-  const scrollToTop = () => {
+  }, [updateShowScroll]);
+
+  const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  }, []);
 
   return { showScroll, scrollToTop, scrollTriggerRef };
 };
