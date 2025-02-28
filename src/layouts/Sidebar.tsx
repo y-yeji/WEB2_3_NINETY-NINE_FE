@@ -76,10 +76,13 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
         <section className="mb-[18px] border-t border-b border-base-1 ">
           <div className="mt-[20px] text-base-1">
             {[
-              { to: "/popup", text: "팝업스토어" },
-              { to: "/exhibition", text: "전시회" },
-              { to: "/musical-theater", text: "뮤지컬 | 연극" },
-              { to: "/festival-concert", text: "페스티벌 | 콘서트" },
+              { to: "/informations/popups", text: "팝업스토어" },
+              { to: "/informations/exhibition", text: "전시회" },
+              { to: "/informations/musical", text: "뮤지컬 | 연극" },
+              {
+                to: "/informations/concert",
+                text: "페스티벌 | 콘서트",
+              },
               { to: "/map-search", text: "지도 검색" },
               { to: "/social-community", text: "소셜 커뮤니티" },
             ].map((item, index) => (
