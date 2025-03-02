@@ -10,21 +10,21 @@ interface EventSectionProps {
 
 const EventSection = ({ category, route, data }: EventSectionProps) => {
   return (
-    <section className="mb-12">
+    <section className="mb-12 mx-[50px]">
       <div className="flex justify-between items-center mb-[64px] h-full">
         <h2 className="h1-b text-gray-80 mt-[84px] flex items-center">
           {category}
         </h2>
         <Link
           to={`/informations/${route}`}
-          className="text-blue-2 body-s-m hover:text-gray-700 transition-all mt-[84px] flex items-center"
+          className="mx-[58px] text-blue-2 body-s-m hover:text-gray-700 transition-all mt-[84px] flex items-center"
         >
           더보기
         </Link>
       </div>
       <Swiper
         pagination={{ clickable: true }}
-        spaceBetween={40}
+        spaceBetween={170}
         slidesPerView={4}
         className="w-full"
       >
