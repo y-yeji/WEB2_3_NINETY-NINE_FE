@@ -36,18 +36,17 @@
   .sidebar {
     position: fixed;
     top: 84px;
-    right: 240px;
+    right: 320px;
     width: 591px;
     height: 525px;
-    transition: all 0.3s ease-in-out;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(20px);
+    transform: translateY(25px);
   }
 
   .sidebar.open {
     opacity: 1;
     visibility: visible;
-    transform: translateY(-20px);
+    transform: translateY(-25px);
   }
 }
