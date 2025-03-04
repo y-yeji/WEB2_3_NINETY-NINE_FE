@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Icon from "../../assets/icons/Icon";
-import InterestIcon from "../ui/InterestIcon";
 import { UserData } from "../../types/User";
+import InterestsIcon from "../ui/InterestsIcon";
 
 const ProfileHeader = ({
   nickname = "닉네임을 설정해주세요.",
@@ -33,7 +33,7 @@ const ProfileHeader = ({
             <div className="w-[280px] flex flex-wrap gap-2 mt-3">
               {interests.length > 0 ? (
                 interests.map((item, index) => (
-                  <InterestIcon key={index} type={item} />
+                  <InterestsIcon key={index} name={item} as={"div"}/>
                 ))
               ) : (
                 <p className="text-gray-40 body-n-r">
