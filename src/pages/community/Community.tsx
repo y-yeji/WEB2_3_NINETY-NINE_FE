@@ -57,11 +57,12 @@ const Community = () => {
       if (response.data && Array.isArray(response.data.posts)) {
         setPosts(response.data.posts);
         setTotalItems(response.data.totalElements);
+        console.log("data:", response.data);
       } else {
         console.error("Posts 배열:", response.data);
       }
     } catch (error) {
-      console.error("포스트 목록을 불러오는데 실패했습니다", error);
+      console.error("포스트 목록을 불러오는데 실패했습니다.", error);
     }
   }, []);
 
