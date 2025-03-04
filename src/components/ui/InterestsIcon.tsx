@@ -19,21 +19,35 @@ const InterestsIcon = ({
 }: InterestsIconProps) => {
   const Component = as === "button" ? "button" : "div"; // 조건에 따라 컴포넌트 결정
 
-  const commonProps = {
-    className: `px-4 h-7 rounded-[140px] body-small-b text-center flex items-center justify-center ${
-      isActive || as === "div"
-        ? `bg-[${color}] text-white`
-        : disabled
-          ? `bg-[${color}]/50 text-[${color}] cursor-not-allowed`
-          : `bg-[${color}]/50 text-[${color}] cursor-pointer`
-    }`,
+  // 문자열 템플릿 대신 객체 형태로 스타일 정의
+  const getStyles = () => {
+    let classes =
+      "px-4 h-7 rounded-[140px] body-small-b text-center flex items-center justify-center ";
+
+    // 조건에 따른 배경색 및 텍스트 색상 추가
+    if (isActive || as === "div") {
+      classes += `bg-[${color}] text-white`;
+    } else if (disabled) {
+      classes += `bg-[${color}]/50 text-[${color}] cursor-not-allowed`;
+    } else {
+      classes += `bg-[${color}]/50 text-[${color}] cursor-pointer`;
+    }
+
+    return classes;
   };
 
   const buttonProps = as === "button" ? { onClick, disabled } : {};
 
   return React.createElement(
     Component,
-    { ...commonProps, ...buttonProps },
+    {
+      className: getStyles(),
+      style: {
+        backgroundColor: isActive || as === "div" ? color : `${color}80`,
+        color: isActive || as === "div" ? "white" : color,
+      },
+      ...buttonProps,
+    },
     name
   );
 };

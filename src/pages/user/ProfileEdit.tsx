@@ -196,12 +196,19 @@ const ProfileEdit = () => {
     콘서트: "#5e7fe2",
   };
 
-  const buttonClasses = (button: string) =>
-    `px-4 h-7 rounded-[140px] body-small-b text-center flex items-center justify-center ${
-      activeButtons.includes(button)
-        ? `bg-[${buttonColors[button]}] text-white`
-        : `bg-[${buttonColors[button]}/50] text-[${buttonColors[button]}]`
-    }`;
+  const renderInterestIcon = (button: string) => {
+    const color = buttonColors[button];
+
+    return (
+      <InterestsIcon
+        key={button}
+        name={button}
+        isActive={true} // 활성화된 상태로 표시
+        color={color}
+        as="div" // div로 렌더링
+      />
+    );
+  };
 
   const displayNickname = nickname.slice(0, 8);
   const displayIntroduction = introduction.slice(0, 20);
@@ -401,11 +408,7 @@ const ProfileEdit = () => {
                         관심있는 문화생활 카테고리를 설정해보세요.
                       </p>
                     ) : (
-                      activeButtons.map((button) => (
-                        <div key={button} className={buttonClasses(button)}>
-                          {button}
-                        </div>
-                      ))
+                      activeButtons.map((button) => renderInterestIcon(button))
                     )}
                   </div>
                   <p
