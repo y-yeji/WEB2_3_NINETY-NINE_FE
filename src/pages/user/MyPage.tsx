@@ -68,7 +68,11 @@ const MyPage = () => {
         <div className="grid grid-cols-3 gap-10 mt-15">
           {postData && postData.length > 0 ? (
             postData.map((post, index) => (
-              <PostCard key={index} post={post} onLikeUpdate={async () => {}} />
+              <PostCard
+                key={post.id}
+                post={post}
+                onLikeUpdate={async () => {}}
+              />
             ))
           ) : (
             <p className="text-gray-40">해당 데이터가 없습니다.</p>
