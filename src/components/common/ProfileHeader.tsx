@@ -8,6 +8,7 @@ const ProfileHeader = ({
   description = "소개글을 작성해주세요.",
   interests = [],
   profileImage = "/default-image.png",
+  isMyPage = false,
 }: UserData) => {
   const navigate = useNavigate();
 
@@ -22,9 +23,11 @@ const ProfileHeader = ({
         <div className="flex flex-col justify-center h-[150px]">
           <div className="flex items-center">
             <h2 className="text-lg font-semibold w-[240px]">{nickname}</h2>
-            <button onClick={() => navigate("/mypage/edit")}>
-              <Icon name="Settings" />
-            </button>
+            {isMyPage && (
+              <button onClick={() => navigate("/mypage/edit")}>
+                <Icon name="Settings" />
+              </button>
+            )}
           </div>
           <div className="flex justify-start mt-[24px] w-[280px]">
             <div className="w-[280px] flex flex-wrap gap-2 mt-3">

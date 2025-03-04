@@ -5,6 +5,7 @@ import ProfileHeader from "../../components/common/ProfileHeader";
 import { UserData } from "../../types/User";
 import PostCard from "../../components/common/PostCard";
 import { PostCardProps } from "../../types/Post";
+import { TabNavigation } from "../../components/ui/TabNavigation";
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState("myposts");
@@ -43,7 +44,7 @@ const MyPage = () => {
       setPostData([]);
     }
   }, [activeTab, userData]);
-  
+
   return (
     <div className="w-full flex flex-col mx-auto ">
       <div className="mt-[108px] max-w-[1280px] mx-auto p-6">
@@ -53,36 +54,17 @@ const MyPage = () => {
             description={userData.description}
             interests={userData.interests}
             profileImage={userData.profileImage}
+            isMyPage={true}
           />
         )}
-        <div className="flex flex-col items-center mt-[135px] mb-[95px]">
-          <div className="w-[1000px] flex justify-center relative">
-            <button
-              onClick={() => setActiveTab("myposts")}
-              className={`flex-1 text-center pb-5 ${
-                activeTab === "myposts" ? "text-blue-6" : "text-gray-20"
-              }`}
-            >
-              <p className="h3-b"> 마이 포스트</p>
-            </button>
-            <button
-              onClick={() => setActiveTab("bookmark")}
-              className={`flex-1 text-center pb-5 ${
-                activeTab === "bookmark" ? "text-blue-6" : "text-gray-20"
-              }`}
-            >
-              <p className="h3-b"> 북마크</p>
-            </button>
-          </div>
-          <div className="relative w-[1000px] h-[4px] bg-gray-20 ">
-            <div
-              className={`absolute h-full bg-blue-6 transition-all duration-300 ${
-                activeTab === "myposts" ? "left-0 w-1/2" : "left-1/2 w-1/2"
-              }`}
-            />
-          </div>
-        </div>
-
+        <TabNavigation
+          tabs={[
+            { key: "myposts", label: "마이 포스트" },
+            { key: "bookmark", label: "북마크" },
+          ]}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
         <div className="grid grid-cols-3 gap-10 mt-15">
           {postData && postData.length > 0 ? (
             postData.map((post, index) => (
