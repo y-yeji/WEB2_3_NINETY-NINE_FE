@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import googlelogo from "../../assets/google.svg";
 import kakaologo from "../../assets/kakao.svg";
-import DividerWithText from "../../components/common/DividerWithText";
+import DividerWithText from "../../components/ui/DividerWithText";
 import InputField from "../../components/ui/InputField";
 import CustomButton from "../../components/ui/CustomButton";
 
