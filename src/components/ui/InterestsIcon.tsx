@@ -3,7 +3,6 @@ import React from "react";
 interface InterestsIconProps {
   name: string;
   isActive?: boolean;
-  color: string;
   onClick?: () => void;
   disabled?: boolean;
   as?: "div" | "button";
@@ -12,12 +11,22 @@ interface InterestsIconProps {
 const InterestsIcon = ({
   name,
   isActive = false,
-  color,
   onClick,
   disabled = false,
   as = "button", // 기본값 button
 }: InterestsIconProps) => {
   const Component = as === "button" ? "button" : "div"; // 조건에 따라 컴포넌트 결정
+
+  const colorMapping: { [key: string]: string } = {
+    "팝업 스토어": "#f28c50",
+    전시회: "#6d8294",
+    뮤지컬: "#a370d8",
+    연극: "#ebcb3d",
+    페스티벌: "#4dbd79",
+    콘서트: "#5e7fe2",
+  };
+
+  const color = colorMapping[name] || "#000"; // 매핑된 색상 또는 기본 색상
 
   // 문자열 템플릿 대신 객체 형태로 스타일 정의
   const getStyles = () => {
