@@ -560,68 +560,62 @@ const ProfileEdit = () => {
                     <InterestsIcon
                       name="팝업 스토어"
                       isActive={activeButtons.includes("팝업 스토어")}
-                      color="#f28c50"
                       onClick={() => toggleButton("팝업 스토어")}
                       disabled={
                         activeButtons.length >= 3 &&
                         !activeButtons.includes("팝업 스토어")
                       }
-                      as="button"
+                      as="button" // button 태그로 사용
                     />
                     <InterestsIcon
                       name="전시회"
                       isActive={activeButtons.includes("전시회")}
-                      color="#6d8294"
                       onClick={() => toggleButton("전시회")}
                       disabled={
                         activeButtons.length >= 3 &&
                         !activeButtons.includes("전시회")
                       }
-                      as="button"
+                      as="button" // button 태그로 사용
                     />
                     <InterestsIcon
                       name="뮤지컬"
                       isActive={activeButtons.includes("뮤지컬")}
-                      color="#a370d8"
                       onClick={() => toggleButton("뮤지컬")}
                       disabled={
                         activeButtons.length >= 3 &&
                         !activeButtons.includes("뮤지컬")
                       }
-                      as="button"
+                      as="button" // button 태그로 사용
                     />
                     <InterestsIcon
                       name="연극"
                       isActive={activeButtons.includes("연극")}
-                      color="#ebcb3d"
                       onClick={() => toggleButton("연극")}
                       disabled={
                         activeButtons.length >= 3 &&
                         !activeButtons.includes("연극")
                       }
-                      as="button"
+                      as="button" // button 태그로 사용
                     />
                     <InterestsIcon
                       name="페스티벌"
                       isActive={activeButtons.includes("페스티벌")}
-                      color="#4dbd79"
                       onClick={() => toggleButton("페스티벌")}
                       disabled={
                         activeButtons.length >= 3 &&
                         !activeButtons.includes("페스티벌")
                       }
-                      as="button"
+                      as="button" // button 태그로 사용
                     />
                     <InterestsIcon
                       name="콘서트"
                       isActive={activeButtons.includes("콘서트")}
-                      color="#5e7fe2"
                       onClick={() => toggleButton("콘서트")}
                       disabled={
                         activeButtons.length >= 3 &&
                         !activeButtons.includes("콘서트")
                       }
-                      as="button"
+                      as="button" // button 태그로 사용
                     />
                   </div>
                 </div>
