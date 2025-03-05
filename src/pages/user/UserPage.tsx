@@ -3,9 +3,9 @@ import PostCard from "../../components/common/PostCard";
 import ProfileHeader from "../../components/common/ProfileHeader";
 import ScrollToTopButton from "../../components/ui/ScrollToTopButton";
 import { TitleBar } from "../../components/ui/TitleBar";
-import { PostCardProps } from "../../types/Post";
+import { PostCardProps } from "../../types/post";
 import api from "../../api/api";
-import { UserData } from "../../types/User";
+import { UserData } from "../../types/user";
 
 const UserPage = () => {
   const [postData, setPostData] = useState<PostCardProps["post"][]>([]);

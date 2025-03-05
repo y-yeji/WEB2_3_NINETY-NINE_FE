@@ -1,32 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import Icon from "../../assets/icons/Icon";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../utils/dateUtils";
-import useLikeStore from "../../stores/likeStore";
-import { PostCardProps } from "../../types/Post";
+import { PostCardProps } from "../../types/post";
+import { useLikeState } from "../../hooks/useLikeState";
 
-export default function PostCard({ post, onLikeUpdate }: PostCardProps) {
-  const navigate = useNavigate();
-  const { toggleLike, getLikeStatus } = useLikeStore();
-  // const { toggleLike, getLikeStatus, updateLikeCount } = useLikeStore();
-  const { isLiked } = getLikeStatus(post.id);
-  const likeCount = useLikeStore(
-    (state) => state.likeCounts[post.id] ?? post.likeCount
+const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle }) => {
+  const { isLiked, likeCount, toggleLike } = useLikeState(
+    post.id,
+    post.likeStatus,
+    post.likeCount
   );
-
-  const handlePostCardClick = () => {
-    navigate("/community/detail");
-  };
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleToggleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    e.preventDefault();
-    await toggleLike(post.id);
+    setIsLoading(true);
+    const result = await toggleLike();
+    if (result && result.success) {
+      onLikeToggle(post.id, result.newLikeStatus, result.newLikeCount);
+    }
+    setIsLoading(false);
   };
 
-  // React.useEffect(() => {
-  //   updateLikeCount(post.id, post.likeCount);
-  // }, [post.id, post.likeCount, updateLikeCount]);
+  const handlePostCardClick = () => {
+    navigate(`/community/${post.id}`);
+    console.log("클릭한 포스트카드id", post.id);
+  };
 
   return (
     <>
@@ -37,19 +38,17 @@ export default function PostCard({ post, onLikeUpdate }: PostCardProps) {
         <div className="w-[265px] h-[265px] relative overflow-hidden">
           <div className="w-full h-full">
             <img
-              src={post.imageUrl || "/default-image.png"}
-              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                const target = e.target as HTMLImageElement;
-                target.onerror = null;
-                target.src = "/default-image.png";
+              src={post.imageUrls[0] || "/default-image.png"}
+              onError={(e) => {
+                e.currentTarget.src = "/default-image.png";
               }}
               className="w-full h-full object-cover bg-center"
-              alt="게시글 카드 이미지"
+              alt="게시글 카드 썸네일"
             />
           </div>
           <div className="w-auto h-[22px] absolute right-[10px] bottom-[10px] flex gap-[3px] rounded-full py-[3px] px-[10.5px] bg-blue-6">
             <div className="flex gap-[2px] items-center">
-              <button onClick={handleToggleLike}>
+              <button onClick={handleToggleLike} disabled={isLoading}>
                 <Icon
                   name="Heart"
                   size={18}
@@ -57,7 +56,7 @@ export default function PostCard({ post, onLikeUpdate }: PostCardProps) {
                   className={isLiked ? "fill-white text-white" : "text-white"}
                 />
               </button>
-              <span className="caption-r text-white">{post.likeCount}</span>
+              <span className="caption-r text-white">{likeCount}</span>
             </div>
             <div className="flex gap-[2px] items-center">
               <Icon
@@ -78,12 +77,14 @@ export default function PostCard({ post, onLikeUpdate }: PostCardProps) {
                 <img
                   src={post.userProfileImage || "/default-image.png"}
                   className="w-full h-full object-cover bg-center"
-                  alt="유저 프로필 기본 이미지"
+                  alt={
+                    post.userProfileImage
+                      ? "유저 프로필 이미지"
+                      : "유저 프로필 기본 이미지"
+                  }
                 />
               </div>
-              <span className="caption-r">
-                {post.userNickname || "NINETY9"}
-              </span>
+              <span className="caption-r">{post.userNickname}</span>
             </div>
             <div className="flex items-center gap-[1.5px]">
               <Icon name="CalendarRange" size={14} strokeWidth={1.5} />
@@ -95,4 +96,6 @@ export default function PostCard({ post, onLikeUpdate }: PostCardProps) {
       </div>
     </>
   );
-}
+};
+
+export default PostCard;

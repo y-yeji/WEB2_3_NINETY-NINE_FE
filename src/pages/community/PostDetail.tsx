@@ -4,7 +4,6 @@ import PostImageTabs from "./PostImageTabs";
 import Icon from "../../assets/icons/Icon";
 import { formatDate } from "../../utils/dateUtils";
 import CommunityDetail from "./CommunityDetail";
-import { useAuthStore } from "../../stores/AuthSotre";
 import api from "../../api/api";
 import { useModalStore } from "../../stores/modalStore";
 
@@ -60,7 +59,6 @@ const PostDetail: React.FC = () => {
   // if (!postDetail) {
   //   return <div>로딩 중...</div>;
   // }
-  const { accessToken } = useAuthStore();
   const [post, setPost] = useState(Temp_PostCard[0].post);
   const [isPostMenuOpen, setIsPostMenuOpen] = useState(false);
   const { openModal } = useModalStore();
