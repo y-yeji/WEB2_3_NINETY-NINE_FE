@@ -49,4 +49,8 @@
     visibility: visible;
     transform: translateY(-25px);
   }
+
+  input:focus::placeholder {
+    color: transparent;
+  }
 }
