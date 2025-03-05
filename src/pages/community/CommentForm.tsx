@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import ShortButton from "../../components/ui/ShortButton";
 import api from "../../api/api";
-import { useAuthStore } from "../../stores/AuthSotre";
+import { useAuthStore } from "../../stores/authSotre";
 
 interface PostComment {
   id: number;

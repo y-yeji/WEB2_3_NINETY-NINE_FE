@@ -4,7 +4,7 @@ import Comments from "./Comments";
 import PostDetail from "./PostDetail";
 import { useParams } from "react-router-dom";
 import ScrollToTopButton from "../../components/ui/ScrollToTopButton";
-import { useAuthStore } from "../../stores/AuthSotre";
+import { useAuthStore } from "../../stores/authSotre";
 
 interface CommunityDetail {
   id: number;
