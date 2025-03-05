@@ -5,7 +5,7 @@ import kakaologo from "../../assets/kakao.svg";
 import DividerWithText from "../../components/ui/DividerWithText";
 import InputField from "../../components/ui/InputField";
 import CustomButton from "../../components/ui/CustomButton";
-import { useAuthStore } from "../../stores/authSotre";
+import { useAuthStore } from "../../stores/authStore";
 
 const KAKAO_REST_API_KEY = import.meta.env.VITE_K_REST_API_KEY;
 const GOOGLE_AUTH_CLIENT_ID = import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID;
