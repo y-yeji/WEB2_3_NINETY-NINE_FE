@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
-import { useAuthStore } from "../../stores/authSotre";
 import api from "../../api/api";
 
 interface PostComment {
@@ -20,7 +19,6 @@ const Comments: React.FC<CommentsProps> = ({
   socialPostId,
   onCommentCountChange,
 }) => {
-  const { accessToken } = useAuthStore();
   const [comments, setComments] = useState<PostComment[]>([]);
 
   const fecthPostComment = async () => {

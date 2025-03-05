@@ -4,7 +4,6 @@ import Comments from "./Comments";
 import PostDetail from "./PostDetail";
 import { useParams } from "react-router-dom";
 import ScrollToTopButton from "../../components/ui/ScrollToTopButton";
-import { useAuthStore } from "../../stores/authSotre";
 
 interface CommunityDetail {
   id: number;
@@ -22,7 +21,6 @@ interface CommunityDetail {
 }
 
 const CommunityDetail = () => {
-  const { accessToken } = useAuthStore();
   const [postDetailContent, setPostDetailContent] =
     useState<CommunityDetail | null>(null);
   const { socialPostId } = useParams<{ socialPostId: string }>();

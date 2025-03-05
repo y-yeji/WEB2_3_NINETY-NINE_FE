@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import ShortButton from "../../components/ui/ShortButton";
 import api from "../../api/api";
-import { useAuthStore } from "../../stores/authSotre";
 
 interface PostComment {
   id: number;
@@ -20,7 +19,6 @@ const CommentForm: React.FC<CommentFormProps> = ({
   onSubmit,
   socialPostId,
 }) => {
-  const { accessToken } = useAuthStore();
   const [commentValue, setCommentValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const adjustTextareaHEight = () => {

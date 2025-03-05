@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Icon from "../../assets/icons/Icon";
-import { UserData } from "../../types/User";
+import { UserData } from "../../types/user";
 import InterestsIcon from "../ui/InterestsIcon";
 
 const ProfileHeader = ({
@@ -33,7 +33,7 @@ const ProfileHeader = ({
             <div className="w-[280px] flex flex-wrap gap-2 mt-3">
               {interests.length > 0 ? (
                 interests.map((item, index) => (
-                  <InterestsIcon key={index} name={item} as={"div"}/>
+                  <InterestsIcon key={index} name={item} as={"div"} />
                 ))
               ) : (
                 <p className="text-gray-40 body-n-r">
