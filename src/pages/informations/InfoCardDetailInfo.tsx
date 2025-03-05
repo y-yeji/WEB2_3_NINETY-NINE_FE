@@ -1,7 +1,10 @@
+import InfoCardDetailInfoMap from "../informations/InfoCardDetailInfoMap";
+
 interface InfoData {
   images?: string[];
   title?: string;
   description?: string;
+  location?: { lat: number; lng: number };
 }
 
 const dummyInfoData: InfoData = {
@@ -9,6 +12,7 @@ const dummyInfoData: InfoData = {
   title: "유의 사항",
   description:
     "화,목,금 7시 30분│수 2시 30분, 7시 30분 │ 토,일, 공휴일 2시, 7시│월 공연 없음",
+  location: { lat: 37.5665, lng: 126.978 }, // 서울 시청의 위도와 경도
 };
 
 const InfoCardDetailInfo = () => {
@@ -50,11 +54,7 @@ const InfoCardDetailInfo = () => {
         <p className="h4-b text-gray-80 ml-10">찾아가는 길</p>
         <div className="w-full border-t border-blue-7 mt-4"></div>
         <div className="flex justify-center">
-          <img
-            src="/map-ex-image.png"
-            alt="맵"
-            className="w-[1080px] h-auto mt-10 shadow-inner border border-gray-20"
-          />
+          <InfoCardDetailInfoMap />
         </div>
       </div>
     </div>
