@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
-import { useAuthStore } from "../../stores/AuthSotre";
+import { useAuthStore } from "../../stores/authSotre";
 import api from "../../api/api";
 
 interface PostComment {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import api from "../../api/api";
-import { useAuthStore } from "../../stores/AuthSotre";
+import { useAuthStore } from "../../stores/authSotre";
 import Icon from "../../assets/icons/Icon";
 
 interface PostComment {

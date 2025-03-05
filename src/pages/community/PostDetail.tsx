@@ -4,7 +4,7 @@ import PostImageTabs from "./PostImageTabs";
 import Icon from "../../assets/icons/Icon";
 import { formatDate } from "../../utils/dateUtils";
 import CommunityDetail from "./CommunityDetail";
-import { useAuthStore } from "../../stores/AuthSotre";
+import { useAuthStore } from "../../stores/authSotre";
 import api from "../../api/api";
 import { useModalStore } from "../../stores/modalStore";
 
