@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import api from "../../api/api";
+import { useAuthStore } from "../../stores/authStore";
 import Icon from "../../assets/icons/Icon";
 
 interface PostComment {
@@ -25,6 +26,7 @@ const CommentList: React.FC<CommentListProps> = ({
   onCommentUpdate,
   onCommentDelete,
 }) => {
+  const { accessToken } = useAuthStore();
   const [isCommentMenuOpen, setIsCommentMenuOpen] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState("");
