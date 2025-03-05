@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import InputField from "../../components/ui/InputField";
 import CustomButton from "../../components/ui/CustomButton";
+import api from "../../api/api";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -67,11 +67,10 @@ const Signup = () => {
 
   const handleSignUp = async () => {
     if (!validate()) return;
-
     try {
       console.log(form);
-      const response = await axios.post(
-        "http://15.164.154.120:8080/api/signup",
+      const response = await api.post(
+        "/api/signup",
         {
           email: form.email,
           nickname: form.nickname,
