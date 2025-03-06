@@ -16,7 +16,7 @@ interface ModalState {
 }
 
 export const useModalStore = create<ModalState>((set) => ({
-  isOpen: true,
+  isOpen: false,
   text: "",
   cancelText: "취소하기",
   confirmText: "삭제하기",
