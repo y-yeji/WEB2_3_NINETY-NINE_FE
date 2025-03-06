@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../utils/dateUtils";
 import { PostCardProps } from "../../types/post";
 import { useLikeState } from "../../hooks/useLikeState";
+import { useAuthStore } from "../../stores/authStore";
+import { useModalStore } from "../../stores/modalStore";
 
 const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle }) => {
   const { isLiked, likeCount, toggleLike } = useLikeState(
@@ -13,9 +15,22 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle }) => {
   );
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { isLoggedIn, checkAuth } = useAuthStore();
+  const { openModal } = useModalStore();
 
   const handleToggleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    await checkAuth();
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    if (!isLoggedIn) {
+      openModal(
+        "로그인이 필요한 서비스입니다.\n 로그인 하러 가시겠어요?",
+        "취소하기",
+        "로그인하기",
+        () => navigate("/login")
+      );
+      return;
+    }
     setIsLoading(true);
     const result = await toggleLike();
     if (result && result.success) {
