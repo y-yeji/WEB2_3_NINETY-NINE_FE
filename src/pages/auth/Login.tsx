@@ -19,7 +19,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
-
+  
   const handleLogin = async () => {
     let newErrors = { email: "", password: "" };
     if (!form.email) newErrors.email = "이메일을 입력해주세요.";

@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import Cookies from "js-cookie";
 import api from "../api/api";
 
 interface AuthState {
@@ -7,7 +6,7 @@ interface AuthState {
   isLoggedIn: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  checkAuth: () => void;
+  checkAuth: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -21,11 +20,17 @@ export const useAuthStore = create<AuthState>((set) => ({
         { email, password },
         { withCredentials: true }
       );
-      const token = Cookies.get("accessToken");
-      console.log(token);
+
+      const token = response.data.data.accessToken;
+      console.log("토큰:", token);
+
       if (token) {
-        set({ user: response.data.user, isLoggedIn: true });
-        console.log("성공");
+        localStorage.setItem("accessToken", token);
+        console.log(
+          "로컬스토리지 저장 완료 ",
+          localStorage.getItem("accessToken")
+        );
+        await useAuthStore.getState().checkAuth();
       }
     } catch (error) {
       console.error("로그인 실패", error);
@@ -36,6 +41,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: async () => {
     try {
       await api.get("/api/logout");
+      localStorage.removeItem("accessToken");
       set({ user: null, isLoggedIn: false });
     } catch (error) {
       console.error("로그아웃 실패:", error);
@@ -43,16 +49,22 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   checkAuth: async () => {
-    const token = Cookies.get("accessToken");
-
+    const token = localStorage.getItem("accessToken");
     if (token) {
       try {
-        const response = await api.get("/api/profile");
-        set({ user: response.data, isLoggedIn: true });
+        const response = await api.get("/api/profile", {
+          headers: {
+            Authorization: token,
+          },
+        });
+        set({ user: response.data.data, isLoggedIn: true });
       } catch (error) {
-        console.error("인증 확인 실패", error);
+        console.error("인증 확인 실패:", error);
+        localStorage.removeItem("accessToken");
         set({ user: null, isLoggedIn: false });
       }
+    } else {
+      set({ user: null, isLoggedIn: false });
     }
   },
 }));
