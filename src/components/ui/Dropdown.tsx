@@ -5,15 +5,19 @@ interface DropdownProps {
   data: string[];
   onSelect?: (selected: string) => void;
   sizeClassName?: string;
+  selectedOption: string;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
   data,
   onSelect,
   sizeClassName = "",
+  selectedOption,
 }) => {
   const selectRef = useRef<HTMLDivElement>(null);
-  const [currentValue, setCurrentValue] = useState<string>(data[0]);
+  const [currentValue, setCurrentValue] = useState<string>(
+    selectedOption || data[0]
+  );
   const [showOptions, setShowOptions] = useState<boolean>(false);
 
   const handleOnChangeSelectValue = (e: React.MouseEvent<HTMLLIElement>) => {

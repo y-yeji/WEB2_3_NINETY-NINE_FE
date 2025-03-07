@@ -4,25 +4,25 @@ import Comments from "./Comments";
 import PostDetail from "./PostDetail";
 import { useParams } from "react-router-dom";
 import ScrollToTopButton from "../../components/ui/ScrollToTopButton";
-import { useAuthStore } from "../../stores/authStore";
 
 interface CommunityDetail {
   id: number;
   userId: number;
   title: string;
   content: string;
-  imageUrl: string;
+  imageUrls: string[];
   viewCount: number;
   commentCount: number;
   likeCount: number;
-  userNickname?: string;
-  userProfileImage?: string;
+  userNickname: string;
+  userProfileImage: string;
+  likeStatus: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
-const CommunityDetail = () => {
-  const { accessToken } = useAuthStore();
+const CommunityDetail: React.FC = () => {
+  const token = localStorage.getItem("accessToken");
   const [postDetailContent, setPostDetailContent] =
     useState<CommunityDetail | null>(null);
   const { socialPostId } = useParams<{ socialPostId: string }>();
@@ -30,8 +30,12 @@ const CommunityDetail = () => {
   useEffect(() => {
     const fetchPostDetails = async () => {
       try {
-        const response = await api.get(`/api/socialPosts/${socialPostId}`);
-        setPostDetailContent(response.data);
+        const response = await api.get(`/api/socialPosts/${socialPostId}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        setPostDetailContent(response.data.data);
         console.log("포스트상세페이지:", response.data);
       } catch (error) {
         console.error("포스트 내용을 가져오는데 실패했습니다.", error);
@@ -41,7 +45,15 @@ const CommunityDetail = () => {
     if (socialPostId) {
       fetchPostDetails();
     }
-  }, [socialPostId]);
+  }, [socialPostId, token]);
+
+  const handleLikeToggle = (newLikeStatus: boolean, newLikeCount: number) => {
+    setPostDetailContent((prev) =>
+      prev
+        ? { ...prev, likeStatus: newLikeStatus, likeCount: newLikeCount }
+        : null
+    );
+  };
 
   const handleCommentCountChange = (newCount: number) => {
     setPostDetailContent((prev) =>
@@ -50,9 +62,11 @@ const CommunityDetail = () => {
   };
   return (
     <article className="w-[1120px] mx-auto mt-[156px]">
-      {/* <PostDetail postDetail={postDetailContent} /> */}
-      {/* {postDetailContent && <Comments socialPostId={postDetailContent.id} />} */}
-      <PostDetail postDetail={postDetailContent} />
+      <PostDetail
+        postDetail={postDetailContent}
+        socialPostId={socialPostId || ""}
+        onLikeToggle={handleLikeToggle}
+      />
       {socialPostId && (
         <Comments
           socialPostId={parseInt(socialPostId)}

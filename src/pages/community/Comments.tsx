@@ -19,6 +19,7 @@ const Comments: React.FC<CommentsProps> = ({
   socialPostId,
   onCommentCountChange,
 }) => {
+  const token = localStorage.getItem("accessToken");
   const [comments, setComments] = useState<PostComment[]>([]);
 
   const fecthPostComment = async () => {
@@ -54,13 +55,13 @@ const Comments: React.FC<CommentsProps> = ({
       <CommentForm
         onSubmit={handleCommentSubmit}
         socialPostId={socialPostId}
-        accessToken={accessToken || ""}
+        accessToken={token || ""}
       />
       <CommentList
         comments={comments}
         setComments={setComments}
         socialPostId={socialPostId}
-        accessToken={accessToken || ""}
+        accessToken={token || ""}
         onCommentUpdate={handleCommentUpdate}
         onCommentDelete={handleCommentDelete}
       />
