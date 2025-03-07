@@ -15,7 +15,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle }) => {
   );
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { isLoggedIn, checkAuth } = useAuthStore();
+  const { isLoggedIn, checkAuth, user } = useAuthStore();
   const { openModal } = useModalStore();
 
   const handleToggleLike = async (e: React.MouseEvent) => {
@@ -41,6 +41,15 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle }) => {
   const handlePostCardClick = () => {
     navigate(`/community/${post.id}`);
     console.log("클릭한 포스트카드id", post.id);
+  };
+
+  const handleUserProfileClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (user && user.id === post.userId) {
+      navigate("/mypage");
+    } else {
+      navigate(`/userpage/${post.userId}`);
+    }
   };
 
   return (
@@ -86,7 +95,10 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle }) => {
         </div>
         <div className="mt-[19px]">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1 mb-2.5">
+            <div
+              className="flex items-center gap-1 mb-2.5 cursor-pointer"
+              onClick={handleUserProfileClick}
+            >
               <div className="w-6 h-6 rounded-full overflow-hidden userProfile-shadow">
                 <img
                   src={post.userProfileImage || "/default-image.png"}
