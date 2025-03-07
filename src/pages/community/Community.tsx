@@ -82,8 +82,8 @@ const Community: React.FC = () => {
   );
 
   return (
-    <div className="mt-[188px]">
-      <h2>소셜 커뮤니티</h2>
+    <div className="mt-[168px]">
+      <h2 className="ml-[39px] h1-b">소셜 커뮤니티</h2>
       <div className="flex items-center justify-end mr-[39px] bg-white">
         <Dropdown
           data={postCardSortOptionLabels}
