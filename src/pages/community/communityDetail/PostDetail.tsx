@@ -1,42 +1,44 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PostImageTabs from "./PostImageTabs";
-import Icon from "../../assets/icons/Icon";
-import { formatDate } from "../../utils/dateUtils";
-import CommunityDetail from "./CommunityDetail";
-import api from "../../api/api";
-import { useModalStore } from "../../stores/modalStore";
-import { useLikeState } from "../../hooks/useLikeState";
+import Icon from "../../../assets/icons/Icon";
+import { formatDate } from "../../../utils/dateUtils";
+import api from "../../../api/api";
+import { useModalStore } from "../../../stores/modalStore";
+import { useLikeState } from "../../../hooks/useLikeState";
+import { useAuthStore } from "../../../stores/authStore";
+import { PostCardProps } from "../../../types/post";
 
 interface PostDetailProps {
-  postDetail: CommunityDetail | null;
+  postDetail: PostCardProps["post"] | null;
   socialPostId: string;
   onLikeToggle: (newLikeStatus: boolean, newLikeCount: number) => void;
 }
 
-// interface Modal {
-//   text: string;
-// }
-
 const PostDetail: React.FC<PostDetailProps> = ({
   postDetail,
   socialPostId,
-  onLikeToggle,
 }: PostDetailProps) => {
-  const token = localStorage.getItem("accessToken");
-  const [isPostMenuOpen, setIsPostMenuOpen] = useState(false);
-  const { openModal } = useModalStore();
-  const menuRef = useRef<HTMLButtonElement | null>(null);
   const navigate = useNavigate();
-  const togglePostMenu = () => {
-    setIsPostMenuOpen(!isPostMenuOpen);
-  };
+  const { openModal } = useModalStore();
+  const { isLoggedIn, checkAuth, user } = useAuthStore();
+  const token = localStorage.getItem("accessToken");
+
+  const [isPostMenuOpen, setIsPostMenuOpen] = useState(false);
+  const [isAuthor, setIsAuthor] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const { isLiked, likeCount, toggleLike } = useLikeState(
     parseInt(socialPostId),
     postDetail?.likeStatus || false,
     postDetail?.likeCount || 0
   );
+
+  useEffect(() => {
+    if (user && postDetail) {
+      setIsAuthor(user.id === postDetail.userId);
+    }
+  }, [user, postDetail]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -46,27 +48,29 @@ const PostDetail: React.FC<PostDetailProps> = ({
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleEditClick = () => {
+  const togglePostMenu = () => setIsPostMenuOpen(!isPostMenuOpen);
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     setIsPostMenuOpen(false);
     navigate(`/community/editor/${socialPostId}`);
   };
 
-  const handleDeletePost = () => {
+  const handleDeletePost = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     openModal(
-      "포스트를 삭제하시면 더 이상 볼 수 없습니다. 정말 삭제 하시겠어요?",
+      "포스트를 삭제하시면 더 이상 볼 수 없습니다.\n정말 삭제 하시겠어요?",
       "취소 하기",
       "삭제 하기",
       async () => {
         try {
           const response = await api.delete(`api/socialPosts/${socialPostId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: token },
           });
           if (response.status === 200) {
             console.log("포스트 삭제가 완료되었습니다.", response.data);
@@ -80,8 +84,19 @@ const PostDetail: React.FC<PostDetailProps> = ({
   };
 
   const handleLikeClick = async () => {
+    await checkAuth();
+    if (!isLoggedIn) {
+      openModal(
+        "로그인이 필요한 서비스입니다.\n 로그인 하러 가시겠어요?",
+        "취소하기",
+        "로그인하기",
+        () => navigate("/login")
+      );
+      return;
+    }
     await toggleLike();
   };
+
   return (
     <>
       <section className="mb-[52px] border-b border-gray-30">
@@ -92,7 +107,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
               <div className="flex items-center gap-2">
                 <img
                   className="w-[30px] h-[30px] rounded-full"
-                  src="/default-image.png"
+                  src={postDetail?.userProfileImage || "/default-image.png"}
                   alt="유저프로필 이미지"
                 />
                 <span className="caption-m">{postDetail?.userNickname}</span>
@@ -104,20 +119,28 @@ const PostDetail: React.FC<PostDetailProps> = ({
                 </span>
               </span>
             </div>
-            <button ref={menuRef} onClick={togglePostMenu}>
-              <Icon name="EllipsisVertical" size={24} className="text-blue-1" />
-            </button>
+            {isAuthor && (
+              <div className="relative" ref={menuRef}>
+                <button onClick={togglePostMenu}>
+                  <Icon
+                    name="EllipsisVertical"
+                    size={24}
+                    className="text-blue-1"
+                  />
+                </button>
+                {isPostMenuOpen && (
+                  <ul className="w-[114px] h-16 absolute top-[26px] right-2 py-2 px-6 bg-white rounded border border-blue-7 body-small-r text-center">
+                    <li className="mb-2 hover:text-blue-4">
+                      <button onClick={handleEditClick}>포스트 수정</button>
+                    </li>
+                    <li className="hover:text-blue-4">
+                      <button onClick={handleDeletePost}>포스트 삭제</button>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            )}
           </div>
-          {isPostMenuOpen && (
-            <ul className="w-[114px] h-16 absolute top-[26px] right-2 py-2 px-6 bg-white rounded border border-blue-7 body-small-r text-center">
-              <li className="mb-2 hover:text-blue-4">
-                <button onClick={handleEditClick}>포스트 수정</button>
-              </li>
-              <li className=" hover:text-blue-4">
-                <button onClick={handleDeletePost}>포스트 삭제</button>
-              </li>
-            </ul>
-          )}
         </div>
       </section>
 
@@ -163,4 +186,5 @@ const PostDetail: React.FC<PostDetailProps> = ({
     </>
   );
 };
+
 export default PostDetail;

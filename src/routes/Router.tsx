@@ -4,7 +4,7 @@ import NotFound from "../pages/NotFound";
 import Login from "../pages/auth/Login";
 import Signup from "../pages/auth/Signup";
 import Community from "../pages/community/Community";
-import CommunityDetail from "../pages/community/CommunityDetail";
+import CommunityDetail from "../pages/community/communityDetail/CommunityDetail";
 import CommunityEditor from "../pages/community/CommunityEditor";
 import Informations from "../pages/informations/Informations";
 import MapSearch from "../pages/mapsearch/MapSearch";
