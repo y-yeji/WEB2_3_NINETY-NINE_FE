@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import api from "../api/api";
 
-const TEMP_ACCESS_TOKEN = "스웨거에서 액세스토큰 받은걸 넣기";
-
 export const useLikeState = (
   postId: number,
   initialLikeStatus: boolean,
   initalLikeCount: number
 ) => {
+  const token = localStorage.getItem("accessToken");
   const [isLiked, setIsLiked] = useState(() => {
     const saved = localStorage.getItem(`post_${postId}_likeStatus`);
     return saved !== null ? JSON.parse(saved) : initialLikeStatus;
@@ -30,7 +29,7 @@ export const useLikeState = (
         {},
         {
           headers: {
-            Authorization: `Bearer ${TEMP_ACCESS_TOKEN}`,
+            Authorization: token,
           },
         }
       );
