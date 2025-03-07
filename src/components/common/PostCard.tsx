@@ -21,7 +21,6 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle }) => {
   const handleToggleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
     await checkAuth();
-    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
     if (!isLoggedIn) {
       openModal(
         "로그인이 필요한 서비스입니다.\n 로그인 하러 가시겠어요?",

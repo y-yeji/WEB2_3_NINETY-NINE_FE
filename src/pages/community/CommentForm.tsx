@@ -20,7 +20,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
   onSubmit,
   socialPostId,
 }) => {
-  const { accessToken } = useAuthStore();
+  const token = localStorage.getItem("accessToken");
   const [commentValue, setCommentValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const adjustTextareaHEight = () => {
@@ -60,7 +60,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
           },
           {
             headers: {
-              Authorization: `Bearer ${accessToken}`,
+              Authorization: token,
               "Content-type": "application/json",
             },
           }

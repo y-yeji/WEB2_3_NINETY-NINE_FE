@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import PostCard from "../../components/common/PostCard";
 import Dropdown from "../../components/ui/Dropdown";
 import Pagination from "../../components/ui/Pagination";
 import api from "../../api/api";
 import { PostsData, SocialCommunityResponse } from "../../types/postApi";
+import { useSearchParams } from "react-router-dom";
 
 const sortOptionMap: { [key: string]: string | undefined } = {
   전체: undefined,
@@ -13,13 +14,14 @@ const sortOptionMap: { [key: string]: string | undefined } = {
 };
 
 const Community: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [posts, setPosts] = useState<PostsData["posts"]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const postCardSortOptionLabels = ["전체", "최신순", "인기순", "댓글순"];
-  const [currentSortOption, setCurrentSortOption] = useState(
-    postCardSortOptionLabels[0]
-  );
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentSortOption =
+    searchParams.get("sort") || postCardSortOptionLabels[0];
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+
   const fetchPostList = useCallback(async (page: number, sort: string) => {
     try {
       const response = await api.get<SocialCommunityResponse>(
@@ -46,15 +48,20 @@ const Community: React.FC = () => {
 
   useEffect(() => {
     fetchPostList(currentPage, currentSortOption);
+
+    const intervalId = setInterval(() => {
+      fetchPostList(currentPage, currentSortOption);
+    }, 30000);
+
+    return () => clearInterval(intervalId);
   }, [currentPage, currentSortOption, fetchPostList]);
 
   const handleSortChange = (selected: string) => {
-    setCurrentSortOption(selected);
-    setCurrentPage(1);
+    setSearchParams({ sort: selected, page: "1" });
   };
 
   const onPageChange = (page: number) => {
-    setCurrentPage(page);
+    setSearchParams({ sort: currentSortOption, page: page.toString() });
   };
 
   const handleLikeToggle = useCallback(
@@ -76,10 +83,12 @@ const Community: React.FC = () => {
 
   return (
     <div className="mt-[188px]">
+      <h2>소셜 커뮤니티</h2>
       <div className="flex items-center justify-end mr-[39px] bg-white">
         <Dropdown
           data={postCardSortOptionLabels}
           onSelect={handleSortChange}
+          selectedOption={currentSortOption}
           sizeClassName="w-[114px] h-[30px]"
         />
       </div>
