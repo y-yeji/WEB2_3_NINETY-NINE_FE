@@ -16,6 +16,9 @@ const PostImageTabs: React.FC<PostImageTabsProps> = ({ images }) => {
           className="w-auto h-[354px] object-cover bg-center"
           src={imageUrls[selectedTab]}
           alt={`게시글 이미지 ${selectedTab + 1}`}
+          onError={(e) => {
+            e.currentTarget.src = "/default-image.png";
+          }}
         />
       </div>
       {imageUrls.length > 1 && (
