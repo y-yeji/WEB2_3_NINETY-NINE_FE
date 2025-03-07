@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Icon from "../../assets/icons/Icon";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../utils/dateUtils";
-import { PostCardProps } from "../../types/post";
+import { PostCardProps } from "../../types/Post";
 import { useLikeState } from "../../hooks/useLikeState";
 
 const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle }) => {

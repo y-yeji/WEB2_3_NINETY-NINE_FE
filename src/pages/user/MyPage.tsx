@@ -4,32 +4,54 @@ import ScrollToTopButton from "../../components/ui/ScrollToTopButton";
 import ProfileHeader from "../../components/common/ProfileHeader";
 import { UserData } from "../../types/user";
 import PostCard from "../../components/common/PostCard";
-import { PostCardProps } from "../../types/post";
+import { PostCardProps } from "../../types/Post";
 import { TabNavigation } from "../../components/ui/TabNavigation";
+import { BookMarkProps } from "../../types/bookmark";
+import InformationCard from "../../components/common/InformationCard";
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState("myposts");
   const [userData, setUserData] = useState<UserData | null>(null);
   const [postData, setPostData] = useState<PostCardProps["post"][]>([]);
+  const [bookmarkData, setBookMarkData] = useState<BookMarkProps["post"][]>([]);
 
   const getUserData = async () => {
     try {
-      const response = await api.get("/api/profile");
+      const token = localStorage.getItem("accessToken");
+      const response = await api.get("/api/profile", {
+        headers: { Authorization: token },
+      });
       setUserData(response.data.data);
     } catch (error) {
-      console.error(`데이터를 불러오는 중 오류 발생:`, error);
-      return [];
+      console.error("데이터를 불러오는 중 오류 발생:", error);
     }
   };
 
   const getPostsData = async () => {
     try {
       if (!userData) return;
-      const endpoint = `/api/users/1/socialPosts`; // 임시 userId 지정 = 1
-      const response = await api.get(endpoint);
-      setPostData(response.data.posts);
+      const response = await api.get(
+        `/api/users/${userData.id}/socialPosts?pageNum=0&pageSize=100`
+      );
+      setPostData(response.data.data.posts);
     } catch (error) {
-      console.error(`데이터 불러오기 실패:`, error);
+      console.error("마이 포스트 데이터 불러오기 실패:", error);
+    }
+  };
+
+  const getBookMarkData = async () => {
+    try {
+      if (!userData) return;
+      const token = localStorage.getItem("accessToken");
+      const response = await api.get(
+        "/api/bookmarks/my-events?pageNum=0&pageSize=100",
+        {
+          headers: { Authorization: token },
+        }
+      );
+      setBookMarkData(response.data.data.posts);
+    } catch (error) {
+      console.error("북마크 데이터 불러오기 실패:", error);
     }
   };
 
@@ -40,13 +62,59 @@ const MyPage = () => {
   useEffect(() => {
     if (activeTab === "myposts") {
       getPostsData();
-    } else {
+      setBookMarkData([]);
+    } else if (activeTab === "bookmark") {
+      getBookMarkData();
       setPostData([]);
     }
   }, [activeTab, userData]);
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case "myposts":
+        return (
+          <div className="grid grid-cols-3 gap-10 mt-15">
+            {postData.length > 0 ? (
+              postData.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  onLikeToggle={async () => {}}
+                />
+              ))
+            ) : (
+              <p className="text-gray-40">
+                해당 마이 포스트 데이터가 없습니다.
+              </p>
+            )}
+          </div>
+        );
+      case "bookmark":
+        return (
+          <div className="grid grid-cols-3 gap-10 mt-15">
+            {bookmarkData.length > 0 ? (
+              bookmarkData.map((post) => (
+                <InformationCard
+                  key={post.id}
+                  imageUrl={post.postUrl}
+                  title={post.title}
+                  date={`${post.startDate} ~ ${post.endDate}`}
+                  location={post.location}
+                  isBookmarked={post.bookmarked}
+                />
+              ))
+            ) : (
+              <p className="text-gray-40">해당 북마크 데이터가 없습니다.</p>
+            )}
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="w-full flex flex-col mx-auto ">
+    <div className="w-full flex flex-col mx-auto">
       <div className="mt-[108px] max-w-[1280px] mx-auto p-6">
         {userData && (
           <ProfileHeader
@@ -65,19 +133,7 @@ const MyPage = () => {
           activeTab={activeTab}
           setActiveTab={setActiveTab}
         />
-        <div className="grid grid-cols-3 gap-10 mt-15">
-          {postData && postData.length > 0 ? (
-            postData.map((post, index) => (
-              <PostCard
-                key={post.id}
-                post={post}
-                onLikeUpdate={async () => {}}
-              />
-            ))
-          ) : (
-            <p className="text-gray-40">해당 데이터가 없습니다.</p>
-          )}
-        </div>
+        {renderContent()}
       </div>
       <ScrollToTopButton />
     </div>
