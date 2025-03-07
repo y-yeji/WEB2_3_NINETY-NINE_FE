@@ -44,7 +44,7 @@ const Router = () => {
         />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/edit" element={<ProfileEdit />} />
-        <Route path="/userpage/:id" element={<UserPage />} />
+        <Route path="/userpage/:userId" element={<UserPage />} />
         {/* </Route> */}
         <Route path="/mapsearch" element={<MapSearch />} />
         <Route path="/informations/:category" element={<Informations />} />
