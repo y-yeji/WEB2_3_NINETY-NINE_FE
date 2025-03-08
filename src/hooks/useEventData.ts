@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchEventData } from "../api/eventApi";
 
-const eventTypes = ["popups", "musical", "exhibition", "concert"];
+const eventTypes = ["popupstores", "performances", "exhibits", "festivals"];
 
 export const useAllEventData = () => {
   const [data, setData] = useState<Record<string, any[]>>({});
