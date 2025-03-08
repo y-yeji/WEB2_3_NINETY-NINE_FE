@@ -2,10 +2,29 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Link } from "react-router-dom";
 import InformationCard from "../common/InformationCard";
 
+interface EventItem {
+  id: number;
+  genre: string;
+  postUrl: string;
+  title: string;
+  location: string;
+  venue: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+  price: string | null;
+  description: string | null;
+  ageRating: string | null;
+  bookmarked: boolean;
+  detailImage: string | null;
+  operatingHours: string | null;
+  ticketingWebSite: string | null;
+}
+
 interface EventSectionProps {
   category: string;
   route: string;
-  data: any[];
+  data: EventItem[];
 }
 
 const EventSection = ({ category, route, data }: EventSectionProps) => {
@@ -31,13 +50,35 @@ const EventSection = ({ category, route, data }: EventSectionProps) => {
         {data.length > 0 ? (
           data.map((data) => (
             <SwiperSlide
-              key={data.event_id}
+              key={data.id}
               className="w-full h-[300px] rounded-[10px] flex flex-col justify-start items-center"
             >
               <InformationCard
-                title={data.event_title}
-                date={`${data.event_start_date} ~ ${data.event_end_date}`}
-                location="미정"
+                title={data.title}
+                date={
+                  data.startDate !== "null" && data.endDate !== "null"
+                    ? `${data.startDate} ~ ${data.endDate}`
+                    : data.startDate !== "null"
+                      ? `시작일 ${data.startDate}`
+                      : data.endDate !== "null"
+                        ? `종료일 ${data.endDate}`
+                        : "날짜 정보 없음"
+                }
+                location={data.location}
+                isBookmarked={data.bookmarked}
+                imageUrl={
+                  typeof data.postUrl === "string"
+                    ? data.postUrl.startsWith("[") && data.postUrl.endsWith("]")
+                      ? data.postUrl
+                          .slice(1, -1)
+                          .split(",")[0]
+                          .trim()
+                          .replace(/['"]/g, "")
+                      : data.postUrl
+                    : Array.isArray(data.postUrl)
+                      ? data.postUrl[0]
+                      : ""
+                }
               />
             </SwiperSlide>
           ))
