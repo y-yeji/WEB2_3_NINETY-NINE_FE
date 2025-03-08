@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import ImageUploader from "../../components/common/ImageUploader";
 import InputField from "../../components/ui/InputField";
-import QuillEditor from "../../components/texteditor/QuillEditor"
+import QuillEditor from "../../components/texteditor/QuillEditor";
 import ShortButton from "../../components/ui/ShortButton";
+import api from "../../api/api";
 
 const CommunityEditor = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [imageUrl, setImageUrl] = useState<string[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
@@ -24,23 +24,20 @@ const CommunityEditor = () => {
     const postData = {
       title,
       content,
-      imageUrl: imageUrl.length > 0 ? imageUrl : "default-image-url",
+      imageUrls: imageUrls.length > 0 ? imageUrls : "default-image-url",
     };
 
     console.log(postData);
     try {
-      const response = await axios.post(
-        "http://15.164.154.120:8080/api/socialPosts",
-        postData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const token = localStorage.getItem("accessToken");
+      const response = await api.post("/api/socialPosts", postData, {
+        headers: {
+          Authorization: token,
+        },
+      });
       console.log("게시글 등록 완료", response.data);
       alert("게시글이 등록되었습니다.");
-      navigate("/");
+      navigate("/mypage");
     } catch (error) {
       console.error("에러 발생", error);
     }
@@ -53,7 +50,7 @@ const CommunityEditor = () => {
     if (confirmCancel) {
       setTitle("");
       setContent("");
-      setImageUrl([]);
+      setImageUrls([]);
       navigate("/");
     }
   };
@@ -68,7 +65,7 @@ const CommunityEditor = () => {
           customStyle="w-[1200px] h-[50px] mt-[67px] mb-5 body-l-m border-gray-5"
         />
         <QuillEditor value={content} onChange={setContent} />
-        <ImageUploader onUpload={setImageUrl} />
+        <ImageUploader onUpload={setImageUrls} />
         <div className="w-full flex justify-between items-center mt-2.5 px-2.5">
           <p className="caption-r text-blue-4">
             이미지 업로드를 하지 않을 경우 기본 이미지로 업로드 됩니다.
