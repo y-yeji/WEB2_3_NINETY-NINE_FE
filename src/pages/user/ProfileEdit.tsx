@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Icon from "../../assets/icons/Icon";
 import InterestsIcon from "../../components/ui/InterestsIcon";
 import api from "../../api/api";
+import { useAuthStore } from "../../stores/authStore";
 
 interface UserProfile {
   nickname: string;
@@ -20,14 +21,6 @@ interface ApiResponse<T> {
   success: boolean;
 }
 
-interface UpdateData {
-  nickname: string;
-  description: string;
-  interests: string[];
-  profileImage: string;
-  password?: string;
-}
-
 const ProfileEdit = () => {
   const navigate = useNavigate();
   const [showImageEdit, setShowImageEdit] = useState(false);
@@ -43,39 +36,77 @@ const ProfileEdit = () => {
   const [profileImageUrl, setProfileImageUrl] = useState("/default-image.png");
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [updateSuccess, setUpdateSuccess] = useState(false);
-  const [updateError, setUpdateError] = useState("");
   const [isNicknameAvailable, setIsNicknameAvailable] = useState<
     null | boolean
   >(null);
   const [message, setMessage] = useState("");
   const [originalNickname, setOriginalNickname] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageAction, setImageAction] = useState<"none" | "change" | "delete">(
+    "none"
+  );
   const [loginType, setLoginType] = useState<string>("");
+  const { checkAuth } = useAuthStore();
+
+  // 추가할 상태 변수
+  const [originalIntroduction, setOriginalIntroduction] = useState("");
+  const [originalActiveButtons, setOriginalActiveButtons] = useState<string[]>(
+    []
+  );
+
+  // 비밀번호 표시/숨김 상태 관리를 위한 상태 변수 추가
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [originalProfileImage, setOriginalProfileImage] = useState("");
 
   useEffect(() => {
-    fetchUserProfile();
-  }, []);
+    // 페이지 로드 시 인증 상태 확인
+    checkAuth().then(() => {
+      // 인증 후 프로필 정보 가져오기
+      fetchUserProfile();
+    });
+  }, [checkAuth]);
 
   const fetchUserProfile = async () => {
     setIsLoading(true);
     try {
-      const response = await api.get<ApiResponse<UserProfile>>("/api/profile");
+      const token = localStorage.getItem("accessToken");
+      const response = await api.get<ApiResponse<UserProfile>>("/api/profile", {
+        headers: {
+          Authorization: token || "",
+        },
+      });
       const userData = response.data.data;
 
       setNickname(userData.nickname || "");
       setOriginalNickname(userData.nickname || "");
+
       setIntroduction(userData.description || "");
+      setOriginalIntroduction(userData.description || "");
+
       setActiveButtons(userData.interests || []);
+      setOriginalActiveButtons(userData.interests || []);
+
       setLoginType(userData.loginType || "");
 
+      // 프로필 이미지 처리
       if (userData.profileImage) {
-        setProfileImageUrl(userData.s3Bucket || "/default-image.png");
+        const imageUrl = userData.s3Bucket || "/default-image.png";
+        setProfileImageUrl(imageUrl);
       } else {
         setProfileImageUrl("/default-image.png");
       }
+      // 프로필 이미지 처리 내부에 추가
+      setOriginalProfileImage(userData.profileImage || "");
+
+      // 이미지 액션 초기화
+      setImageAction("none");
+      setSelectedFile(null);
     } catch (error) {
       console.error("프로필 정보를 불러오는데 실패했습니다.", error);
+      // 인증 오류인 경우 로그인 페이지로 이동
+      navigate("/login");
     } finally {
       setIsLoading(false);
     }
@@ -125,29 +156,26 @@ const ProfileEdit = () => {
     }
 
     try {
-      const response = await fetch("/api/check-nickname", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ nickname }),
-      });
+      const token = localStorage.getItem("accessToken");
+      const response = await api.post(
+        "/api/check-nickname?nickname=",
+        { nickname },
+        {
+          headers: {
+            Authorization: token || "",
+          },
+        }
+      );
 
-      if (!response.ok) {
-        throw new Error("서버 응답 오류");
-      }
-
-      const data = await response.json();
-
-      if (data.code === 200 && data.success) {
-        setIsNicknameAvailable(!data.data);
+      if (response.data.code === 200 && response.data.success) {
+        setIsNicknameAvailable(!response.data.data);
         setMessage(
-          data.data
+          response.data.data
             ? "이미 사용 중인 닉네임입니다."
             : "사용 가능한 닉네임입니다."
         );
       } else {
-        setMessage("오류 발생: " + data.message);
+        setMessage("오류 발생: " + response.data.message);
         setIsNicknameAvailable(null);
       }
     } catch (error) {
@@ -164,6 +192,11 @@ const ProfileEdit = () => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       setSelectedFile(file);
+
+      // 이미지 액션을 변경으로 설정
+      setImageAction("change");
+
+      // 미리보기 URL 생성
       const previewUrl = URL.createObjectURL(file);
       setProfileImageUrl(previewUrl);
       setShowImageEdit(false);
@@ -171,6 +204,8 @@ const ProfileEdit = () => {
   };
 
   const handleRemoveImage = () => {
+    // 이미지 삭제로 상태 변경
+    setImageAction("delete");
     setProfileImageUrl("/default-image.png");
     setSelectedFile(null);
     setShowImageEdit(false);
@@ -187,31 +222,16 @@ const ProfileEdit = () => {
     });
   };
 
-  const buttonColors: { [key: string]: string } = {
-    "팝업 스토어": "#f28c50",
-    전시회: "#6d8294",
-    뮤지컬: "#a370d8",
-    연극: "#ebcb3d",
-    페스티벌: "#4dbd79",
-    콘서트: "#5e7fe2",
-  };
-
   const renderInterestIcon = (button: string) => {
-    const color = buttonColors[button];
-
     return (
       <InterestsIcon
         key={button}
         name={button}
         isActive={true} // 활성화된 상태로 표시
-        color={color}
         as="div" // div로 렌더링
       />
     );
   };
-
-  const displayNickname = nickname.slice(0, 8);
-  const displayIntroduction = introduction.slice(0, 20);
 
   const validatePassword = () => {
     // 비밀번호 입력이 없으면 유효성 검사를 통과
@@ -251,33 +271,19 @@ const ProfileEdit = () => {
     }
   };
 
-  const uploadImage = async (): Promise<string> => {
-    if (!selectedFile) return "";
+  // 비밀번호 표시/숨김 토글 함수
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-    try {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-
-      const response = await api.post("/api/upload-profile-image", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      if (response.data.success) {
-        return response.data.data.imageUrl || "";
-      }
-      return "";
-    } catch (error) {
-      console.error("이미지 업로드 중 오류가 발생했습니다.", error);
-      return "";
-    }
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   const handleSubmit = async () => {
-    // 닉네임이 바뀌었는데 중복확인을 안 한 경우
+    // 닉네임이 바뀌었는데 중복확인을 안 한 경우만 체크
     if (nickname !== originalNickname && isNicknameAvailable === null) {
-      setMessage("닉네임 중복 확인을 해주세요.");
+      alert("닉네임 중복 확인을 해주세요.");
       return;
     }
 
@@ -290,65 +296,134 @@ const ProfileEdit = () => {
       introductionError ||
       (password && (!isPasswordValid || !isConfirmPasswordValid))
     ) {
+      // 구체적인 에러 메시지 생성
+      let errorMessage = "다음 항목을 확인해주세요:\n";
+      if (nicknameError) errorMessage += `- 닉네임: ${nicknameError}\n`;
+      if (introductionError)
+        errorMessage += `- 한 줄 소개: ${introductionError}\n`;
+      if (password && !isPasswordValid)
+        errorMessage += `- 비밀번호: ${passwordError}\n`;
+      if (password && !isConfirmPasswordValid)
+        errorMessage += `- 비밀번호 확인: ${confirmPasswordError}\n`;
+
+      alert(errorMessage);
+      return;
+    }
+
+    // 변경 사항이 있는지 확인
+    const hasChanges =
+      nickname !== originalNickname ||
+      introduction !== originalIntroduction ||
+      // 배열 비교 간소화
+      JSON.stringify(activeButtons) !== JSON.stringify(originalActiveButtons) ||
+      password ||
+      imageAction !== "none";
+
+    // 변경 사항이 없으면 알림 표시 후 종료
+    if (!hasChanges) {
+      alert("변경된 회원 정보가 없습니다. 회원 정보를 수정해주세요.");
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      // 이미지 업로드 처리
-      let imageUrl = "";
-      if (selectedFile) {
-        imageUrl = await uploadImage();
+      // FormData 객체 생성
+      const formData = new FormData();
+
+      // 필수 필드들 추가
+      formData.append("nickname", nickname);
+
+      // 선택 입력 필드
+      if (introduction) {
+        formData.append("description", introduction);
       }
 
-      const updateData: UpdateData = {
-        nickname: nickname,
-        description: introduction,
-        interests: activeButtons,
-        profileImage: imageUrl || profileImageUrl,
-      };
+      // 관심사 추가
+      activeButtons.forEach((interest) => {
+        formData.append("interests", interest);
+      });
 
       // 비밀번호가 입력된 경우에만 포함
       if (password) {
-        updateData.password = password;
+        formData.append("password", password);
       }
 
-      const response = await api.put("/api/user", updateData);
+      // 이미지 처리
+      if (imageAction === "change" && selectedFile) {
+        formData.append("image_data", selectedFile);
+      } else if (imageAction === "delete") {
+        formData.append("image_data", "");
+      } else if (imageAction === "none") {
+        // 이미지 변경 없음 - 기존 이미지 값 전송
+        formData.append("profileImage", originalProfileImage);
+      }
+
+      const token = localStorage.getItem("accessToken");
+      const response = await api.put("/api/profile", formData, {
+        headers: {
+          Authorization: token || "",
+        },
+      });
 
       if (response.data.success) {
-        setUpdateSuccess(true);
-        setUpdateError("");
-
-        // 성공 메시지를 잠시 보여준 후 홈으로 리다이렉트
-        setTimeout(() => {
-          navigate("/"); // 홈으로 이동
-        }, 1500);
+        alert("프로필이 성공적으로 업데이트되었습니다.");
+        navigate("/");
       } else {
-        setUpdateError(response.data.message || "프로필 수정에 실패했습니다.");
+        alert(
+          `프로필 수정에 실패했습니다: ${response.data.message || "알 수 없는 오류가 발생했습니다."}`
+        );
       }
-    } catch (error) {
-      console.error("오류가 발생했습니다.", error);
-      setUpdateError("오류가 발생했습니다.");
+    } catch (err: any) {
+      console.error("오류가 발생했습니다.", err);
+
+      let errorMessage = "프로필 수정 중 오류가 발생했습니다.";
+
+      if (err.response) {
+        if (err.response.status === 401) {
+          errorMessage = "로그인이 만료되었습니다. 다시 로그인해주세요.";
+          setTimeout(() => navigate("/login"), 1500);
+        } else if (err.response.status === 400) {
+          errorMessage = "닉네임을 변경해주세요.";
+        } else if (err.response.status === 413) {
+          errorMessage =
+            "업로드한 이미지 크기가 너무 큽니다. 더 작은 이미지를 사용해주세요.";
+        } else if (err.response.status >= 500) {
+          errorMessage = "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+        }
+
+        if (err.response.data && err.response.data.message) {
+          errorMessage += `\n\n상세 내용: ${err.response.data.message}`;
+        }
+      } else if (err.request) {
+        errorMessage =
+          "서버에 연결할 수 없습니다. 인터넷 연결을 확인하고 다시 시도해주세요.";
+      } else {
+        errorMessage =
+          "요청 처리 중 오류가 발생했습니다. 새로고침 후 다시 시도해주세요.";
+      }
+
+      alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleCancel = () => {
-    // 사용자에게 수정 사항을 저장하지 않고 홈으로 돌아갈지 묻기
-    if (
+    // 변경 사항이 있는지 간단하게 확인
+    const hasChanges =
       nickname !== originalNickname ||
-      introduction !== introduction ||
+      introduction !== originalIntroduction ||
+      JSON.stringify(activeButtons) !== JSON.stringify(originalActiveButtons) ||
       password ||
-      selectedFile
+      imageAction !== "none";
+
+    if (
+      hasChanges &&
+      window.confirm("수정 사항을 저장하지 않고 홈으로 돌아가시겠습니까?")
     ) {
-      if (
-        window.confirm("수정 사항을 저장하지 않고 홈으로 돌아가시겠습니까?")
-      ) {
-        navigate("/");
-      }
-    } else {
+      navigate("/");
+    } else if (!hasChanges) {
       navigate("/");
     }
   };
@@ -400,7 +475,7 @@ const ProfileEdit = () => {
                 </div>
                 <div className="flex flex-col justify-center h-[150px]">
                   <div className="flex items-center">
-                    <h2 className="h3-b w-[240px]">{displayNickname}</h2>
+                    <h2 className="h3-b w-[240px]">{nickname.slice(0, 8)}</h2>
                   </div>
                   <div className="flex justify-start gap-[10px] mt-[24px] w-[280px] flex-wrap">
                     {activeButtons.length === 0 ? (
@@ -412,26 +487,15 @@ const ProfileEdit = () => {
                     )}
                   </div>
                   <p
-                    className={`body-normal-r mt-[24px] ${displayIntroduction ? "text-gray-80" : "text-gray-40"}`}
+                    className={`body-normal-r mt-[24px] ${introduction ? "text-gray-80" : "text-gray-40"}`}
                   >
-                    {displayIntroduction || "자신을 한 문장으로 소개해주세요."}
+                    {introduction.slice(0, 20) ||
+                      "자신을 한 문장으로 소개해주세요."}
                   </p>
                 </div>
               </div>
             </div>
             <div className="border-[4px] border-gray-20 mt-24 mb-[40px]"></div>
-
-            {/* 성공 및 에러 메시지 */}
-            {updateSuccess && (
-              <div className="w-[784px] mx-auto mb-4 p-3 bg-green-100 text-green-800 rounded">
-                프로필이 성공적으로 업데이트되었습니다. 홈으로 이동합니다...
-              </div>
-            )}
-            {updateError && (
-              <div className="w-[784px] mx-auto mb-4 p-3 bg-red-100 text-red-800 rounded">
-                {updateError}
-              </div>
-            )}
 
             <div className="flex flex-col items-center gap-6">
               <div className="w-[784px] relative">
@@ -460,13 +524,7 @@ const ProfileEdit = () => {
                   type="text"
                   value={nickname}
                   onChange={handleNicknameChange}
-                  className={`w-full h-[50px] rounded-lg bg-white border ${
-                    nicknameError || (message && !isNicknameAvailable)
-                      ? "border-red-error"
-                      : isNicknameAvailable
-                        ? "border-green-500"
-                        : "border-blue-7 focus:border-blue-1"
-                  } px-3 pr-[100px]`}
+                  className={`w-full h-[50px] rounded-lg bg-white border border-blue-7 focus:border-blue-1 px-3 pr-[100px]`}
                   placeholder="8자 이내의 닉네임를 입력해주세요"
                 />
                 <button
@@ -499,11 +557,7 @@ const ProfileEdit = () => {
                   type="text"
                   value={introduction}
                   onChange={handleIntroductionChange}
-                  className={`w-full h-[50px] rounded-lg bg-white border ${
-                    introductionError
-                      ? "border-red-error"
-                      : "border-blue-7 focus:border-blue-1"
-                  } px-3`}
+                  className={`w-full h-[50px] rounded-lg bg-white border border-blue-7 focus:border-blue-1 px-3`}
                   placeholder="20자 이내의 한 줄 소개를 입력해주세요"
                 />
               </div>
@@ -518,14 +572,26 @@ const ProfileEdit = () => {
                         </span>
                       )}
                     </label>
-                    <input
-                      type="password"
-                      className="w-full h-[50px] rounded-lg bg-white border border-blue-7 focus:border-blue-1 px-3"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      onBlur={validatePassword}
-                      placeholder="영문 대/소문자, 숫자, 특수문자 각각 최소 1개 포함 8~16자 비밀번호를 입력해주세요"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        className="w-full h-[50px] rounded-lg bg-white border border-blue-7 focus:border-blue-1 px-3 pr-10"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onBlur={validatePassword}
+                        placeholder="영문 대/소문자, 숫자, 특수문자 각각 최소 1개 포함 8~16자 비밀번호를 입력해주세요"
+                      />
+                      <button
+                        type="button"
+                        className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-60 hover:text-blue-1"
+                        onClick={togglePasswordVisibility}
+                      >
+                        <Icon
+                          name={showPassword ? "Eye" : "EyeOff"}
+                          className="w-5 h-5"
+                        />
+                      </button>
+                    </div>
                   </div>
                   <div className="w-[784px]">
                     <label className="block body-large-r text-blue-1 ml-3 mb-2">
@@ -536,15 +602,28 @@ const ProfileEdit = () => {
                         </span>
                       )}
                     </label>
-                    <input
-                      type="password"
-                      className="w-full h-[50px] rounded-lg bg-white border border-blue-7 focus:border-blue-1 px-3"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      onBlur={validateConfirmPassword}
-                      placeholder="비밀번호를 다시 입력하세요"
-                      disabled={!password}
-                    />
+                    <div className="relative">
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        className="w-full h-[50px] rounded-lg bg-white border border-blue-7 focus:border-blue-1 px-3 pr-10"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        onBlur={validateConfirmPassword}
+                        placeholder="비밀번호를 다시 입력하세요"
+                        disabled={!password}
+                      />
+                      <button
+                        type="button"
+                        className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-60 hover:text-blue-1"
+                        onClick={toggleConfirmPasswordVisibility}
+                        disabled={!password}
+                      >
+                        <Icon
+                          name={showConfirmPassword ? "Eye" : "EyeOff"}
+                          className="w-5 h-5"
+                        />
+                      </button>
+                    </div>
                   </div>
                 </>
               )}
@@ -565,7 +644,7 @@ const ProfileEdit = () => {
                         activeButtons.length >= 3 &&
                         !activeButtons.includes("팝업 스토어")
                       }
-                      as="button" // button 태그로 사용
+                      as="button"
                     />
                     <InterestsIcon
                       name="전시회"
@@ -575,7 +654,7 @@ const ProfileEdit = () => {
                         activeButtons.length >= 3 &&
                         !activeButtons.includes("전시회")
                       }
-                      as="button" // button 태그로 사용
+                      as="button"
                     />
                     <InterestsIcon
                       name="뮤지컬"
@@ -585,7 +664,7 @@ const ProfileEdit = () => {
                         activeButtons.length >= 3 &&
                         !activeButtons.includes("뮤지컬")
                       }
-                      as="button" // button 태그로 사용
+                      as="button"
                     />
                     <InterestsIcon
                       name="연극"
@@ -595,7 +674,7 @@ const ProfileEdit = () => {
                         activeButtons.length >= 3 &&
                         !activeButtons.includes("연극")
                       }
-                      as="button" // button 태그로 사용
+                      as="button"
                     />
                     <InterestsIcon
                       name="페스티벌"
@@ -605,7 +684,7 @@ const ProfileEdit = () => {
                         activeButtons.length >= 3 &&
                         !activeButtons.includes("페스티벌")
                       }
-                      as="button" // button 태그로 사용
+                      as="button"
                     />
                     <InterestsIcon
                       name="콘서트"
@@ -615,7 +694,7 @@ const ProfileEdit = () => {
                         activeButtons.length >= 3 &&
                         !activeButtons.includes("콘서트")
                       }
-                      as="button" // button 태그로 사용
+                      as="button"
                     />
                   </div>
                 </div>
@@ -637,10 +716,11 @@ const ProfileEdit = () => {
                 onClick={handleSubmit}
                 disabled={
                   isSubmitting ||
-                  (nickname !== originalNickname && !isNicknameAvailable)
+                  (nickname !== originalNickname &&
+                    isNicknameAvailable === false)
                 }
               >
-                {isSubmitting ? "처리 중..." : "회원정보 수정"}
+                {isSubmitting ? "처리 중..." : "회원 정보 수정"}
               </button>
             </div>
           </>
