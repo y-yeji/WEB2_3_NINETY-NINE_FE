@@ -10,10 +10,13 @@ const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      const filesArray = Array.from(event.target.files).slice(
-        0,
-        4 - images.length
-      );
+      const filesArray = Array.from(event.target.files);
+
+      if (images.length + filesArray.length > 4) {
+        alert("최대 4개의 이미지만 업로드할 수 있습니다.");
+        return;
+      }
+
       const newImages = filesArray.map((file) => URL.createObjectURL(file));
 
       const updatedImages = [...images, ...newImages].slice(0, 4);
