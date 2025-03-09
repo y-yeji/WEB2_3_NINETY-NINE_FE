@@ -9,4 +9,5 @@ export interface ShowInfo {
   price: string;
   reviewCount: number;
   isBookmarked: boolean;
+  genre: string;
 }

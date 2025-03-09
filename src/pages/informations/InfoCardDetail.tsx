@@ -1,28 +1,173 @@
 import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Icon from "../../assets/icons/Icon";
 import InfoCardDetailInfo from "./InfoCardDetailInfo";
 import InfoCardDetailReview from "./InfoCardDetailReview";
-import InfoCardHeader from "../../components/informationdetail/InfoCardHeader"; // Import the new component
+import InfoCardHeader from "../../components/informationdetail/InfoCardHeader";
 import { ShowInfo } from "../../types/Informationdetail";
+import api from "../../api/api";
+import { useBookmarkState } from "../../hooks/useBookmarkState";
+import { useAuthStore } from "../../stores/authStore";
+import { useModalStore } from "../../stores/modalStore";
 
-const dummyShowInfo: ShowInfo = {
-  posterUrl: "/poster-img.png",
-  title: "<인상파, 모네에서 미국으로: 빛, 바다를 건너다 전시>",
-  audience: "전체관람가",
-  period: "2025.02.13 - 2025.06.30",
-  location: "서울 서초구",
-  times: "월 - 목 : 10:30 ~ 20:00 | 금 - 일 : 10:30 ~ 20:30",
-  links: "사이트 바로가기 | 예매 사이트 바로가기",
-  price: "유료",
-  reviewCount: 99,
-  isBookmarked: false,
+// Define the API response type
+interface EventDetailResponse {
+  code: number;
+  message: string;
+  data: EventDetail;
+  success: boolean;
+}
+
+// Define the EventDetail type based on the API response
+interface EventDetail {
+  id: number;
+  genre: string | null;
+  postUrl: string;
+  ageRating: string | null;
+  title: string;
+  startDate: string;
+  endDate: string;
+  operatingHours: string | null;
+  location: string;
+  venue: string;
+  status: string;
+  ticketingWebSite: string | null;
+  price: string | null;
+  detailImage: string | null;
+  description: string | null;
+  bookmarked: boolean;
+}
+
+// Fallback data for when API fails
+const fallbackEventDetail: EventDetail = {
+  id: 0,
+  genre: "기타",
+  postUrl: "/default-image.png",
+  ageRating: "-",
+  title: "정보를 불러올 수 없습니다",
+  startDate: "",
+  endDate: "",
+  operatingHours: "-",
+  location: "-",
+  venue: "정보 없음",
+  status: "진행중",
+  ticketingWebSite: null,
+  price: "-",
+  detailImage: null,
+  description:
+    "서버에서 정보를 불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+  bookmarked: false,
 };
 
 const InfoCardDetail = () => {
+  const { category, eventId } = useParams<{
+    category: string;
+    eventId: string;
+  }>();
+  const navigate = useNavigate();
+  const { isLoggedIn, checkAuth } = useAuthStore();
+  const { openModal } = useModalStore();
+
   const [activeTab, setActiveTab] = useState("review");
   const [showScrollButton, setShowScrollButton] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(dummyShowInfo.isBookmarked);
+  const [eventDetail, setEventDetail] = useState<EventDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [usingFallback, setUsingFallback] = useState(false);
 
+  // Normalize category to match API expectations
+  const normalizeCategory = (cat: string | undefined): string => {
+    if (!cat) return "";
+
+    // Map UI category to API endpoint category
+    const categoryMapping: { [key: string]: string } = {
+      popups: "popupstores",
+      exhibition: "exhibits",
+      musical: "performances",
+      concert: "festivals",
+    };
+
+    return categoryMapping[cat] || cat;
+  };
+
+  // Use the custom bookmark hook
+  const {
+    isBookmarked,
+    toggleBookmark: handleToggleBookmark,
+    isLoading: bookmarkLoading,
+  } = useBookmarkState(Number(eventId), eventDetail?.bookmarked || false);
+
+  // Fetch event detail from API
+  useEffect(() => {
+    const fetchEventDetail = async () => {
+      if (!category || !eventId) {
+        setError("Invalid category or event ID");
+        setLoading(false);
+        return;
+      }
+
+      const normalizedCategory = normalizeCategory(category);
+      console.log(
+        `Fetching event: category=${normalizedCategory}, eventId=${eventId}`
+      );
+
+      try {
+        console.log(
+          `Sending request to: /api/events/${normalizedCategory}/${eventId}`
+        );
+        const response = await api.get(
+          `/api/events/${normalizedCategory}/${eventId}`
+        );
+
+        console.log("API Response:", response);
+        console.log("API Response data:", response.data);
+
+        // 응답 구조 확인 및 처리
+        if (response.data && typeof response.data === "object") {
+          // success 속성이 있는지 확인 (원래 예상했던 구조인지)
+          if ("success" in response.data && "data" in response.data) {
+            // 기존 예상 구조: { success: boolean, data: EventDetail, ... }
+            if (response.data.success) {
+              setEventDetail(response.data.data);
+            } else {
+              setError(
+                response.data.message || "Failed to fetch event details"
+              );
+              setEventDetail(fallbackEventDetail);
+              setUsingFallback(true);
+            }
+          } else {
+            // 새로운 구조: 응답 자체가 EventDetail 객체
+            // 필수 필드를 확인하여 유효한 EventDetail인지 확인
+            if ("id" in response.data && "title" in response.data) {
+              setEventDetail(response.data);
+            } else {
+              setError("Invalid data format received from server");
+              setEventDetail(fallbackEventDetail);
+              setUsingFallback(true);
+            }
+          }
+        } else {
+          setError("Invalid response format");
+          setEventDetail(fallbackEventDetail);
+          setUsingFallback(true);
+        }
+      } catch (error: any) {
+        console.error("Error fetching event details:", error);
+        setError(`An error occurred: ${error.message || "Unknown error"}`);
+        setEventDetail(fallbackEventDetail);
+        setUsingFallback(true);
+      } finally {
+        setLoading(false);
+      }
+    }; // 여기에 중괄호 닫기 추가
+
+    fetchEventDetail();
+  }, [category, eventId]);
+
+  useEffect(() => {
+    console.log("Current event detail:", eventDetail);
+  }, [eventDetail]);
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 100) {
@@ -40,14 +185,122 @@ const InfoCardDetail = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const toggleBookmark = () => {
-    setIsBookmarked((prev) => !prev);
+  const toggleBookmark = async () => {
+    // Check authentication
+    await checkAuth();
+    if (!isLoggedIn) {
+      openModal(
+        "로그인이 필요한 서비스입니다.\n 로그인 하러 가시겠어요?",
+        "취소하기",
+        "로그인하기",
+        () => navigate("/login")
+      );
+      return;
+    }
+
+    await handleToggleBookmark();
   };
+
+  // Convert API data to ShowInfo format
+  const mapToShowInfo = (data: EventDetail): ShowInfo => {
+    // Parse postUrl for poster image
+    let posterUrl = data.postUrl;
+
+    // 배열 형태 문자열인지 확인 (대괄호로 시작하는지)
+    if (
+      data.postUrl &&
+      data.postUrl.startsWith("[") &&
+      data.postUrl.endsWith("]")
+    ) {
+      // 대괄호 제거하고 첫 번째 URL만 추출
+      const urlArray = data.postUrl
+        .substring(1, data.postUrl.length - 1)
+        .split(",");
+      posterUrl = urlArray[0].trim();
+
+      // 첫 번째 URL에서 따옴표 제거 (있을 경우)
+      if (posterUrl.startsWith('"') || posterUrl.startsWith("'")) {
+        posterUrl = posterUrl.substring(1, posterUrl.length - 1);
+      }
+    } else if (data.postUrl && data.postUrl.includes(",")) {
+      // 기존 로직 유지: 콤마로만 구분된 경우
+      posterUrl = data.postUrl.split(",")[0].trim();
+    }
+
+    // Format ticketing website links
+    let links = "";
+    if (data.ticketingWebSite) {
+      links = `예매 사이트 바로가기: ${data.ticketingWebSite}`;
+    }
+
+    return {
+      posterUrl: posterUrl || "/poster-img.png",
+      title: data.title || "-",
+      audience: data.ageRating || "-",
+      period: `${data.startDate || ""} - ${data.endDate || ""}`,
+      location: data.location || "-",
+      times: data.operatingHours || "-",
+      links: links || "-",
+      price: data.price || "-",
+      reviewCount: 0, // This might need to be fetched from a different API
+      isBookmarked: data.bookmarked,
+      // Additional fields that might be useful
+      genre: data.genre || "",
+    };
+  };
+
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex justify-center items-center">
+        <p>불러오는 중...</p>
+      </div>
+    );
+  }
+
+  if (error && !eventDetail) {
+    return (
+      <div className="w-full h-screen flex flex-col justify-center items-center">
+        <p>정보를 불러올 수 없습니다.</p>
+        <p className="text-gray-500 mt-2">{error}</p>
+        <button
+          className="mt-4 px-4 py-2 bg-blue-6 text-white rounded-md"
+          onClick={() => navigate(-1)}
+        >
+          돌아가기
+        </button>
+      </div>
+    );
+  }
+
+  if (!eventDetail) {
+    return (
+      <div className="w-full h-screen flex flex-col justify-center items-center">
+        <p>정보를 불러올 수 없습니다.</p>
+        <button
+          className="mt-4 px-4 py-2 bg-blue-6 text-white rounded-md"
+          onClick={() => navigate(-1)}
+        >
+          돌아가기
+        </button>
+      </div>
+    );
+  }
+
+  const showInfo = mapToShowInfo(eventDetail);
 
   return (
     <div className="w-[1280px] h-full relative overflow-hidden bg-white">
+      {usingFallback && (
+        <div className="bg-yellow-100 p-4 mb-4 rounded-md text-yellow-800">
+          <p>
+            서버에서 정보를 가져오는 데 문제가 발생했습니다. 제한된 정보만
+            표시됩니다.
+          </p>
+        </div>
+      )}
+
       <InfoCardHeader
-        showInfo={dummyShowInfo}
+        showInfo={showInfo}
         isBookmarked={isBookmarked}
         toggleBookmark={toggleBookmark}
       />
@@ -68,7 +321,7 @@ const InfoCardDetail = () => {
               activeTab === "info" ? "text-blue-6" : "text-gray-20"
             }`}
           >
-            <p className="h3-b">후기 ({dummyShowInfo.reviewCount})</p>
+            <p className="h3-b">후기 ({showInfo.reviewCount})</p>
           </button>
         </div>
         <div className="relative w-[1120px] h-[4px] bg-gray-20">
@@ -78,11 +331,16 @@ const InfoCardDetail = () => {
             }`}
           />
         </div>
-        <div>
+        <div className="w-full flex justify-center">
           {activeTab === "review" ? (
-            <InfoCardDetailInfo />
+            <InfoCardDetailInfo
+              description={eventDetail.description}
+              location={eventDetail.location}
+              venue={eventDetail.venue}
+              detailImage={eventDetail.detailImage} // API에서 받아온 detailImage 전달
+            />
           ) : (
-            <InfoCardDetailReview />
+            <InfoCardDetailReview eventId={Number(eventId)} />
           )}
         </div>
       </div>

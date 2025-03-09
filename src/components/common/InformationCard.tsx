@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Icon from "../../assets/icons/Icon";
 import { useAuthStore } from "../../stores/authStore";
 import { useModalStore } from "../../stores/modalStore";
@@ -12,6 +12,7 @@ interface InformationCardProps {
   location: string;
   isBookmarked: boolean;
   onBookmarkChange?: (id: number, newStatus: boolean) => void;
+  category: string; // Add category prop
 }
 
 function InformationCard({
@@ -22,10 +23,33 @@ function InformationCard({
   location,
   isBookmarked,
   onBookmarkChange,
+  category, // Receive category prop
 }: InformationCardProps) {
   const navigate = useNavigate();
+  const location_path = useLocation();
   const { isLoggedIn, checkAuth } = useAuthStore();
   const { openModal } = useModalStore();
+
+  // Determine the API category based on current path or passed category
+  const getApiCategory = () => {
+    // If category is explicitly provided, use it
+    if (category) return category;
+
+    // Otherwise, extract from the current path
+    const pathSegments = location_path.pathname.split("/");
+    const currentCategory =
+      pathSegments[pathSegments.indexOf("informations") + 1];
+
+    // Map UI category to API endpoint category
+    const categoryMapping: { [key: string]: string } = {
+      popups: "popupstores",
+      exhibition: "exhibits",
+      musical: "performances",
+      concert: "festivals",
+    };
+
+    return categoryMapping[currentCategory] || currentCategory;
+  };
 
   // Use the custom hook instead of local state
   const {
@@ -35,7 +59,8 @@ function InformationCard({
   } = useBookmarkState(id, isBookmarked);
 
   const handleClick = () => {
-    navigate(`/infocard/detail/${id}`);
+    const apiCategory = getApiCategory();
+    navigate(`/informations/${apiCategory}/${id}`);
   };
 
   const toggleBookmark = async (e: React.MouseEvent) => {

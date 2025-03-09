@@ -48,7 +48,10 @@ const Router = () => {
         {/* </Route> */}
         <Route path="/mapsearch" element={<MapSearch />} />
         <Route path="/informations/:category" element={<Informations />} />
-        <Route path="/infocard/detail/:eventId" element={<InfoCardDetail />} />
+        <Route
+          path="/informations/:category/:eventId"
+          element={<InfoCardDetail />}
+        />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
