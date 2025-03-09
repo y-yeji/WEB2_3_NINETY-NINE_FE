@@ -1,21 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import InformationCard from "../../components/common/InformationCard";
 import { EventData } from "../../hooks/useInformationsList";
 
 interface InformationsGridProps {
   events: EventData[];
   loading: boolean;
+  category?: string; // Add optional category prop
 }
 
 const InformationsGrid: React.FC<InformationsGridProps> = ({
   events,
   loading,
+  category,
 }) => {
   // 북마크 상태를 관리하기 위한 상태 추가
   const [updatedEvents, setUpdatedEvents] = useState<EventData[]>(events);
+  const location = useLocation();
+
+  // Determine the current category from URL if not provided
+  const getCurrentCategory = () => {
+    if (category) return category;
+
+    const pathSegments = location.pathname.split("/");
+    const indexOfInformations = pathSegments.indexOf("informations");
+    if (
+      indexOfInformations !== -1 &&
+      indexOfInformations + 1 < pathSegments.length
+    ) {
+      return pathSegments[indexOfInformations + 1];
+    }
+    return "";
+  };
+
+  const currentCategory = getCurrentCategory();
 
   // events prop이 변경될 때마다 내부 상태 업데이트
-  React.useEffect(() => {
+  useEffect(() => {
     setUpdatedEvents(events);
   }, [events]);
 
@@ -94,6 +115,7 @@ const InformationsGrid: React.FC<InformationsGridProps> = ({
                     location={event.location || "위치 정보 없음"}
                     isBookmarked={!!event.bookmarked}
                     onBookmarkChange={handleBookmarkChange}
+                    category={currentCategory} // Pass the category
                   />
                 );
               })}
