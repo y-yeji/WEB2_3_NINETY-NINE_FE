@@ -1,32 +1,64 @@
 import { useNavigate } from "react-router-dom";
 import Icon from "../../assets/icons/Icon";
-import { useState } from "react";
+import { useAuthStore } from "../../stores/authStore";
+import { useModalStore } from "../../stores/modalStore";
+import { useBookmarkState } from "../../hooks/useBookmarkState";
 
 interface InformationCardProps {
-  imageUrl?: string;
-  title?: string;
-  date?: string;
-  location?: string;
-  isBookmarked?: boolean;
+  id: number;
+  imageUrl: string;
+  title: string;
+  date: string;
+  location: string;
+  isBookmarked: boolean;
+  onBookmarkChange?: (id: number, newStatus: boolean) => void;
 }
 
 function InformationCard({
-  imageUrl = "/info-image.png",
-  title = "케르종 X 비클린 팝업스토어",
-  date = "2025.02.14 - 2025.06.30",
-  location = "경기 성남시",
-  isBookmarked = false,
+  id,
+  imageUrl,
+  title,
+  date,
+  location,
+  isBookmarked,
+  onBookmarkChange,
 }: InformationCardProps) {
   const navigate = useNavigate();
-  const [bookmarked, setBookmarked] = useState(isBookmarked);
+  const { isLoggedIn, checkAuth } = useAuthStore();
+  const { openModal } = useModalStore();
+
+  // Use the custom hook instead of local state
+  const {
+    isBookmarked: bookmarked,
+    toggleBookmark: handleToggleBookmark,
+    isLoading,
+  } = useBookmarkState(id, isBookmarked);
 
   const handleClick = () => {
-    navigate("/infocard/detail/:eventId");
+    navigate(`/infocard/detail/${id}`);
   };
 
-  const toggleBookmark = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent the card click event
-    setBookmarked((prev) => !prev);
+  const toggleBookmark = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click event
+
+    // Check authentication
+    await checkAuth();
+    if (!isLoggedIn) {
+      openModal(
+        "로그인이 필요한 서비스입니다.\n 로그인 하러 가시겠어요?",
+        "취소하기",
+        "로그인하기",
+        () => navigate("/login")
+      );
+      return;
+    }
+
+    const result = await handleToggleBookmark();
+
+    // Notify parent component of the change
+    if (result.success && onBookmarkChange) {
+      onBookmarkChange(id, result.newBookmarkStatus);
+    }
   };
 
   return (
@@ -38,6 +70,10 @@ function InformationCard({
         src={imageUrl}
         alt={title}
         className="w-full h-full absolute left-0 top-0 object-cover"
+        onError={(e) => {
+          // Replace with default image if loading fails
+          e.currentTarget.src = "/default-image.png";
+        }}
       />
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute left-0 bottom-0 w-full h-full info-postcard-shadow"></div>
@@ -66,7 +102,7 @@ function InformationCard({
               <p className="caption-r text-white ml-1">{location}</p>
             </div>
           </div>
-          <button onClick={toggleBookmark}>
+          <button onClick={toggleBookmark} disabled={isLoading}>
             <Icon
               name="Bookmark"
               size={24}
