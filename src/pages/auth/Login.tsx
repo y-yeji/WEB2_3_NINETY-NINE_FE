@@ -7,19 +7,14 @@ import InputField from "../../components/ui/InputField";
 import CustomButton from "../../components/ui/CustomButton";
 import { useAuthStore } from "../../stores/authStore";
 
-const KAKAO_REST_API_KEY = import.meta.env.VITE_K_REST_API_KEY;
-const GOOGLE_AUTH_CLIENT_ID = import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID;
-const KAKAO_REDIRECT_URI = "http://localhost:5173/oauth/callback";
-const GOOGLE_REDIRECT_URI = "http://localhost:5173/oauth/callback";
-const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
-const googleUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_AUTH_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=email profile`;
+const socialLoginUrl = import.meta.env.VITE_SOCIAL_LOGIN_URL;
 
 const Login = () => {
   const { login } = useAuthStore();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
-  
+
   const handleLogin = async () => {
     let newErrors = { email: "", password: "" };
     if (!form.email) newErrors.email = "이메일을 입력해주세요.";
@@ -76,14 +71,18 @@ const Login = () => {
           bgColor="bg-white"
           borderColor="border-blue-1"
           iconSrc={googlelogo}
-          onClick={() => (window.location.href = googleUrl)}
+          onClick={() =>
+            (window.location.href = `${socialLoginUrl}/oauth2/authorization/google`)
+          }
         />
         <CustomButton
           text="Kakao로 시작하기"
           bgColor="bg-white"
           borderColor="border-blue-1"
           iconSrc={kakaologo}
-          onClick={() => (window.location.href = kakaoUrl)}
+          onClick={() =>
+            (window.location.href = `${socialLoginUrl}/oauth2/authorization/kakao`)
+          }
         />
       </div>
     </div>
