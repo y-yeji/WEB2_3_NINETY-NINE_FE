@@ -3,23 +3,36 @@ import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../stores/authStore";
 
 const OAuthCallback = () => {
+  const { checkAuth, isLoggedIn, user } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = new URL(window.location.href).searchParams.get(
-      "access_token"
-    );
+    const handleAuth = async () => {
+      const accessToken = new URL(window.location.href).searchParams.get("access_token");
 
-    if (!token) {
-      console.error("액세스 토큰이 없습니다.");
-      navigate("/login");
-      return;
+      if (!accessToken) {
+        console.error("액세스 토큰이 없습니다.");
+        navigate("/login");
+        return;
+      }
+
+      localStorage.setItem("accessToken", accessToken);
+      console.log("로그인 성공! 액세스 토큰:", accessToken);
+
+      await checkAuth();
+    };
+
+    handleAuth();
+  }, [checkAuth, navigate]);
+
+  useEffect(() => {
+    console.log("isLoggedIn:", isLoggedIn);
+    console.log("user:", user);
+
+    if (isLoggedIn && user) {
+      navigate("/"); 
     }
-    localStorage.setItem("access_token", token);
-    console.log("로그인 성공! 액세스 토큰:", token);
-    // useAuthStore.getState().checkAuth();
-    navigate("/");
-  }, [navigate]);
+  }, [isLoggedIn, user, navigate]);
 
   return (
     <div>
