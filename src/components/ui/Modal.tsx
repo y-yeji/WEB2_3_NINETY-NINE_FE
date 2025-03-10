@@ -7,12 +7,16 @@ const Modal = () => {
     useModalStore();
 
   if (!isOpen) return null;
+
   const handleConfirm = () => {
     if (onConfirm) {
       onConfirm();
     }
     closeModal();
   };
+
+  const onlyConfirmButton = !cancelText || !confirmText;
+
   return (
     <div className="fixed inset-0 bg-blue-7 bg-opacity-30 flex items-center justify-center z-50">
       <div className="w-[400px] h-[270px] border rounded-[20px] bg-blue-7 flex flex-col justify-center relative text-white z-51">
@@ -28,20 +32,28 @@ const Modal = () => {
           {text}
         </p>
 
-        <div className="flex justify-center gap-5 mt-[32px] z-52">
-          <ShortButton
-            text={cancelText}
-            textColor="blue-1"
-            bgColor="base-1"
-            onClick={closeModal}
-          />
-          <ShortButton
-            text={confirmText}
-            textColor="base-1"
-            bgColor="blue-1"
-            hoverColor="blue-4"
-            onClick={handleConfirm}
-          />
+        <div
+          className={`flex justify-center mt-[32px] z-52 ${
+            onlyConfirmButton ? "" : "gap-5"
+          }`}
+        >
+          {cancelText && (
+            <ShortButton
+              text={cancelText}
+              textColor="blue-1"
+              bgColor="base-1"
+              onClick={closeModal}
+            />
+          )}
+          {confirmText && (
+            <ShortButton
+              text={confirmText}
+              textColor="base-1"
+              bgColor="blue-1"
+              hoverColor="blue-4"
+              onClick={handleConfirm}
+            />
+          )}
         </div>
       </div>
     </div>

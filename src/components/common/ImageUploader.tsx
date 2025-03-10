@@ -3,22 +3,25 @@ import Icon from "../../assets/icons/Icon";
 
 interface ImageUploaderProps {
   onUpload: (images: string[]) => void;
-  initialImages?: string[]; 
+  initialImages?: string[];
 }
 
-const ImageUploader = ({ onUpload, initialImages = [] }: ImageUploaderProps) => {
+const ImageUploader = ({
+  onUpload,
+  initialImages = [],
+}: ImageUploaderProps) => {
   const [images, setImages] = useState<string[]>(initialImages);
 
   useEffect(() => {
     setImages(initialImages);
-  }, [initialImages]);
+  }, []);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const filesArray = Array.from(event.target.files);
 
       if (images.length + filesArray.length > 4) {
-        alert("최대 4개의 이미지만 업로드할 수 있습니다."); // 추후 모달창 작성 예정 
+        alert("최대 4개의 이미지만 업로드할 수 있습니다."); // 추후 모달창 작성 예정
         return;
       }
 
@@ -40,10 +43,20 @@ const ImageUploader = ({ onUpload, initialImages = [] }: ImageUploaderProps) => 
     <div className="w-[1200px] h-[362px] mt-5 flex flex-col justify-between items-center mx-auto border border-gray-5 rounded-lg p-6 bg-white">
       <div className="flex gap-[54px]">
         {images.map((src, index) => (
-          <div key={index} className="relative w-60 h-60 overflow-hidden rounded-lg border">
-            <img src={src} alt={`uploaded-${index}`} className="w-full h-full object-cover" />
+          <div
+            key={index}
+            className="relative w-60 h-60 overflow-hidden rounded-lg border"
+          >
+            <img
+              src={src}
+              alt={`uploaded-${index}`}
+              className="w-full h-full object-cover"
+            />
 
-            <button onClick={() => handleRemoveImage(index)} className="absolute top-2 right-2 ">
+            <button
+              onClick={() => handleRemoveImage(index)}
+              className="absolute top-2 right-2 "
+            >
               <Icon
                 name="Trash2"
                 size={20}
@@ -60,7 +73,12 @@ const ImageUploader = ({ onUpload, initialImages = [] }: ImageUploaderProps) => 
               onClick={() => document.getElementById("file-upload")?.click()}
               className="w-full h-full flex items-center justify-center"
             >
-              <Icon name="ImagePlus" size={80} strokeWidth={1} className="text-gray-20 hover:text-blue-1" />
+              <Icon
+                name="ImagePlus"
+                size={80}
+                strokeWidth={1}
+                className="text-gray-20 hover:text-blue-1"
+              />
             </button>
 
             <input
