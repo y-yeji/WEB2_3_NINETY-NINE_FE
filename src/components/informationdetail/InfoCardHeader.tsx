@@ -1,7 +1,7 @@
 import Icon from "../../assets/icons/Icon";
 import ShareButton from "../../components/informationdetail/ShareButton";
 import { ShowInfo } from "../../types/Informationdetail";
-import { useDateFormatter } from "../../hooks/useInformationDateFormatter"; // 새로 추가한 훅 임포트
+import { useDateFormatter } from "../../hooks/useInformationDateFormatter";
 
 interface InfoCardHeaderProps {
   showInfo: ShowInfo;
@@ -14,7 +14,7 @@ const InfoCardHeader = ({
   isBookmarked,
   toggleBookmark,
 }: InfoCardHeaderProps) => {
-  const { formatDatePeriod } = useDateFormatter(); // 훅 사용
+  const { formatDatePeriod } = useDateFormatter();
 
   // 시작일, 종료일 추출 (period에서 분리)
   const extractDates = () => {
