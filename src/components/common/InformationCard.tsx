@@ -9,6 +9,7 @@ import { useDateFormatter } from "../../hooks/useInformationDateFormatter"; // �
 
 interface InformationCardProps {
   id: number;
+  date?: string; // date 대신 startDate와 endDate로 변경
   imageUrl: string;
   title: string;
   startDate?: string; // date 대신 startDate와 endDate로 변경

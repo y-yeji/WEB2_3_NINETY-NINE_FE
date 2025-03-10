@@ -16,7 +16,6 @@ interface ReviewListProps {
 const ReviewList = ({
   reviews,
   totalItems,
-  currentUserId,
   onDeleteReview,
 }: ReviewListProps) => {
   const itemsPerPage = 10;
@@ -142,3 +141,4 @@ const ReviewList = ({
 };
 
 export default ReviewList;
+

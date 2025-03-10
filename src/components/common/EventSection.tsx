@@ -1,7 +1,7 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Link } from "react-router-dom";
 import InformationCard from "../common/InformationCard";
-import { useDateFormatter } from "../../hooks/useInformationDateFormatter";
+// import { useDateFormatter } from "../../hooks/useInformationDateFormatter";
 import { useTitleFormatter } from "../../hooks/usePopupTitleFormatter";
 
 interface EventItem {
@@ -30,7 +30,7 @@ interface EventSectionProps {
 }
 
 const EventSection = ({ category, route, data }: EventSectionProps) => {
-  const { formatDatePeriod } = useDateFormatter();
+  // const { formatDatePeriod } = useDateFormatter();
   const { formatTitle } = useTitleFormatter();
 
   // 디버깅을 위한 콘솔 로그 추가
@@ -63,7 +63,7 @@ const EventSection = ({ category, route, data }: EventSectionProps) => {
             if (category === "팝업스토어") {
               // console.log("팝업스토어 제목 정제 전:", item.title);
               // console.log("장르:", item.genre);
-              const formattedTitle = formatTitle(item.title, "popupstores"); // 직접 "popupstores" 값 전달
+              // const formattedTitle = formatTitle(item.title, "popupstores"); // 직접 "popupstores" 값 전달
               // console.log("팝업스토어 제목 정제 후:", formattedTitle);
             }
 
