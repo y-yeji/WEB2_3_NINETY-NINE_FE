@@ -30,6 +30,5 @@ export const useAllEventData = () => {
 
     fetchAllData();
   }, []);
-  console.log(data);
   return { data, loading };
 };

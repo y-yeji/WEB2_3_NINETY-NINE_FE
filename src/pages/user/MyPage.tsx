@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../../api/api";
 import ScrollToTopButton from "../../components/ui/ScrollToTopButton";
 import ProfileHeader from "../../components/common/ProfileHeader";
-import { UserData } from "../../types/user";
+import { UserData } from "../../types/User";
 import PostCard from "../../components/common/PostCard";
 import { PostCardProps } from "../../types/Post";
 import { TabNavigation } from "../../components/ui/TabNavigation";
@@ -95,6 +95,8 @@ const MyPage = () => {
             {bookmarkData.length > 0 ? (
               bookmarkData.map((post) => (
                 <InformationCard
+                  id={post.id}
+                  category={post.genre}
                   key={post.id}
                   imageUrl={post.postUrl}
                   title={post.title}
@@ -113,6 +115,8 @@ const MyPage = () => {
     }
   };
 
+  console.log(userData);
+  console.log(bookmarkData);
   return (
     <div className="w-full flex flex-col mx-auto">
       <div className="mt-[108px] max-w-[1280px] mx-auto p-6">
@@ -121,7 +125,7 @@ const MyPage = () => {
             nickname={userData.nickname}
             description={userData.description}
             interests={userData.interests}
-            profileImage={userData.profileImage}
+            profileImage={userData.s3Bucket}
             isMyPage={true}
           />
         )}
