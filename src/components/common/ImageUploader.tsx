@@ -2,15 +2,12 @@ import React, { useState, useEffect } from "react";
 import Icon from "../../assets/icons/Icon";
 
 interface ImageUploaderProps {
-  onUpload: (images: string[]) => void;
-  initialImages?: string[];
+  onUpload: (images: File[]) => void; // 기존 string[] → File[]로 변경
+  initialImages?: File[];
 }
 
-const ImageUploader = ({
-  onUpload,
-  initialImages = [],
-}: ImageUploaderProps) => {
-  const [images, setImages] = useState<string[]>(initialImages);
+const ImageUploader = ({ onUpload, initialImages = [] }: ImageUploaderProps) => {
+  const [images, setImages] = useState<File[]>(initialImages);
 
   useEffect(() => {
     setImages(initialImages);
@@ -25,11 +22,9 @@ const ImageUploader = ({
         return;
       }
 
-      const newImages = filesArray.map((file) => URL.createObjectURL(file));
-      const updatedImages = [...images, ...newImages].slice(0, 4);
-
+      const updatedImages = [...images, ...filesArray].slice(0, 4);
       setImages(updatedImages);
-      onUpload(updatedImages);
+      onUpload(updatedImages); // 변경: File[] 전달
     }
   };
 
@@ -42,13 +37,13 @@ const ImageUploader = ({
   return (
     <div className="w-[1200px] h-[362px] mt-5 flex flex-col justify-between items-center mx-auto border border-gray-5 rounded-lg p-6 bg-white">
       <div className="flex gap-[54px]">
-        {images.map((src, index) => (
+        {images.map((file, index) => (
           <div
             key={index}
             className="relative w-60 h-60 overflow-hidden rounded-lg border"
           >
             <img
-              src={src}
+              src={URL.createObjectURL(file)} // 변경: 미리보기 표시
               alt={`uploaded-${index}`}
               className="w-full h-full object-cover"
             />
