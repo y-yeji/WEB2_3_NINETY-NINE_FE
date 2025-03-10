@@ -34,7 +34,7 @@ const EventSection = ({ category, route, data }: EventSectionProps) => {
   const { formatTitle } = useTitleFormatter();
 
   // 디버깅을 위한 콘솔 로그 추가
-  console.log("카테고리:", category, "라우트:", route);
+  // console.log("카테고리:", category, "라우트:", route);
 
   return (
     <section className="mb-12 mx-[50px]">
@@ -61,10 +61,10 @@ const EventSection = ({ category, route, data }: EventSectionProps) => {
           data.map((item) => {
             // 디버깅용 로그 추가
             if (category === "팝업스토어") {
-              console.log("팝업스토어 제목 정제 전:", item.title);
-              console.log("장르:", item.genre);
+              // console.log("팝업스토어 제목 정제 전:", item.title);
+              // console.log("장르:", item.genre);
               const formattedTitle = formatTitle(item.title, "popupstores"); // 직접 "popupstores" 값 전달
-              console.log("팝업스토어 제목 정제 후:", formattedTitle);
+              // console.log("팝업스토어 제목 정제 후:", formattedTitle);
             }
 
             return (

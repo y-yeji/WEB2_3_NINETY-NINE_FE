@@ -10,7 +10,7 @@ const categoryRoutes = {
   팝업스토어: "popupstores",
   전시회: "exhibits",
   "뮤지컬 | 연극": "performances",
-  "페스티벌": "festivals",
+  페스티벌: "festivals",
 };
 
 const MainPage = () => {
@@ -23,7 +23,7 @@ const MainPage = () => {
     return shuffled.slice(0, count);
   };
 
-  const allEvents = [...(data.performances?.data || [])];
+  const allEvents = [...((data as any).performances?.data || [])];
   const randomEvents = getRandomItems(allEvents, 8);
 
   return (
@@ -42,7 +42,7 @@ const MainPage = () => {
           >
             {randomEvents.map((event, index) => (
               <SwiperSlide key={index} className="w-full h-[647px] ">
-                <Link to={`/infocard/detail/${event.id}`}>
+                <Link to={`/informations/performances/${(event as any).id}`}>
                   <img
                     src={event.postUrl}
                     alt={`이벤트 이미지 ${index + 1}`}
@@ -63,7 +63,7 @@ const MainPage = () => {
           key={route}
           category={category}
           route={route}
-          data={data[route]?.data || []}
+          data={(data as any)[route]?.data || []}
         />
       ))}
       <ScrollToTopButton />
