@@ -64,7 +64,7 @@ const InfoCardDetailReview = ({
     const fetchData = async () => {
       setLoading(true);
       try {
-        // 1. 먼저 사용자 정보 확인
+        // 1. 사용자 정보 확인
         await checkAuth();
         let userId = "";
         const userInfo = localStorage.getItem("userInfo");
@@ -72,20 +72,17 @@ const InfoCardDetailReview = ({
           const parsed = JSON.parse(userInfo);
           userId = parsed.id?.toString() || "";
           setCurrentUserId(userId);
-          console.log("현재 사용자 ID:", userId);
         }
 
-        // 2. 그 다음 리뷰 정보 가져오기
+        // 2. 리뷰 정보 가져오기
         const token = localStorage.getItem("accessToken");
         if (!token) {
           setError("인증 토큰이 없습니다.");
           setLoading(false);
           return;
         }
-        console.log("토큰:", token);
 
         const { key, id } = getCategoryIdParam();
-        console.log("카테고리 파라미터:", key, "이벤트 ID:", id);
 
         if (!key || !id) {
           setError("유효하지 않은 카테고리입니다.");
@@ -94,16 +91,12 @@ const InfoCardDetailReview = ({
         }
 
         const requestUrl = `/api/reviews?${key}=${id}`;
-        console.log("요청 URL:", requestUrl);
-        console.log("요청 헤더:", { Authorization: `Bearer ${token}` });
 
         const response = await api.get<ApiResponse>(requestUrl, {
           headers: {
             Authorization: token,
           },
         });
-
-        console.log("API 응답:", response.data);
 
         if (response.data && response.data.success) {
           const formattedReviews = response.data.data.map((apiReview) => {
@@ -143,10 +136,6 @@ const InfoCardDetailReview = ({
       } catch (err) {
         console.error("Error fetching data:", err);
         console.log("오류 객체 전체:", JSON.stringify(err, null, 2));
-        console.log("응답 상태:", err.response?.status);
-        console.log("응답 헤더:", err.response?.headers);
-        console.log("오류 메시지:", err.message);
-        setError(`오류가 발생했습니다: ${err.message || "알 수 없는 오류"}`);
       } finally {
         setLoading(false);
       }
@@ -209,11 +198,6 @@ const InfoCardDetailReview = ({
         formData.append("image", imageFile);
       }
 
-      console.log("전송할 데이터:", {
-        requestDTO: JSON.stringify(requestDTO),
-        이미지: imageFile ? imageFile.name : "없음",
-      });
-
       // API 요청 헤더 설정
       const response = await api.post("/api/reviews", formData, {
         headers: {
@@ -270,12 +254,6 @@ const InfoCardDetailReview = ({
       }
     } catch (err) {
       console.error("리뷰 등록 오류:", err);
-      // 로그 추가
-      if (err.response) {
-        console.log("응답 데이터:", err.response.data);
-        console.log("응답 상태:", err.response.status);
-        console.log("응답 헤더:", err.response.headers);
-      }
       openModal(
         "리뷰 등록에 실패했습니다. 다시 시도해주세요.",
         "확인",
