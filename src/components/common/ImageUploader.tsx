@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import Icon from "../../assets/icons/Icon";
 
 interface ImageUploaderProps {
-  onUpload: (images: File[]) => void; // 기존 string[] → File[]로 변경
-  initialImages?: File[];
+  onUpload: (images: File[]) => void;
+  initialImages?: File[] ;
 }
 
-const ImageUploader = ({ onUpload, initialImages = [] }: ImageUploaderProps) => {
+const ImageUploader = ({
+  onUpload,
+  initialImages = [],
+}: ImageUploaderProps) => {
   const [images, setImages] = useState<File[]>(initialImages);
 
   useEffect(() => {
@@ -18,13 +21,13 @@ const ImageUploader = ({ onUpload, initialImages = [] }: ImageUploaderProps) => 
       const filesArray = Array.from(event.target.files);
 
       if (images.length + filesArray.length > 4) {
-        alert("최대 4개의 이미지만 업로드할 수 있습니다."); // 추후 모달창 작성 예정
+        alert("최대 4개의 이미지만 업로드할 수 있습니다.");
         return;
       }
 
       const updatedImages = [...images, ...filesArray].slice(0, 4);
       setImages(updatedImages);
-      onUpload(updatedImages); // 변경: File[] 전달
+      onUpload(updatedImages);
     }
   };
 
@@ -43,7 +46,7 @@ const ImageUploader = ({ onUpload, initialImages = [] }: ImageUploaderProps) => 
             className="relative w-60 h-60 overflow-hidden rounded-lg border"
           >
             <img
-              src={URL.createObjectURL(file)} // 변경: 미리보기 표시
+              src={URL.createObjectURL(file)} 
               alt={`uploaded-${index}`}
               className="w-full h-full object-cover"
             />
