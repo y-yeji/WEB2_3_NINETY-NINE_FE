@@ -48,6 +48,7 @@ const MapSearch: React.FC = () => {
   useEffect(() => {
     console.log("performanceData.posts:", performanceData?.posts);
   }, [performanceData]);
+
   useEffect(() => {
     if (performanceData?.posts) {
       console.log("Original posts:", performanceData.posts);
@@ -55,13 +56,14 @@ const MapSearch: React.FC = () => {
         "Mapped posts:",
         performanceData.posts.map((post) => ({
           ...post,
-          isBookmarked: post.isBookmarked || false,
+          isBookmarked: post.bookmarked || false,
           category:
             post.category || mapToApiCategory(performanceOptionsSelected),
         }))
       );
     }
   }, [performanceData, performanceOptionsSelected]);
+
   return (
     <div className="mt-[160px]">
       <SearchForm
@@ -112,7 +114,7 @@ const MapSearch: React.FC = () => {
 
             return {
               ...post,
-              isBookmarked: post.isBookmarked || false,
+              isBookmarked: post.bookmarked || false, // 여기를 bookmarked에서 isBookmarked로 변환
               category: mappedCategory,
             };
           })}

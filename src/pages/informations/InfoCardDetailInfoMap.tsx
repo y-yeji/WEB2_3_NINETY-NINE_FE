@@ -141,7 +141,6 @@ const InfoCardDetailInfoMap: React.FC<InfoCardDetailInfoMapProps> = ({
       }
 
       const query = queries[index];
-      console.log(`검색 시도 ${index + 1}/${queries.length}: "${query}"`);
 
       const ps = new window.kakao.maps.services.Places();
 
@@ -205,7 +204,6 @@ const InfoCardDetailInfoMap: React.FC<InfoCardDetailInfoMapProps> = ({
       }
 
       const searchQueries = generateSearchQueries(venueStr, addressStr);
-      console.log("생성된 검색 쿼리:", searchQueries);
 
       if (searchQueries.length > 0) {
         searchWithQueries(searchQueries);
