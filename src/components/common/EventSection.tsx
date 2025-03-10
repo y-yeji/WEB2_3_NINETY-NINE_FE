@@ -45,6 +45,8 @@ const EventSection = ({ category, route, data }: EventSectionProps) => {
         pagination={{ clickable: true }}
         spaceBetween={170}
         slidesPerView={4}
+        slidesPerGroup={1}
+        loop={true}
         className="w-full"
       >
         {data.length > 0 ? (
@@ -54,6 +56,8 @@ const EventSection = ({ category, route, data }: EventSectionProps) => {
               className="w-full h-[300px] rounded-[10px] flex flex-col justify-start items-center"
             >
               <InformationCard
+                id={data.id}
+                category={data.genre}
                 title={data.title}
                 date={
                   data.startDate !== "null" && data.endDate !== "null"
