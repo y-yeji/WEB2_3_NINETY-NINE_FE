@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import InfoCardDetailInfoMap from "../informations/InfoCardDetailInfoMap";
 
 interface InfoCardDetailInfoProps {
@@ -14,6 +14,8 @@ const InfoCardDetailInfo: React.FC<InfoCardDetailInfoProps> = ({
   venue = "",
   detailImage = null, // 기본값은 null로 설정
 }) => {
+  const [isImageLoaded, setIsImageLoaded] = useState(true);
+
   // Prepare location data for the map component
   // This is a placeholder - you'll need to get actual coordinates
   const locationData = {
@@ -40,12 +42,13 @@ const InfoCardDetailInfo: React.FC<InfoCardDetailInfoProps> = ({
         )}
 
         {/* API에서 가져온 이미지가 있는 경우에만 이미지 표시 */}
-        {detailImage && (
+        {detailImage && isImageLoaded && (
           <div className="flex justify-center mt-8">
             <img
               src={detailImage}
               alt="이벤트 이미지"
               className="w-[746px] h-auto"
+              onError={() => setIsImageLoaded(false)} // 이미지 로드 실패 시 숨기기
             />
           </div>
         )}
@@ -57,13 +60,11 @@ const InfoCardDetailInfo: React.FC<InfoCardDetailInfoProps> = ({
         <div className="flex justify-center mt-8">
           <div className="w-[746px]">
             {venue && (
-              <p className="body-large-b font-semibold text-gray-80 mb-2">
-                {venue}
+              <p className="body-large-b font-semibold text-gray-80 mb-4">
+                🧭 {venue}
               </p>
             )}
-            {location && (
-              <p className="body-small-m text-gray-80 mb-6">{location}</p>
-            )}
+
             <InfoCardDetailInfoMap location={locationData} />
           </div>
         </div>
