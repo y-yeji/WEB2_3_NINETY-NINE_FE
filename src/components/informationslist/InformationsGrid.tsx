@@ -1,127 +1,94 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { FC } from "react";
 import InformationCard from "../../components/common/InformationCard";
 import { EventData } from "../../hooks/useInformationsList";
 
-interface InformationsGridProps {
+interface EventsGridProps {
   events: EventData[];
   loading: boolean;
-  category?: string; // Add optional category prop
+  onBookmarkChange?: (id: number, newStatus: boolean) => void;
 }
 
-const InformationsGrid: React.FC<InformationsGridProps> = ({
+const InformationsGrid: FC<EventsGridProps> = ({
   events,
   loading,
-  category,
+  onBookmarkChange,
 }) => {
-  // 북마크 상태를 관리하기 위한 상태 추가
-  const [updatedEvents, setUpdatedEvents] = useState<EventData[]>(events);
-  const location = useLocation();
+  // 첫 번째 이미지 URL 추출 함수
+  const getFirstImageUrl = (urls: string | null): string => {
+    if (!urls) return "/default-image.png";
 
-  // Determine the current category from URL if not provided
-  const getCurrentCategory = () => {
-    if (category) return category;
-
-    const pathSegments = location.pathname.split("/");
-    const indexOfInformations = pathSegments.indexOf("informations");
-    if (
-      indexOfInformations !== -1 &&
-      indexOfInformations + 1 < pathSegments.length
-    ) {
-      return pathSegments[indexOfInformations + 1];
+    // 대괄호로 둘러싸인 배열 형태 확인
+    if (urls.startsWith("[") && urls.endsWith("]")) {
+      try {
+        // 배열 파싱 시도
+        const urlArray = JSON.parse(urls);
+        return urlArray[0] || "/default-image.png";
+      } catch {
+        // 파싱 실패 시 단순 분리
+        const firstUrl = urls.substring(
+          1,
+          urls.indexOf(",") > 0 ? urls.indexOf(",") : urls.length - 1
+        );
+        return firstUrl.replace(/"/g, "") || "/default-image.png";
+      }
     }
-    return "";
+
+    // 콤마로 구분된 URL 목록
+    if (urls.includes(",")) {
+      return urls.split(",")[0].trim();
+    }
+
+    return urls;
+  };
+
+  // 북마크 변경 핸들러
+  const handleBookmarkChange = (id: number, newStatus: boolean) => {
+    if (onBookmarkChange) {
+      onBookmarkChange(id, newStatus);
+    }
+  };
+
+  // 현재 카테고리 파악
+  const getCurrentCategory = (): string => {
+    const pathname = window.location.pathname;
+    const match = pathname.match(/\/informations\/([^\/]+)/);
+    return match ? match[1] : "";
   };
 
   const currentCategory = getCurrentCategory();
 
-  // events prop이 변경될 때마다 내부 상태 업데이트
-  useEffect(() => {
-    setUpdatedEvents(events);
-  }, [events]);
-
-  // 북마크 상태 변경 시 이벤트 목록 업데이트
-  const handleBookmarkChange = (id: number, newStatus: boolean) => {
-    setUpdatedEvents((prev) =>
-      prev.map((event) =>
-        event.id === id ? { ...event, bookmarked: newStatus } : event
-      )
-    );
-  };
-
-  // 첫 번째 이미지 URL만 추출하는 함수
-  const getFirstImageUrl = (postUrl: string) => {
-    if (!postUrl) return "/info-image.png";
-
-    // URL이 대괄호로 묶여있고 콤마로 구분된 경우
-    if (postUrl.startsWith("[") && postUrl.endsWith("]")) {
-      const urlsString = postUrl.substring(1, postUrl.length - 1);
-      const urls = urlsString.split(", ");
-      return urls[0].trim();
-    }
-
-    return postUrl;
-  };
-
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-96">
+      <div className="w-full mt-16 grid grid-cols-3 gap-6 min-h-[600px] place-items-center">
         <p>불러오는 중...</p>
       </div>
     );
   }
 
-  if (updatedEvents.length === 0) {
+  if (events.length === 0) {
     return (
-      <div className="flex justify-center items-center h-96">
-        <p>조건에 맞는 공연이 없습니다.</p>
+      <div className="w-full mt-16 min-h-[600px] flex justify-center items-center">
+        <p>표시할 정보가 없습니다.</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-wrap ml-5 gap-y-[60px] mt-[42px]">
-      {Array.from(
-        { length: Math.ceil(updatedEvents.length / 3) },
-        (_, rowIndex) => (
-          <div key={rowIndex} className="flex gap-x-10">
-            {updatedEvents
-              .slice(rowIndex * 3, rowIndex * 3 + 3)
-              .map((event) => {
-                console.log(
-                  "렌더링 이벤트:",
-                  event.id,
-                  event.title,
-                  event.bookmarked
-                );
-                return (
-                  <InformationCard
-                    key={event.id}
-                    id={event.id}
-                    imageUrl={getFirstImageUrl(event.postUrl)}
-                    title={event.title || "제목 없음"}
-                    date={
-                      event.startDate &&
-                      event.startDate !== "null" &&
-                      event.endDate &&
-                      event.endDate !== "null"
-                        ? `${event.startDate} ~ ${event.endDate}`
-                        : event.startDate && event.startDate !== "null"
-                          ? `시작일 ${event.startDate}`
-                          : event.endDate && event.endDate !== "null"
-                            ? `종료일 ${event.endDate}`
-                            : "날짜 정보 없음"
-                    }
-                    location={event.location || "위치 정보 없음"}
-                    isBookmarked={!!event.bookmarked}
-                    onBookmarkChange={handleBookmarkChange}
-                    category={currentCategory} // Pass the category
-                  />
-                );
-              })}
-          </div>
-        )
-      )}
+    <div className="w-full mt-16 grid grid-cols-3 gap-6">
+      {events.map((event) => (
+        <InformationCard
+          key={event.id}
+          id={event.id}
+          imageUrl={getFirstImageUrl(event.postUrl)}
+          title={event.title || "제목 없음"}
+          startDate={event.startDate || undefined}
+          endDate={event.endDate || undefined}
+          location={event.location || "위치 정보 없음"}
+          isBookmarked={!!event.bookmarked}
+          onBookmarkChange={handleBookmarkChange}
+          category={currentCategory}
+        />
+      ))}
     </div>
   );
 };

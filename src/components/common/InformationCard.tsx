@@ -1,72 +1,66 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Icon from "../../assets/icons/Icon";
 import { useAuthStore } from "../../stores/authStore";
 import { useModalStore } from "../../stores/modalStore";
 import { useBookmarkState } from "../../hooks/useBookmarkState";
+import { useCategoryMapper } from "../../hooks/useInfoCardMapper";
+import { useTitleFormatter } from "../../hooks/usePopupTitleFormatter";
+import { useDateFormatter } from "../../hooks/useInformationDateFormatter"; // 새로 추가한 훅 임포트
 
 interface InformationCardProps {
   id: number;
   imageUrl: string;
   title: string;
-  date: string;
+  startDate?: string; // date 대신 startDate와 endDate로 변경
+  endDate?: string;
   location: string;
   isBookmarked: boolean;
   onBookmarkChange?: (id: number, newStatus: boolean) => void;
-  category: string; // Add category prop
+  category: string;
 }
 
 function InformationCard({
   id,
   imageUrl,
   title,
-  date,
+  startDate, // 변경된 props
+  endDate,
   location,
   isBookmarked,
   onBookmarkChange,
-  category, // Receive category prop
+  category,
 }: InformationCardProps) {
   const navigate = useNavigate();
-  const location_path = useLocation();
   const { isLoggedIn, checkAuth } = useAuthStore();
   const { openModal } = useModalStore();
+  const { mapToApiCategory } = useCategoryMapper();
+  const { formatTitle } = useTitleFormatter();
+  const { formatDatePeriod } = useDateFormatter(); // 새로 추가한 훅 사용
 
-  // Determine the API category based on current path or passed category
-  const getApiCategory = () => {
-    // If category is explicitly provided, use it
-    if (category) return category;
+  // 카테고리에 따라 제목 포맷팅
+  const formattedTitle = formatTitle(title, category);
 
-    // Otherwise, extract from the current path
-    const pathSegments = location_path.pathname.split("/");
-    const currentCategory =
-      pathSegments[pathSegments.indexOf("informations") + 1];
+  // 날짜 정보 포맷팅
+  const formattedDate = formatDatePeriod(startDate, endDate);
 
-    // Map UI category to API endpoint category
-    const categoryMapping: { [key: string]: string } = {
-      popups: "popupstores",
-      exhibition: "exhibits",
-      musical: "performances",
-      concert: "festivals",
-    };
-
-    return categoryMapping[currentCategory] || currentCategory;
-  };
-
-  // Use the custom hook instead of local state
+  // 북마크 상태 관리 커스텀 훅 사용
   const {
     isBookmarked: bookmarked,
     toggleBookmark: handleToggleBookmark,
     isLoading,
   } = useBookmarkState(id, isBookmarked);
 
+  // 카드 클릭 시 상세 페이지로 이동
   const handleClick = () => {
-    const apiCategory = getApiCategory();
+    const apiCategory = mapToApiCategory(category);
     navigate(`/informations/${apiCategory}/${id}`);
   };
 
+  // 북마크 토글 처리
   const toggleBookmark = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card click event
+    e.stopPropagation(); // 카드 클릭 이벤트 방지
 
-    // Check authentication
+    // 인증 확인
     await checkAuth();
     if (!isLoggedIn) {
       openModal(
@@ -80,7 +74,7 @@ function InformationCard({
 
     const result = await handleToggleBookmark();
 
-    // Notify parent component of the change
+    // 부모 컴포넌트에 변경 알림
     if (result.success && onBookmarkChange) {
       onBookmarkChange(id, result.newBookmarkStatus);
     }
@@ -93,10 +87,10 @@ function InformationCard({
     >
       <img
         src={imageUrl}
-        alt={title}
+        alt={formattedTitle}
         className="w-full h-full absolute left-0 top-0 object-cover"
         onError={(e) => {
-          // Replace with default image if loading fails
+          // 이미지 로딩 실패 시 기본 이미지로 대체
           e.currentTarget.src = "/default-image.png";
         }}
       />
@@ -106,8 +100,9 @@ function InformationCard({
       <div className="w-[268px] h-[268px] absolute left-4 top-4">
         <div className="flex justify-between items-start w-full absolute left-0 top-[203px]">
           <div>
-            <p className="body-normal-b text-white line-clamp-1">{title}</p>
-
+            <p className="body-normal-b text-white line-clamp-1">
+              {formattedTitle}
+            </p>
             <div className="flex items-center w-full mt-1">
               <Icon
                 name="CalendarRange"
@@ -115,7 +110,7 @@ function InformationCard({
                 strokeWidth={1.5}
                 className="text-white"
               />
-              <p className="caption-r text-white ml-1">{date}</p>
+              <p className="caption-r text-white ml-1">{formattedDate}</p>
             </div>
             <div className="flex items-center mt-1">
               <Icon

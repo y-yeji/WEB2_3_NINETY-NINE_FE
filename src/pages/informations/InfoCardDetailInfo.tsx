@@ -32,9 +32,6 @@ const InfoCardDetailInfo: React.FC<InfoCardDetailInfoProps> = ({
         {description && (
           <div className="w-full flex flex-col items-center mt-10 mb-10">
             <div className="w-[746px] text-center">
-              <p className="body-large-b font-semibold text-gray-80 mb-4">
-                유의 사항
-              </p>
               <div className="body-small-m text-gray-80 mt-2 whitespace-pre-wrap">
                 {description}
               </div>
