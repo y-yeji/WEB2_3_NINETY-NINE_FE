@@ -9,6 +9,8 @@ import { useBookmarkState } from "../../hooks/useBookmarkState";
 import { useAuthStore } from "../../stores/authStore";
 import { useModalStore } from "../../stores/modalStore";
 import ScrollToTopButton from "../../components/ui/ScrollToTopButton";
+import { useTitleFormatter } from "../../hooks/usePopupTitleFormatter"; // 추가된 hook import
+import { useDateFormatter } from "../../hooks/useInformationDateFormatter";
 
 interface EventDetail {
   id: number;
@@ -57,6 +59,7 @@ const InfoCardDetail = () => {
   const navigate = useNavigate();
   const { isLoggedIn, checkAuth } = useAuthStore();
   const { openModal } = useModalStore();
+  const { formatTitle } = useTitleFormatter(); // 추가된 hook 사용
 
   const [activeTab, setActiveTab] = useState("review");
   const [eventDetail, setEventDetail] = useState<EventDetail | null>(null);
@@ -64,6 +67,8 @@ const InfoCardDetail = () => {
   const [error, setError] = useState<string | null>(null);
   const [usingFallback, setUsingFallback] = useState(false);
   const [reviewCount, setReviewCount] = useState(0);
+
+  const { formatDatePeriod } = useDateFormatter();
 
   const normalizeCategory = (cat: string | undefined): string => {
     if (!cat) return "";
@@ -192,7 +197,11 @@ const InfoCardDetail = () => {
   };
 
   const mapToShowInfo = (data: EventDetail): ShowInfo => {
-    let posterUrl = data.postUrl;
+    // postUrl이 없는 경우 기본 이미지 경로를 사용
+    let posterUrl = data.postUrl || "/default-image.png";
+
+    // formatTitle 훅을 사용하여 제목 처리
+    let title = formatTitle(data.title || "-");
 
     // 배열 형태 문자열인지 확인 (대괄호로 시작하는지)
     if (
@@ -215,19 +224,38 @@ const InfoCardDetail = () => {
       posterUrl = data.postUrl.split(",")[0].trim();
     }
 
-    let links = "";
+    // 날짜 정보 포맷팅
+    const formattedPeriod = formatDatePeriod(data.startDate, data.endDate);
+
+    // 티켓팅 웹사이트 정보 파싱
+    let links: Array<{ siteName: string; url: string }> = [];
+
     if (data.ticketingWebSite) {
-      links = `예매 사이트 바로가기: ${data.ticketingWebSite}`;
+      // 여러 사이트가 있는 경우 쉼표로 구분되어 있음
+      const siteInfos = data.ticketingWebSite.split(",");
+
+      siteInfos.forEach((siteInfo) => {
+        // 각 사이트 정보는 '사이트명 - URL' 형식
+        const trimmedSiteInfo = siteInfo.trim();
+        const separatorIndex = trimmedSiteInfo.indexOf(" - ");
+
+        if (separatorIndex !== -1) {
+          const siteName = trimmedSiteInfo.substring(0, separatorIndex).trim();
+          const url = trimmedSiteInfo.substring(separatorIndex + 3).trim();
+
+          links.push({ siteName, url });
+        }
+      });
     }
 
     return {
-      posterUrl: posterUrl || "/poster-img.png",
-      title: data.title || "-",
+      posterUrl: posterUrl || "/default-image.png",
+      title: title || "-",
       audience: data.ageRating || "-",
-      period: `${data.startDate || ""} - ${data.endDate || ""}`,
+      period: formattedPeriod, // 포맷팅된 날짜 정보 사용
       location: data.location || "-",
       times: data.operatingHours || "-",
-      links: links || "-",
+      links: links.length > 0 ? links : "-",
       price: data.price || "-",
       reviewCount,
       isBookmarked: data.bookmarked,
@@ -273,6 +301,11 @@ const InfoCardDetail = () => {
   }
 
   const showInfo = mapToShowInfo(eventDetail);
+
+  const cleanDescription = (text: string | null): string | null => {
+    if (!text) return null;
+    return text.replace(/\?/g, "");
+  };
 
   return (
     <div className="w-[1280px] h-full relative overflow-hidden bg-white">
@@ -320,7 +353,7 @@ const InfoCardDetail = () => {
         <div className="w-full flex justify-center">
           {activeTab === "review" ? (
             <InfoCardDetailInfo
-              description={eventDetail.description}
+              description={cleanDescription(eventDetail.description)}
               location={eventDetail.location}
               venue={eventDetail.venue}
               detailImage={eventDetail.detailImage}
