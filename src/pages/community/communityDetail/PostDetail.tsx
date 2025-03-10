@@ -7,7 +7,7 @@ import api from "../../../api/api";
 import { useModalStore } from "../../../stores/modalStore";
 import { useLikeState } from "../../../hooks/useLikeState";
 import { useAuthStore } from "../../../stores/authStore";
-import { PostCardProps } from "../../../types/Post";
+import { PostCardProps } from "../../../types/post";
 import DOMPurify from "dompurify";
 
 interface PostDetailProps {
@@ -152,9 +152,11 @@ const PostDetail: React.FC<PostDetailProps> = ({
         <div className="mb-5 border-b border-gray-30">
           <div className="mb-6"></div>
           <p
-  className="mb-10"
-  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(postDetail?.content || "") }}
-/>
+            className="mb-10"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(postDetail?.content || ""),
+            }}
+          />
         </div>
         <div className="mb-[34px]">
           <div className="flex gap-[10px]">

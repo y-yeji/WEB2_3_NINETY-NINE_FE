@@ -3,7 +3,7 @@ import Icon from "../../assets/icons/Icon";
 
 interface DropdownProps {
   data: string[];
-  onSelect?: (selected: string) => void;
+  onSelect?: (value: string) => void;
   sizeClassName?: string;
   selectedOption: string;
 }
