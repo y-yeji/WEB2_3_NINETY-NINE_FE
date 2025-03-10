@@ -1,6 +1,8 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Link } from "react-router-dom";
 import InformationCard from "../common/InformationCard";
+import { useDateFormatter } from "../../hooks/useInformationDateFormatter";
+import { useTitleFormatter } from "../../hooks/usePopupTitleFormatter";
 
 interface EventItem {
   id: number;
@@ -28,6 +30,12 @@ interface EventSectionProps {
 }
 
 const EventSection = ({ category, route, data }: EventSectionProps) => {
+  const { formatDatePeriod } = useDateFormatter();
+  const { formatTitle } = useTitleFormatter();
+
+  // 디버깅을 위한 콘솔 로그 추가
+  console.log("카테고리:", category, "라우트:", route);
+
   return (
     <section className="mb-12 mx-[50px]">
       <div className="flex justify-between items-center mb-[64px] h-full">
@@ -50,42 +58,52 @@ const EventSection = ({ category, route, data }: EventSectionProps) => {
         className="w-full"
       >
         {data.length > 0 ? (
-          data.map((data) => (
-            <SwiperSlide
-              key={data.id}
-              className="w-full h-[300px] rounded-[10px] flex flex-col justify-start items-center"
-            >
-              <InformationCard
-                id={data.id}
-                category={data.genre}
-                title={data.title}
-                date={
-                  data.startDate !== "null" && data.endDate !== "null"
-                    ? `${data.startDate} ~ ${data.endDate}`
-                    : data.startDate !== "null"
-                      ? `시작일 ${data.startDate}`
-                      : data.endDate !== "null"
-                        ? `종료일 ${data.endDate}`
-                        : "날짜 정보 없음"
-                }
-                location={data.location}
-                isBookmarked={data.bookmarked}
-                imageUrl={
-                  typeof data.postUrl === "string"
-                    ? data.postUrl.startsWith("[") && data.postUrl.endsWith("]")
-                      ? data.postUrl
-                          .slice(1, -1)
-                          .split(",")[0]
-                          .trim()
-                          .replace(/['"]/g, "")
-                      : data.postUrl
-                    : Array.isArray(data.postUrl)
-                      ? data.postUrl[0]
-                      : ""
-                }
-              />
-            </SwiperSlide>
-          ))
+          data.map((item) => {
+            // 디버깅용 로그 추가
+            if (category === "팝업스토어") {
+              console.log("팝업스토어 제목 정제 전:", item.title);
+              console.log("장르:", item.genre);
+              const formattedTitle = formatTitle(item.title, "popupstores"); // 직접 "popupstores" 값 전달
+              console.log("팝업스토어 제목 정제 후:", formattedTitle);
+            }
+
+            return (
+              <SwiperSlide
+                key={item.id}
+                className="w-full h-[300px] rounded-[10px] flex flex-col justify-start items-center"
+              >
+                <InformationCard
+                  id={item.id}
+                  category={item.genre}
+                  title={
+                    category === "팝업스토어"
+                      ? formatTitle(item.title, "popupstores")
+                      : item.title
+                  }
+                  startDate={
+                    item.startDate !== "null" ? item.startDate : undefined
+                  }
+                  endDate={item.endDate !== "null" ? item.endDate : undefined}
+                  location={item.location}
+                  isBookmarked={item.bookmarked}
+                  imageUrl={
+                    typeof item.postUrl === "string"
+                      ? item.postUrl.startsWith("[") &&
+                        item.postUrl.endsWith("]")
+                        ? item.postUrl
+                            .slice(1, -1)
+                            .split(",")[0]
+                            .trim()
+                            .replace(/['"]/g, "")
+                        : item.postUrl
+                      : Array.isArray(item.postUrl)
+                        ? item.postUrl[0]
+                        : ""
+                  }
+                />
+              </SwiperSlide>
+            );
+          })
         ) : (
           <p className="text-gray-20">데이터가 없습니다.</p>
         )}

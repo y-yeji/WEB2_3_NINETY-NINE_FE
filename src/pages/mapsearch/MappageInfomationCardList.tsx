@@ -1,6 +1,7 @@
 import InformationCard from "../../components/common/InformationCard";
 import { MapPost } from "../../types/mapSearch";
 import { useCategoryMapper } from "../../hooks/useInfoCardMapper";
+import { useDateFormatter } from "../../hooks/useInformationDateFormatter";
 
 interface InformationCardListProps {
   posts?: (MapPost & { isBookmarked: boolean; category: string })[];
@@ -12,6 +13,7 @@ const MappageInfomationCardList = ({
   isLoading,
 }: InformationCardListProps) => {
   const { mapToApiCategory } = useCategoryMapper();
+  const { formatDatePeriod } = useDateFormatter();
 
   if (isLoading)
     return <p className="text-center">리스트를 불러오는 중입니다.</p>;
@@ -26,7 +28,8 @@ const MappageInfomationCardList = ({
           id={post.id}
           title={post.title}
           imageUrl={post.postUrl || "/default-image.png"}
-          date={`${post.startDate} ~ ${post.endDate}`}
+          startDate={post.startDate} // Pass startDate directly
+          endDate={post.endDate} // Pass endDate directly
           location={post.location || "위치 정보 없음"}
           isBookmarked={post.isBookmarked}
           category={post.category} // 이미 변환된 카테고리를 사용
