@@ -3,9 +3,9 @@ import PostCard from "../../components/common/PostCard";
 import ProfileHeader from "../../components/common/ProfileHeader";
 import ScrollToTopButton from "../../components/ui/ScrollToTopButton";
 import { TitleBar } from "../../components/ui/TitleBar";
-import { PostCardProps } from "../../types/Post";
+import { PostCardProps } from "../../types/post";
 import api from "../../api/api";
-import { UserData } from "../../types/user";
+import { UserData } from "../../types/User";
 import { useParams } from "react-router-dom";
 
 const UserPage = () => {
@@ -46,7 +46,7 @@ const UserPage = () => {
             nickname={userData.nickname}
             description={userData.description}
             interests={userData.interests}
-            profileImage={userData.profileImage}
+            profileImage={userData.s3Bucket}
           />
         )}
         <TitleBar

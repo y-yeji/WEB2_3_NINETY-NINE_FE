@@ -15,13 +15,16 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
     const { logout, checkAuth, isLoggedIn, user } = useAuthStore();
 
     useEffect(() => {
-      checkAuth();
-    }, [checkAuth]);
+      if (isOpen) {
+        checkAuth();
+      }
+    }, [isOpen]);
 
     const handleLogout = async () => {
       await logout();
     };
 
+    console.log(user);
     return (
       <aside
         ref={ref}
@@ -55,7 +58,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
                   <div className="flex items-center gap-2">
                     <div className="w-[50px] h-[50px] rounded-full overflow-hidden userProfile-shadow">
                       <img
-                        src={user?.profileImage || "/default-image.png"}
+                        src={user?.s3Bucket || "/default-image.png"}
                         className="w-full h-full object-cover bg-center"
                         alt="유저 프로필 이미지"
                       />
