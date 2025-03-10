@@ -10,7 +10,7 @@ const CommunityEditPost = () => {
   const { postId } = useParams();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [imageUrls, setImageUrls] = useState<(File | string)[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,6 +18,7 @@ const CommunityEditPost = () => {
       try {
         const response = await api.get(`/api/socialPosts/${postId}`);
         const { title, content, imageUrls } = response.data.data;
+
         setTitle(title);
         setContent(content);
         setImageUrls(imageUrls || []);
@@ -38,16 +39,25 @@ const CommunityEditPost = () => {
     const confirmPost = window.confirm("게시글을 수정하시겠습니까?");
     if (!confirmPost) return;
 
-    const postData = {
-      title,
-      content,
-      imageUrls: imageUrls.length > 0 ? imageUrls : ["default-image-url"],
-    };
+    const formData = new FormData();
+    const requestDTO = { title, content };
+    formData.append("requestDTO", JSON.stringify(requestDTO));
+
+    imageUrls.forEach((img) => {
+      if (typeof img === "string") {
+        formData.append("existingImages", img);
+      } else {
+        formData.append("images", img);
+      }
+    });
 
     try {
       const token = localStorage.getItem("accessToken");
-      const response = await api.put(`/api/socialPosts/${postId}`, postData, {
-        headers: { Authorization: token },
+      const response = await api.put(`/api/socialPosts/${postId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: token,
+        },
       });
 
       console.log("게시글 수정 완료", response.data);
@@ -64,7 +74,7 @@ const CommunityEditPost = () => {
     );
     if (confirmCancel) navigate(`/socialPosts/${postId}`);
   };
-  console.log(title, content, imageUrls);
+
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <div className="mt-[100px]">
@@ -75,7 +85,13 @@ const CommunityEditPost = () => {
           customStyle="w-[1200px] h-[50px] mt-[67px] mb-5 body-l-m border-gray-5"
         />
         <QuillEditor value={content} onChange={setContent} />
-        <ImageUploader onUpload={setImageUrls} initialImages={imageUrls} />
+        <ImageUploader
+          onUpload={setImageUrls}
+          initialImages={
+            imageUrls.filter((img) => img instanceof File) as File[]
+          } // 추후 오류 수정
+        />
+
         <div className="w-full flex justify-between items-center mt-2.5 px-2.5">
           <p className="caption-r text-blue-4">
             이미지 업로드를 하지 않을 경우 기본 이미지로 업로드됩니다.
