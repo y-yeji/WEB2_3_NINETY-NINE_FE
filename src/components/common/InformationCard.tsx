@@ -5,14 +5,14 @@ import { useModalStore } from "../../stores/modalStore";
 import { useBookmarkState } from "../../hooks/useBookmarkState";
 import { useCategoryMapper } from "../../hooks/useInfoCardMapper";
 import { useTitleFormatter } from "../../hooks/usePopupTitleFormatter";
-import { useDateFormatter } from "../../hooks/useInformationDateFormatter"; // 새로 추가한 훅 임포트
+import { useDateFormatter } from "../../hooks/useInformationDateFormatter";
 
 interface InformationCardProps {
   id: number;
   date?: string; // date 대신 startDate와 endDate로 변경
   imageUrl: string;
   title: string;
-  startDate?: string; // date 대신 startDate와 endDate로 변경
+  startDate?: string;
   endDate?: string;
   location: string;
   isBookmarked: boolean;
@@ -24,7 +24,7 @@ function InformationCard({
   id,
   imageUrl,
   title,
-  startDate, // 변경된 props
+  startDate,
   endDate,
   location,
   isBookmarked,
@@ -36,7 +36,7 @@ function InformationCard({
   const { openModal } = useModalStore();
   const { mapToApiCategory } = useCategoryMapper();
   const { formatTitle } = useTitleFormatter();
-  const { formatDatePeriod } = useDateFormatter(); // 새로 추가한 훅 사용
+  const { formatDatePeriod } = useDateFormatter();
 
   // 카테고리에 따라 제목 포맷팅
   const formattedTitle = formatTitle(title, category);

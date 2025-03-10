@@ -3,84 +3,81 @@ import api from "../api/api";
 
 interface BookmarkToggleResult {
   success: boolean;
-  newBookmarkStatus: boolean; // Make this non-optional
+  newBookmarkStatus: boolean;
 }
 
 export const useBookmarkState = (
-  eventId: number,
-  initialBookmarkStatus: boolean,
-  eventType: "performances" | "festivals" = "performances"
+  id: number,
+  initialBookmarkStatus: boolean
 ) => {
-  const token = localStorage.getItem("accessToken");
   const [isBookmarked, setIsBookmarked] = useState(initialBookmarkStatus);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch the current bookmark status when component mounts
   useEffect(() => {
-    const fetchBookmarkStatus = async () => {
-      if (!token) return; // Skip if not logged in
+    setIsBookmarked(initialBookmarkStatus);
+  }, [initialBookmarkStatus]);
 
-      try {
-        const response = await api.get(`/api/events/performances/${eventId}`, {
-          headers: {
-            Authorization: token ? `Bearer ${token}` : "",
-          },
-        });
-
-        if (response.data?.success) {
-          setIsBookmarked(response.data.data.bookmarked);
-        }
-      } catch (error) {
-        console.error("북마크 상태 확인 오류", error);
-      }
+  // Map category from URL path to API parameter
+  const getCategoryParam = (): string => {
+    const pathname = window.location.pathname;
+    const categoryMap: { [key: string]: string } = {
+      popups: "popupStore",
+      exhibition: "exhibit",
+      musical: "performance",
+      concert: "festival",
     };
 
-    fetchBookmarkStatus();
-  }, [eventId, token]);
+    for (const [urlPath, apiParam] of Object.entries(categoryMap)) {
+      if (pathname.includes(`/informations/${urlPath}`)) {
+        return apiParam;
+      }
+    }
+    return "performance"; // Default fallback
+  };
 
   const toggleBookmark = async (): Promise<BookmarkToggleResult> => {
     setIsLoading(true);
     setError(null);
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      setIsLoading(false);
+      return {
+        success: false,
+        newBookmarkStatus: isBookmarked,
+      };
+    }
 
     try {
-      // First update UI optimistically
+      // Update UI optimistically
       const newStatus = !isBookmarked;
       setIsBookmarked(newStatus);
 
-      // Your existing POST request to toggle the bookmark
+      // Get the correct category parameter
+      const categoryParam = getCategoryParam();
+
+      // Make API request to toggle bookmark
       const response = await api.post(
-        `/api/events/${eventType}/${eventId}/bookmarks`,
+        `/api/events/${id}/bookmarks?genre=${categoryParam}`,
         {},
         {
           headers: {
-            Authorization: token ? `Bearer ${token}` : "",
+            Authorization: `${token}`,
           },
         }
       );
 
       console.log("북마크 응답:", response);
 
-      // After toggling, fetch the current status to make sure it matches our expectation
-      const updatedResponse = await api.get(
-        `/api/events/performances/${eventId}`,
-        {
-          headers: {
-            Authorization: token ? `Bearer ${token}` : "",
-          },
-        }
-      );
-
-      if (updatedResponse.data?.success) {
-        const actualStatus = updatedResponse.data.data.bookmarked;
-        setIsBookmarked(actualStatus);
-
+      // Check if the request was successful
+      if (response.data?.success) {
         return {
           success: true,
-          newBookmarkStatus: actualStatus,
+          newBookmarkStatus: newStatus,
         };
       } else {
-        // Revert if we couldn't confirm the update
+        // Revert if API call was not successful
         setIsBookmarked(!newStatus);
         setError("북마크 업데이트 실패");
         return {
@@ -95,7 +92,7 @@ export const useBookmarkState = (
       setError("북마크 업데이트 실패");
       return {
         success: false,
-        newBookmarkStatus: !isBookmarked,
+        newBookmarkStatus: isBookmarked,
       };
     } finally {
       setIsLoading(false);
