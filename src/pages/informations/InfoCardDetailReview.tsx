@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuthStore } from "../../stores/authStore";
 import ReviewForm from "../../components/informationdetailreview/ReviewForm";
 import ReviewList from "../../components/informationdetailreview/ReviewList";
-import { Review } from "../../types/Review";
+import { Review } from "../../types/review";
 
 const InfoCardDetailReview = () => {
   const totalItems = 19;

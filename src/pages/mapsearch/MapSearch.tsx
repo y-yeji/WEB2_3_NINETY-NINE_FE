@@ -1,148 +1,192 @@
-import { useState } from "react";
-import Icon from "../../assets/icons/Icon";
+import React, { useEffect } from "react";
 import Dropdown from "../../components/ui/Dropdown";
 import InformationCard from "../../components/common/InformationCard";
 import Map from "./Map";
 import Pagination from "../../components/ui/Pagination";
+import useFetchData from "../../hooks/useFetchData";
+import useSearchFilters from "../../hooks/useSearchFilters";
+import Icon from "../../assets/icons/Icon";
 
-const cardData = [
-  { id: 1, title: "Card 1", description: "Description 1" },
-  { id: 2, title: "Card 2", description: "Description 2" },
-  { id: 3, title: "Card 3", description: "Description 3" },
-  { id: 4, title: "Card 1", description: "Description 1" },
-  { id: 5, title: "Card 2", description: "Description 2" },
-  { id: 6, title: "Card 3", description: "Description 3" },
-  { id: 7, title: "Card 1", description: "Description 1" },
-  { id: 8, title: "Card 2", description: "Description 2" },
-  { id: 9, title: "Card 3", description: "Description 3" },
+interface MapPost {
+  id: number;
+  title: string;
+  latitude: number;
+  longitude: number;
+  postUrl: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+  isBookmarked: boolean;
+}
+interface MapSearchResponse {
+  posts: MapPost[];
+  totalElements: number;
+}
+
+const performanceOptions = [
+  "카테고리 선택",
+  "팝업 스토어",
+  "전시회",
+  "뮤지컬 | 연극",
+  "페스티벌",
 ];
+const progressStatusOptions = ["선택", "진행중", "오픈 예정"];
 
-const mockLocations = [
-  { name: "서울특별시", lat: 37.5665, lng: 126.978 },
-  { name: "인천광역시", lat: 37.4563, lng: 126.7052 },
-  { name: "대전광역시", lat: 36.3504, lng: 127.3845 },
-  { name: "광주광역시", lat: 35.1595, lng: 126.8526 },
-  { name: "대구광역시", lat: 35.8714, lng: 128.6014 },
-  { name: "울산광역시", lat: 35.5384, lng: 129.3114 },
-  { name: "부산광역시", lat: 35.1796, lng: 129.0756 },
-  { name: "세종특별자치시", lat: 36.48, lng: 127.289 },
-  { name: "강원도", lat: 37.8228, lng: 128.1555 },
-  { name: "충청북도", lat: 36.8, lng: 127.7 },
-  { name: "전라북도", lat: 35.7175, lng: 127.153 },
-  { name: "전라남도", lat: 34.8679, lng: 126.991 },
-  { name: "경상북도", lat: 36.4919, lng: 128.8889 },
-  { name: "경상남도", lat: 35.4606, lng: 128.2132 },
-  { name: "제주특별자치도", lat: 33.489, lng: 126.4983 },
-];
+const MapSearch: React.FC = () => {
+  const {
+    searchKeyword,
+    performanceOptionsSelected,
+    statusOptionsSelected,
+    setSearchKeyword,
+    setPerformanceOptionSelected,
+    setStatusOptionsSelected,
+    updateSearchParams,
+    searchParams,
+  } = useSearchFilters();
 
-// interface ApiResponse {
-//   posts: Post[];
-//   totalElements: number;
-// }
+  const {
+    data: performanceData,
+    isLoading,
+    fetchData,
+  } = useFetchData<MapSearchResponse>();
 
-const MapSearch = ({}) => {
-  const performanceOptions = [
-    "카테고리 선택",
-    "팝업 스토어",
-    "전시회",
-    "뮤지컬 | 연극",
-    "페스티벌 | 콘서트",
-  ];
-  const progressStatusOptions = ["선택", "진행중", "오픈 예정"];
-  const [performanceOptionsSelected, setPerformanceOptionSelected] = useState(
-    performanceOptions[0]
-  );
-  const [statusOptionsSelected, setStatusOptionsSelected] = useState(
-    progressStatusOptions[0]
-  );
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [mapCenter, setMapCenter] = useState({
-    lat: 33.450701,
-    lng: 126.570667,
-  });
+  const fetchDataByCategory = () => {
+    const endpointMap: Record<string, string> = {
+      "팝업 스토어": "api/events/popupstores",
+      전시회: "api/events/exhibits/exhibits",
+      "뮤지컬 | 연극": "api/events/performances",
+      페스티벌: "/api/events/festivals",
+    };
 
-  // const handleSearchSortChange = (selected: string) => {
-  //   setPerformanceOptionSelected(selected);
-  //   // 선택된 정렬 옵션에 따라 지도 중심 변경 (예시)
-  //   if (selected === "진행중") {
-  //     setMapCenter({ lat: 37.5665, lng: 126.978 }); // 서울 중심 좌표
-  //   } else if (selected === "오픈 예정") {
-  //     setMapCenter({ lat: 35.1796, lng: 129.0756 }); // 부산 중심 좌표
-  //   } else {
-  //     setMapCenter({ lat: 33.450701, lng: 126.570667 }); // 기본 좌표
-  //   }
-  // };
+    const statusMapping: Record<string, string> = {
+      선택: "",
+      진행중: "진행중",
+      "오픈 예정": "진행 예정",
+    };
 
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const foundLocation = mockLocations.find(
-      (location) => location.name.toLowerCase() === searchKeyword.toLowerCase()
-    );
+    const params: Record<string, any> = {
+      pageNum: parseInt(searchParams.get("page") || "1") - 1,
+      pageSize: 9,
+      region: searchParams.get("region") || "",
+      titleKeyword: searchKeyword,
+    };
 
-    if (foundLocation) {
-      setMapCenter({ lat: foundLocation.lat, lng: foundLocation.lng });
-      console.log(`검색된 위치: ${foundLocation.name}`);
-    } else {
-      console.log("검색 결과가 없습니다.");
+    if (statusOptionsSelected !== "선택") {
+      params.status = statusMapping[statusOptionsSelected];
     }
+
+    fetchData(
+      endpointMap[performanceOptionsSelected] || "api/events/performances",
+      params
+    );
   };
+
+  useEffect(() => {
+    fetchDataByCategory();
+  }, [
+    performanceOptionsSelected,
+    statusOptionsSelected,
+    searchKeyword,
+    searchParams.get("page"),
+  ]);
 
   return (
     <div className="mt-[124px]">
       <section className="mb-10 flex gap-6 justify-center items-center">
-        <div className="flex gap-4">
-          <Dropdown
-            data={performanceOptions}
-            // onSelect={handleSearchSortChange}
-            sizeClassName="w-[154px] h-[30px]"
-          />
-          <Dropdown
-            data={progressStatusOptions}
-            // onSelect={handleSearchSortChange}
-            sizeClassName="w-[122px] h-[30px]"
-          />
-        </div>
+        <Dropdown
+          data={performanceOptions}
+          selectedOption={performanceOptionsSelected}
+          onSelect={(selected) => {
+            setPerformanceOptionSelected(selected);
+            updateSearchParams("category", selected);
+            updateSearchParams("page", "1");
+          }}
+          sizeClassName="w-[170px] h-[30px]"
+        />
+        <Dropdown
+          data={progressStatusOptions}
+          selectedOption={statusOptionsSelected}
+          onSelect={(selected) => {
+            setStatusOptionsSelected(selected);
+            updateSearchParams("status", selected);
+            updateSearchParams("page", "1");
+          }}
+          sizeClassName="w-[122px] h-[30px]"
+        />
         <form
-          onSubmit={handleSearch}
-          className="flex justify-between py-[9px] w-[766px] h-9 rounded-full border border-gray-20"
+          onSubmit={(e) => e.preventDefault()}
+          className="flex justify-between w-[766px] h-9 relative items-center"
         >
           <input
-            type="search"
-            name="search"
-            id="search"
-            placeholder="찾고싶은 공연의 이름을 입력하세요"
-            className="flex-grow px-4 bg-transparent outline-none pl-6 placeholder:caption-r"
+            type="text"
+            value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
+            className="w-full h-full py-[9px] px-4 bg-transparent outline-none placeholder:body-small-r appearance-none [&::-webkit-search-cancel-button]:hidden border border-gray-20 rounded-full focus:border-blue-7"
           />
-          <button type="submit" className="flex justify-end items-center mr-6">
+          <button
+            type="submit"
+            className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center"
+          >
             <Icon name="Search" size={18} className="text-blue-1" />
           </button>
         </form>
       </section>
 
       <section className="flex justify-center items-center">
-        <Map center={mapCenter} />
+        <Map
+          center={{
+            lat: parseFloat(searchParams.get("lat") || "33.450701"),
+            lng: parseFloat(searchParams.get("lng") || "126.570667"),
+          }}
+        />
       </section>
 
-      <section className="my-10">
+      <section className="my-20">
         <div className="flex gap-[93px] justify-center flex-wrap mx-auto">
-          {cardData.map((card) => (
-            <InformationCard
-              key={card.id}
-              title={card.title}
-              description={card.description}
-            />
-          ))}
+          {isLoading ? (
+            <p className="text-center">리스트를 불러오는 중입니다.</p>
+          ) : !performanceData?.posts || performanceData.posts.length === 0 ? (
+            <p className="text-center">
+              {statusOptionsSelected !== "선택"
+                ? `선택하신 카테고리에 ${statusOptionsSelected}인 리스트가 없습니다.`
+                : "리스트가 없습니다."}
+            </p>
+          ) : (
+            performanceData.posts.map((post) => {
+              const dateDisplay =
+                post.startDate !== "null" && post.endDate !== "null"
+                  ? `${post.startDate} ~ ${post.endDate}`
+                  : post.startDate !== "null"
+                    ? `시작일 ${post.startDate}`
+                    : post.endDate !== "null"
+                      ? `종료일 ${post.endDate}`
+                      : "날짜 정보 없음";
+              return (
+                <InformationCard
+                  key={post.id}
+                  id={post.id}
+                  title={post.title}
+                  imageUrl={post.postUrl || "/default-image.png"}
+                  date={dateDisplay}
+                  location={post.location || "위치 정보 없음"}
+                  isBookmarked={post.isBookmarked || false}
+                />
+              );
+            })
+          )}
         </div>
       </section>
-      <div>
-        <Pagination
-        // totalItems={totalItems}
-        // itemsPerPage={9}
-        // currentPage={currentPage}
-        // onPageChange={onPageChange}
-        />
-      </div>
+
+      {performanceData?.posts && performanceData.posts.length > 0 && (
+        <div className="mb-16">
+          <Pagination
+            totalItems={performanceData?.totalElements || 0}
+            itemsPerPage={9}
+            currentPage={parseInt(searchParams.get("page") || "1")}
+            onPageChange={(page) => updateSearchParams("page", page.toString())}
+          />
+        </div>
+      )}
     </div>
   );
 };
