@@ -63,6 +63,10 @@ const InfoCardDetail = () => {
 
   const [activeTab, setActiveTab] = useState("review");
   const [eventDetail, setEventDetail] = useState<EventDetail | null>(null);
+
+  const { isBookmarked, toggleBookmark: handleToggleBookmark } =
+    useBookmarkState(Number(eventId), eventDetail?.bookmarked || false);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [usingFallback, setUsingFallback] = useState(false);
@@ -82,9 +86,6 @@ const InfoCardDetail = () => {
 
     return categoryMapping[cat] || cat;
   };
-
-  const { isBookmarked, toggleBookmark: handleToggleBookmark } =
-    useBookmarkState(Number(eventId), eventDetail?.bookmarked || false);
 
   const fetchReviewCount = async () => {
     if (!category || !eventId) return;
@@ -125,19 +126,43 @@ const InfoCardDetail = () => {
       }
 
       const normalizedCategory = normalizeCategory(category);
+      const token = localStorage.getItem("accessToken");
+
+      console.log("토큰 확인:", token); // 토큰이 있는지 확인
+      console.log("카테고리:", normalizedCategory);
+      console.log("이벤트 ID:", eventId);
 
       try {
-        const response = await api.get(
+        // API 호출 전 정보 로깅
+        console.log(
+          "API 요청 URL:",
           `/api/events/${normalizedCategory}/${eventId}`
         );
+        console.log("헤더:", token ? { Authorization: token } : {});
 
+        const response = await api.get(
+          `/api/events/${normalizedCategory}/${eventId}`,
+          {
+            headers: token ? { Authorization: token } : {},
+          }
+        );
+
+        // 응답 로깅
+        console.log("API 응답:", response.data);
+
+        // 응답에서 bookmarked 값 확인
+        if (response.data && "data" in response.data) {
+          console.log("북마크 상태:", response.data.data.bookmarked);
+        } else if (response.data) {
+          console.log("북마크 상태:", response.data.bookmarked);
+        }
         // 응답 구조 확인 및 처리
         if (response.data && typeof response.data === "object") {
           // success 속성이 있는지 확인 (원래 예상했던 구조인지)
           if ("success" in response.data && "data" in response.data) {
-            // 기존 예상 구조: { success: boolean, data: EventDetail, ... }
             if (response.data.success) {
-              setEventDetail(response.data.data);
+              const eventData = response.data.data;
+              setEventDetail(eventData);
             } else {
               setError(
                 response.data.message || "Failed to fetch event details"
@@ -197,6 +222,10 @@ const InfoCardDetail = () => {
   };
 
   const mapToShowInfo = (data: EventDetail): ShowInfo => {
+    console.log("mapToShowInfo 입력 데이터:", data);
+    console.log("북마크 상태 (data.bookmarked):", data.bookmarked);
+    console.log("현재 isBookmarked 상태:", isBookmarked);
+
     // postUrl이 없는 경우 기본 이미지 경로를 사용
     let posterUrl = data.postUrl || "/default-image.png";
 

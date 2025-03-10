@@ -50,37 +50,34 @@ export const useEventsData = (category: string) => {
     async (page: number, location: string, status: string) => {
       setLoading(true);
       try {
-        // 카테고리에 맞는 엔드포인트 결정
         const endpoint = categoryEndpoints[category || ""] || category;
+        let region = location === "전체" ? "" : location;
 
-        let region = location;
-        if (region === "전체") {
-          region = "";
-        }
+        // 토큰 가져오기
+        const token = localStorage.getItem("accessToken");
 
-        // API 파라미터 설정
         const params = {
           region: region,
-          status: status === "진행 중" ? "진행중" : "진행 예정", // 공백 유지
-          pageNum: page - 1, // API는 0부터 시작하는 페이지 번호 사용
+          status: status === "진행 중" ? "진행중" : "진행 예정",
+          pageNum: page - 1,
           pageSize: 9,
         };
 
-        console.log(
-          `Calling API: /api/events/${endpoint} with params:`,
-          params
-        );
+        const headers = token ? { Authorization: token } : {};
 
         const response = await api.get<ApiResponse>(`/api/events/${endpoint}`, {
           params,
+          headers, // 토큰이 있으면 헤더에 추가
         });
+        // useEventsData에서
+        console.log("API Response with auth token:", response.data);
+        console.log("Events with bookmark status:", response.data.data.posts);
         console.log("API Response:", response.data);
-
         setEvents(response.data.data.posts);
         setTotalItems(response.data.data.totalElements);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching events:", error);
+      } finally {
         setLoading(false);
       }
     },

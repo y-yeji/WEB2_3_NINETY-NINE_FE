@@ -59,7 +59,7 @@ const InformationsGrid: FC<EventsGridProps> = ({
 
   if (loading) {
     return (
-      <div className="w-full mt-16 grid grid-cols-3 gap-6 min-h-[600px] place-items-center">
+      <div className="flex justify-center items-center h-96">
         <p>불러오는 중...</p>
       </div>
     );
@@ -67,27 +67,31 @@ const InformationsGrid: FC<EventsGridProps> = ({
 
   if (events.length === 0) {
     return (
-      <div className="w-full mt-16 min-h-[600px] flex justify-center items-center">
+      <div className="flex justify-center items-center h-96">
         <p>표시할 정보가 없습니다.</p>
       </div>
     );
   }
 
   return (
-    <div className="w-full mt-16 grid grid-cols-3 gap-6">
-      {events.map((event) => (
-        <InformationCard
-          key={event.id}
-          id={event.id}
-          imageUrl={getFirstImageUrl(event.postUrl)}
-          title={event.title || "제목 없음"}
-          startDate={event.startDate || undefined}
-          endDate={event.endDate || undefined}
-          location={event.location || "위치 정보 없음"}
-          isBookmarked={!!event.bookmarked}
-          onBookmarkChange={handleBookmarkChange}
-          category={currentCategory}
-        />
+    <div className="flex flex-wrap ml-5 gap-y-[60px] mt-[42px]">
+      {Array.from({ length: Math.ceil(events.length / 3) }, (_, rowIndex) => (
+        <div key={rowIndex} className="flex gap-x-10">
+          {events.slice(rowIndex * 3, rowIndex * 3 + 3).map((event) => (
+            <InformationCard
+              key={event.id}
+              id={event.id}
+              imageUrl={getFirstImageUrl(event.postUrl)}
+              title={event.title || "제목 없음"}
+              startDate={event.startDate || undefined}
+              endDate={event.endDate || undefined}
+              location={event.location || "위치 정보 없음"}
+              isBookmarked={!!event.bookmarked}
+              onBookmarkChange={handleBookmarkChange}
+              category={currentCategory}
+            />
+          ))}
+        </div>
       ))}
     </div>
   );
