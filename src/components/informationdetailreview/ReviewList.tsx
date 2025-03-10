@@ -3,7 +3,8 @@ import Icon from "../../assets/icons/Icon";
 import Pagination from "../../components/ui/Pagination";
 import StarDisplay from "../../components/informationdetailreview/StarDisplay";
 import ReviewListImagePopUp from "./ReviewListImagePopUp";
-import { Review } from "../../types/review";
+import { Review } from "../../types/Review";
+import { useAuthStore } from "../../stores/authStore";
 
 interface ReviewListProps {
   reviews: Review[];
@@ -21,6 +22,7 @@ const ReviewList = ({
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [popupImage, setPopupImage] = useState<string | null>(null);
+  const { user } = useAuthStore(); // 현재 로그인한 사용자 정보 가져오기
 
   const currentReviews = reviews.slice(
     (currentPage - 1) * itemsPerPage,
@@ -35,6 +37,16 @@ const ReviewList = ({
 
   const handleClosePopup = () => {
     setPopupImage(null);
+  };
+
+  const isReviewAuthor = (review: Review) => {
+    return review.isMyReview || (user && user.id === parseInt(review.userId));
+  };
+
+  const handleDeleteClick = (reviewId: number) => {
+    if (onDeleteReview) {
+      onDeleteReview(reviewId);
+    }
   };
 
   return (
@@ -56,8 +68,8 @@ const ReviewList = ({
             key={review.id}
             className={`flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 ${review.image ? "h-[200px]" : "h-[142px]"} gap-2.5 pl-[38px] pr-[18px] py-7 rounded-[10px] bg-base-1 border border-blue-7`}
           >
-            <div className="flex justify-end items-start flex-grow-0 flex-shrink-0 relative">
-              <div className="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 w-[1044px] gap-5">
+            <div className="flex justify-between items-start flex-grow-0 flex-shrink-0 w-full relative">
+              <div className="flex flex-col justify-start items-start flex-grow w-full gap-5">
                 <div className="flex justify-start items-center flex-grow-0 flex-shrink-0 relative gap-2">
                   <p className="flex-grow-0 flex-shrink-0 body-normal-r text-center text-gray-80 cursor-pointer">
                     {review.username}
@@ -98,12 +110,14 @@ const ReviewList = ({
                   </p>
                 </div>
               </div>
-              {review.isMyReview && (
-                <Icon
-                  name="Trash2"
-                  className="flex-grow-0 flex-shrink-0 w-5 h-5 cursor-pointer relative -left-2.5"
-                  onClick={() => onDeleteReview && onDeleteReview(review.id)}
-                />
+              {isReviewAuthor(review) && (
+                <div className="flex-shrink-0">
+                  <Icon
+                    name="Trash2"
+                    className="w-5 h-5 cursor-pointer"
+                    onClick={() => handleDeleteClick(review.id)}
+                  />
+                </div>
               )}
             </div>
           </div>
