@@ -3,7 +3,7 @@ import Icon from "../../assets/icons/Icon";
 import Pagination from "../../components/ui/Pagination";
 import StarDisplay from "../../components/informationdetailreview/StarDisplay";
 import ReviewListImagePopUp from "./ReviewListImagePopUp";
-import { Review } from "../../types/Review";
+import { Review } from "../../types/review";
 import { useAuthStore } from "../../stores/authStore";
 
 interface ReviewListProps {

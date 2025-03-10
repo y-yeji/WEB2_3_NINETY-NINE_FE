@@ -5,7 +5,7 @@ import ScrollToTopButton from "../../components/ui/ScrollToTopButton";
 import { TitleBar } from "../../components/ui/TitleBar";
 import { PostCardProps } from "../../types/post";
 import api from "../../api/api";
-import { UserData } from "../../types/User";
+import { UserData } from "../../types/user";
 import { useParams } from "react-router-dom";
 
 const UserPage = () => {

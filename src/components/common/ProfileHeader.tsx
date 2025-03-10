@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Icon from "../../assets/icons/Icon";
-import { UserData } from "../../types/User";
+import { UserData } from "../../types/user";
 import InterestsIcon from "../ui/InterestsIcon";
 
 const ProfileHeader = ({

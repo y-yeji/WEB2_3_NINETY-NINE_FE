@@ -4,7 +4,7 @@ import { useModalStore } from "../../stores/modalStore";
 import { useNavigate, useParams } from "react-router-dom";
 import ReviewForm from "../../components/informationdetailreview/ReviewForm";
 import ReviewList from "../../components/informationdetailreview/ReviewList";
-import { Review } from "../../types/Review";
+import { Review } from "../../types/review";
 import api from "../../api/api";
 
 interface ApiReview {
