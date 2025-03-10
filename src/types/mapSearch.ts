@@ -28,6 +28,7 @@ export interface MapPost {
   bookmarked: boolean;
   latitude?: number;
   longitude?: number;
+  category: string;
 }
 
 export interface MapSearchResponse {

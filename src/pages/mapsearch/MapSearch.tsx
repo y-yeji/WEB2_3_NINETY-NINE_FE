@@ -5,6 +5,7 @@ import Pagination from "../../components/ui/Pagination";
 import MappageInfomationCardList from "./MappageInfomationCardList";
 import useSearchFilters from "../../hooks/useSearchFilters";
 import { usePerformanceData } from "../../hooks/usePerformanceData";
+import { useCategoryMapper } from "../../hooks/useInfoCardMapper";
 
 const performanceOptions = [
   "카테고리 선택",
@@ -16,6 +17,7 @@ const performanceOptions = [
 const progressStatusOptions = ["선택", "진행중", "오픈 예정"];
 
 const MapSearch: React.FC = () => {
+  const { mapToApiCategory } = useCategoryMapper();
   const {
     searchKeyword,
     performanceOptionsSelected,
@@ -46,7 +48,20 @@ const MapSearch: React.FC = () => {
   useEffect(() => {
     console.log("performanceData.posts:", performanceData?.posts);
   }, [performanceData]);
-
+  useEffect(() => {
+    if (performanceData?.posts) {
+      console.log("Original posts:", performanceData.posts);
+      console.log(
+        "Mapped posts:",
+        performanceData.posts.map((post) => ({
+          ...post,
+          isBookmarked: post.isBookmarked || false,
+          category:
+            post.category || mapToApiCategory(performanceOptionsSelected),
+        }))
+      );
+    }
+  }, [performanceData, performanceOptionsSelected]);
   return (
     <div className="mt-[160px]">
       <SearchForm
@@ -81,11 +96,26 @@ const MapSearch: React.FC = () => {
 
       <section className="my-10">
         <MappageInfomationCardList
-          posts={performanceData?.posts.map((post) => ({
-            ...post,
-            isBookmarked: post.isBookmarked || false, // 기본값 설정
-            category: performanceOptionsSelected, // 현재 선택된 카테고리 전달
-          }))}
+          posts={performanceData?.posts.map((post) => {
+            // Log individual posts to see their structure
+            console.log("Processing post:", post);
+
+            // Determine the appropriate category
+            let mappedCategory = post.category;
+            if (!mappedCategory && post.genre) {
+              // Try mapping from genre if category is missing
+              mappedCategory = mapToApiCategory(post.genre);
+            } else if (!mappedCategory) {
+              // Use selected option if both are missing
+              mappedCategory = mapToApiCategory(performanceOptionsSelected);
+            }
+
+            return {
+              ...post,
+              isBookmarked: post.isBookmarked || false,
+              category: mappedCategory,
+            };
+          })}
           isLoading={isLoading}
         />
       </section>

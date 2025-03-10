@@ -1,5 +1,6 @@
 import InformationCard from "../../components/common/InformationCard";
 import { MapPost } from "../../types/mapSearch";
+import { useCategoryMapper } from "../../hooks/useInfoCardMapper";
 
 interface InformationCardListProps {
   posts?: (MapPost & { isBookmarked: boolean; category: string })[];
@@ -10,6 +11,8 @@ const MappageInfomationCardList = ({
   posts,
   isLoading,
 }: InformationCardListProps) => {
+  const { mapToApiCategory } = useCategoryMapper();
+
   if (isLoading)
     return <p className="text-center">리스트를 불러오는 중입니다.</p>;
   if (!posts || posts.length === 0)
@@ -26,7 +29,7 @@ const MappageInfomationCardList = ({
           date={`${post.startDate} ~ ${post.endDate}`}
           location={post.location || "위치 정보 없음"}
           isBookmarked={post.isBookmarked}
-          category={post.category}
+          category={post.category} // 이미 변환된 카테고리를 사용
         />
       ))}
     </div>
