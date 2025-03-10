@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../stores/authStore";
 
 const OAuthCallback = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const OAuthCallback = () => {
     localStorage.setItem("access_token", token);
     console.log("로그인 성공! 액세스 토큰:", token);
     // useAuthStore.getState().checkAuth();
+    navigate("/");
   }, [navigate]);
 
   return (
