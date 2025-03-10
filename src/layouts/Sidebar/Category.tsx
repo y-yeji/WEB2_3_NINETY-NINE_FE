@@ -13,7 +13,7 @@ const Category: React.FC<CategoryProps> = ({ onClick }) => {
         { to: "/informations/musical", text: "뮤지컬 | 연극" },
         {
           to: "/informations/concert",
-          text: "페스티벌 | 콘서트",
+          text: "페스티벌",
         },
         { to: "/MapSearch", text: "지도 검색" },
         { to: "/community", text: "소셜 커뮤니티" },

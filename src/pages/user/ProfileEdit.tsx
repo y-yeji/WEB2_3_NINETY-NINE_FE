@@ -4,6 +4,7 @@ import Icon from "../../assets/icons/Icon";
 import InterestsIcon from "../../components/ui/InterestsIcon";
 import api from "../../api/api";
 import { useAuthStore } from "../../stores/authStore";
+import { useModalStore } from "../../stores/modalStore";
 
 interface UserProfile {
   nickname: string;
@@ -57,9 +58,8 @@ const ProfileEdit = () => {
   // 비밀번호 표시/숨김 상태 관리를 위한 상태 변수 추가
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const [originalProfileImage, setOriginalProfileImage] = useState("");
-
+  const { openModal } = useModalStore();
   useEffect(() => {
     // 페이지 로드 시 인증 상태 확인
     checkAuth().then(() => {
@@ -367,8 +367,9 @@ const ProfileEdit = () => {
       });
 
       if (response.data.success) {
-        alert("프로필이 성공적으로 업데이트되었습니다.");
-        navigate("/");
+        openModal("프로필이 성공적으로 업데이트되었습니다.", "", "확인", () =>
+          navigate("/")
+        );
       } else {
         alert(
           `프로필 수정에 실패했습니다: ${response.data.message || "알 수 없는 오류가 발생했습니다."}`

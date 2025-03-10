@@ -10,7 +10,7 @@ const categoryRoutes = {
   팝업스토어: "popupstores",
   전시회: "exhibits",
   "뮤지컬 | 연극": "performances",
-  "페스티벌 | 콘서트": "festivals",
+  "페스티벌": "festivals",
 };
 
 const MainPage = () => {
