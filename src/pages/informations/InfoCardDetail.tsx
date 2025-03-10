@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Icon from "../../assets/icons/Icon";
 import InfoCardDetailInfo from "./InfoCardDetailInfo";
 import InfoCardDetailReview from "./InfoCardDetailReview";
 import InfoCardHeader from "../../components/informationdetail/InfoCardHeader";
@@ -9,16 +8,8 @@ import api from "../../api/api";
 import { useBookmarkState } from "../../hooks/useBookmarkState";
 import { useAuthStore } from "../../stores/authStore";
 import { useModalStore } from "../../stores/modalStore";
+import ScrollToTopButton from "../../components/ui/ScrollToTopButton";
 
-// Define the API response type
-interface EventDetailResponse {
-  code: number;
-  message: string;
-  data: EventDetail;
-  success: boolean;
-}
-
-// Define the EventDetail type based on the API response
 interface EventDetail {
   id: number;
   genre: string | null;
@@ -38,7 +29,6 @@ interface EventDetail {
   bookmarked: boolean;
 }
 
-// Fallback data for when API fails
 const fallbackEventDetail: EventDetail = {
   id: 0,
   genre: "기타",
@@ -69,18 +59,16 @@ const InfoCardDetail = () => {
   const { openModal } = useModalStore();
 
   const [activeTab, setActiveTab] = useState("review");
-  const [showScrollButton, setShowScrollButton] = useState(false);
   const [eventDetail, setEventDetail] = useState<EventDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [usingFallback, setUsingFallback] = useState(false);
+  const [reviewCount, setReviewCount] = useState(0);
 
-  // Normalize category to match API expectations
   const normalizeCategory = (cat: string | undefined): string => {
     if (!cat) return "";
 
-    // Map UI category to API endpoint category
-    const categoryMapping: { [key: string]: string } = {
+    const categoryMapping: Record<string, string> = {
       popups: "popupstores",
       exhibition: "exhibits",
       musical: "performances",
@@ -90,12 +78,37 @@ const InfoCardDetail = () => {
     return categoryMapping[cat] || cat;
   };
 
-  // Use the custom bookmark hook
-  const {
-    isBookmarked,
-    toggleBookmark: handleToggleBookmark,
-    isLoading: bookmarkLoading,
-  } = useBookmarkState(Number(eventId), eventDetail?.bookmarked || false);
+  const { isBookmarked, toggleBookmark: handleToggleBookmark } =
+    useBookmarkState(Number(eventId), eventDetail?.bookmarked || false);
+
+  const fetchReviewCount = async () => {
+    if (!category || !eventId) return;
+
+    const categoryMapping: Record<string, string> = {
+      popups: "popupStoreId",
+      exhibition: "exhibitId",
+      musical: "performanceId",
+      concert: "festivalId",
+    };
+
+    const paramKey = categoryMapping[category] || "";
+    if (!paramKey) return;
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      const requestUrl = `/api/reviews?${paramKey}=${eventId}`;
+
+      const response = await api.get(requestUrl, {
+        headers: token ? { Authorization: token } : {},
+      });
+
+      if (response.data && response.data.success) {
+        setReviewCount(response.data.data.length);
+      }
+    } catch (error) {
+      console.error("리뷰 개수 가져오기 오류:", error);
+    }
+  };
 
   // Fetch event detail from API
   useEffect(() => {
@@ -107,20 +120,11 @@ const InfoCardDetail = () => {
       }
 
       const normalizedCategory = normalizeCategory(category);
-      console.log(
-        `Fetching event: category=${normalizedCategory}, eventId=${eventId}`
-      );
 
       try {
-        console.log(
-          `Sending request to: /api/events/${normalizedCategory}/${eventId}`
-        );
         const response = await api.get(
           `/api/events/${normalizedCategory}/${eventId}`
         );
-
-        console.log("API Response:", response);
-        console.log("API Response data:", response.data);
 
         // 응답 구조 확인 및 처리
         if (response.data && typeof response.data === "object") {
@@ -160,33 +164,19 @@ const InfoCardDetail = () => {
       } finally {
         setLoading(false);
       }
-    }; // 여기에 중괄호 닫기 추가
+    };
 
     fetchEventDetail();
   }, [category, eventId]);
 
+  // 이벤트 상세 정보 로드 후 리뷰 개수 가져오기
   useEffect(() => {
-    console.log("Current event detail:", eventDetail);
+    if (eventDetail) {
+      fetchReviewCount();
+    }
   }, [eventDetail]);
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 100) {
-        setShowScrollButton(true);
-      } else {
-        setShowScrollButton(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   const toggleBookmark = async () => {
-    // Check authentication
     await checkAuth();
     if (!isLoggedIn) {
       openModal(
@@ -201,9 +191,7 @@ const InfoCardDetail = () => {
     await handleToggleBookmark();
   };
 
-  // Convert API data to ShowInfo format
   const mapToShowInfo = (data: EventDetail): ShowInfo => {
-    // Parse postUrl for poster image
     let posterUrl = data.postUrl;
 
     // 배열 형태 문자열인지 확인 (대괄호로 시작하는지)
@@ -227,7 +215,6 @@ const InfoCardDetail = () => {
       posterUrl = data.postUrl.split(",")[0].trim();
     }
 
-    // Format ticketing website links
     let links = "";
     if (data.ticketingWebSite) {
       links = `예매 사이트 바로가기: ${data.ticketingWebSite}`;
@@ -242,9 +229,8 @@ const InfoCardDetail = () => {
       times: data.operatingHours || "-",
       links: links || "-",
       price: data.price || "-",
-      reviewCount: 0, // This might need to be fetched from a different API
+      reviewCount,
       isBookmarked: data.bookmarked,
-      // Additional fields that might be useful
       genre: data.genre || "",
     };
   };
@@ -321,7 +307,7 @@ const InfoCardDetail = () => {
               activeTab === "info" ? "text-blue-6" : "text-gray-20"
             }`}
           >
-            <p className="h3-b">후기 ({showInfo.reviewCount})</p>
+            <p className="h3-b">후기 ({reviewCount})</p>
           </button>
         </div>
         <div className="relative w-[1120px] h-[4px] bg-gray-20">
@@ -337,27 +323,18 @@ const InfoCardDetail = () => {
               description={eventDetail.description}
               location={eventDetail.location}
               venue={eventDetail.venue}
-              detailImage={eventDetail.detailImage} // API에서 받아온 detailImage 전달
+              detailImage={eventDetail.detailImage}
             />
           ) : (
-            <InfoCardDetailReview eventId={Number(eventId)} />
+            <InfoCardDetailReview
+              eventId={Number(eventId)}
+              onReviewCountChange={setReviewCount}
+            />
           )}
         </div>
       </div>
 
-      {showScrollButton && (
-        <div
-          className="w-[42px] h-[42px] fixed bottom-10 right-10 cursor-pointer"
-          onClick={scrollToTop}
-        >
-          <div
-            className="w-[42px] h-[42px] rounded-lg bg-blue-7 flex justify-center items-center shadow-md"
-            style={{ boxShadow: "0px 0px 3px 3px rgba(0,0,0,0.06)" }}
-          >
-            <Icon name="ChevronUp" className="w-7.5 h-7.5 text-white" />
-          </div>
-        </div>
-      )}
+      <ScrollToTopButton />
     </div>
   );
 };
