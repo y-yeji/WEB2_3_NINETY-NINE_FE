@@ -9,23 +9,22 @@ const Header: React.FC = () => {
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const notificationRef = useRef<HTMLDivElement | null>(null);
 
-  // 알림창 열고 닫기
-  const handleNotificationClick = () => {
-    setShowNotification(!showNotification);
+  // 알림창 토글
+  const toggleNotification = () => {
+    setShowNotification((prev) => !prev);
     if (!showNotification) {
-      setIsSidebarOpen(false); // 알림창이 열리면 사이드바 닫기
+      setIsSidebarOpen(false); // 알림창이 열리면 사이드바는 닫힘
     }
   };
 
-  // 사이드바 열고 닫기
+  // 사이드바 토글
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+    setIsSidebarOpen((prev) => !prev);
     if (!isSidebarOpen) {
-      setShowNotification(false); // 사이드바가 열리면 알림창 닫기
+      setShowNotification(false); // 사이드바가 열리면 알림창은 닫힘
     }
   };
 
-  // 외부 클릭 감지로 알림창 및 사이드바 닫기
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -62,13 +61,13 @@ const Header: React.FC = () => {
           </a>
           <div className="flex gap-4">
             {/* 알림 버튼 */}
-            <button onClick={handleNotificationClick} aria-label="알림 열기">
+            <button onClick={toggleNotification} aria-label="알림 열기">
               <Icon name="Bell" size={24} className="text-blue-1" />
             </button>
 
             {/* 사이드바 버튼 */}
             <button onClick={toggleSidebar} aria-label="메뉴 열기">
-              {isSidebarOpen === true ? (
+              {isSidebarOpen ? (
                 <Icon name="X" size={24} className="text-blue-1" />
               ) : (
                 <Icon name="Menu" size={24} className="text-blue-1" />
@@ -79,18 +78,22 @@ const Header: React.FC = () => {
       </header>
 
       {/* 사이드바 */}
-      <Sidebar
-        ref={sidebarRef}
-        isOpen={isSidebarOpen}
-        onClose={toggleSidebar}
-      />
+      {isSidebarOpen && (
+        <Sidebar
+          ref={sidebarRef}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+        />
+      )}
 
       {/* 알림창 */}
-      <Notification
-        ref={notificationRef}
-        isOpen={showNotification}
-        onClose={() => setShowNotification(false)}
-      />
+      {showNotification && (
+        <Notification
+          ref={notificationRef}
+          isOpen={showNotification}
+          onClose={() => setShowNotification(false)}
+        />
+      )}
     </>
   );
 };
