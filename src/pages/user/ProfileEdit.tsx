@@ -311,13 +311,19 @@ const ProfileEdit = () => {
     }
 
     // 변경 사항이 있는지 확인
+    const hasNicknameChanged = nickname !== originalNickname;
+    const hasIntroductionChanged = introduction !== originalIntroduction;
+    const hasInterestsChanged =
+      JSON.stringify(activeButtons) !== JSON.stringify(originalActiveButtons);
+    const hasPasswordChanged = !!password;
+    const hasImageChanged = imageAction !== "none";
+
     const hasChanges =
-      nickname !== originalNickname ||
-      introduction !== originalIntroduction ||
-      // 배열 비교 간소화
-      JSON.stringify(activeButtons) !== JSON.stringify(originalActiveButtons) ||
-      password ||
-      imageAction !== "none";
+      hasNicknameChanged ||
+      hasIntroductionChanged ||
+      hasInterestsChanged ||
+      hasPasswordChanged ||
+      hasImageChanged;
 
     // 변경 사항이 없으면 알림 표시 후 종료
     if (!hasChanges) {
@@ -331,25 +337,29 @@ const ProfileEdit = () => {
       // FormData 객체 생성
       const formData = new FormData();
 
-      // 필수 필드들 추가
-      formData.append("nickname", nickname);
+      // 필드별로 변경된 항목만 FormData에 추가
+      if (hasNicknameChanged) {
+        formData.append("nickname", nickname);
+      }
 
-      // 선택 입력 필드
-      if (introduction) {
+      // 소개 텍스트가 변경된 경우에만 추가
+      if (hasIntroductionChanged) {
         formData.append("description", introduction);
       }
 
-      // 관심사 추가
-      activeButtons.forEach((interest) => {
-        formData.append("interests", interest);
-      });
+      // 관심사가 변경된 경우에만 추가
+      if (hasInterestsChanged) {
+        activeButtons.forEach((interest) => {
+          formData.append("interests", interest);
+        });
+      }
 
       // 비밀번호가 입력된 경우에만 포함
-      if (password) {
+      if (hasPasswordChanged) {
         formData.append("password", password);
       }
 
-      // 이미지 처리
+      // 이미지 처리 - 항상 이미지 정보 포함
       if (imageAction === "change" && selectedFile) {
         formData.append("image_data", selectedFile);
       } else if (imageAction === "delete") {
@@ -360,6 +370,7 @@ const ProfileEdit = () => {
       }
 
       const token = localStorage.getItem("accessToken");
+
       const response = await api.put("/api/profile", formData, {
         headers: {
           Authorization: token || "",
@@ -377,6 +388,14 @@ const ProfileEdit = () => {
       }
     } catch (err: any) {
       console.error("오류가 발생했습니다.", err);
+
+      // 자세한 오류 정보 로깅
+      if (err.response) {
+        console.log("오류 응답:", {
+          status: err.response.status,
+          data: err.response.data,
+        });
+      }
 
       let errorMessage = "프로필 수정 중 오류가 발생했습니다.";
 
