@@ -99,23 +99,19 @@ const MapSearch: React.FC = () => {
       <section className="my-10">
         <MappageInfomationCardList
           posts={performanceData?.posts.map((post) => {
-            // Log individual posts to see their structure
-            console.log("Processing post:", post);
-
-            // Determine the appropriate category
+            // 이 부분 수정
             let mappedCategory = post.category;
             if (!mappedCategory && post.genre) {
-              // Try mapping from genre if category is missing
               mappedCategory = mapToApiCategory(post.genre);
             } else if (!mappedCategory) {
-              // Use selected option if both are missing
               mappedCategory = mapToApiCategory(performanceOptionsSelected);
             }
 
             return {
               ...post,
-              isBookmarked: post.bookmarked || false, // 여기를 bookmarked에서 isBookmarked로 변환
+              isBookmarked: post.bookmarked || false,
               category: mappedCategory,
+              apiCategory: mappedCategory, // apiCategory도 함께 전달
             };
           })}
           isLoading={isLoading}

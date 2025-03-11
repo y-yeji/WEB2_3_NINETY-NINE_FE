@@ -40,6 +40,7 @@ const MappageInfomationCardList = ({
           location={post.location || "위치 정보 없음"}
           isBookmarked={post.isBookmarked}
           category={post.category} // 이미 변환된 카테고리를 사용
+          apiCategory={post.apiCategory}
         />
       ))}
     </div>
