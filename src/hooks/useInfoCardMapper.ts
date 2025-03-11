@@ -23,7 +23,7 @@ export const useCategoryMapper = () => {
     뮤지컬: "performances",
     연극: "performances",
     콘서트: "festivals",
-    페스티벌: "festivals",
+    축제: "festivals",
     "뮤지컬 | 연극": "performances",
     // API 경로는 그대로 유지
     popupstores: "popupstores",

@@ -26,6 +26,12 @@ export const useBookmarkState = (
       exhibition: "exhibit",
       musical: "performance",
       concert: "festival",
+      팝업스토어: "popupStore",
+      전시회: "exhibit",
+      "뮤지컬 | 연극": "performance",
+      공연: "performance",
+      페스티벌: "festival",
+      축제: "festival",
     };
 
     for (const [urlPath, apiParam] of Object.entries(categoryMap)) {
@@ -36,7 +42,9 @@ export const useBookmarkState = (
     return "performance"; // Default fallback
   };
 
-  const toggleBookmark = async (): Promise<BookmarkToggleResult> => {
+  const toggleBookmark = async (
+    overrideCategory?: string
+  ): Promise<BookmarkToggleResult> => {
     setIsLoading(true);
     setError(null);
     const token = localStorage.getItem("accessToken");
@@ -50,12 +58,29 @@ export const useBookmarkState = (
     }
 
     try {
-      // Update UI optimistically
+      // UI 먼저 낙관적으로 업데이트
       const newStatus = !isBookmarked;
       setIsBookmarked(newStatus);
 
-      // Get the correct category parameter
-      const categoryParam = getCategoryParam();
+      // overrideCategory가 있으면 사용, 없으면 URL에서 추출
+      const categoryParam = overrideCategory
+        ? overrideCategory === "popupstores"
+          ? "popupStore"
+          : overrideCategory === "exhibits"
+            ? "exhibit"
+            : overrideCategory === "performances"
+              ? "performance"
+              : overrideCategory === "festivals"
+                ? "festival"
+                : overrideCategory
+        : getCategoryParam();
+
+      console.log("북마크 요청 정보:", {
+        id,
+        categoryParam,
+        overrideCategory,
+        currentPath: window.location.pathname,
+      });
 
       // Make API request to toggle bookmark
       const response = await api.post(

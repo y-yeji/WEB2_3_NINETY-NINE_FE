@@ -19,7 +19,12 @@ const OAuthCallback = () => {
       localStorage.setItem("accessToken", accessToken);
       console.log("로그인 성공! 액세스 토큰:", accessToken);
 
-      await checkAuth();
+      try {
+        await checkAuth(); 
+      } catch (error) {
+        console.error("checkAuth 실행 중 오류:", error);
+        navigate("/login");
+      }
     };
 
     handleAuth();
@@ -30,7 +35,7 @@ const OAuthCallback = () => {
     console.log("user:", user);
 
     if (isLoggedIn && user) {
-      navigate("/"); 
+      navigate("/");
     }
   }, [isLoggedIn, user, navigate]);
 

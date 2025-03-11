@@ -40,7 +40,7 @@ const UserPage = () => {
   console.log(userData);
   return (
     <div className="w-full flex flex-col mx-auto ">
-      <div className="mt-[108px] max-w-[1280px] mx-auto p-6">
+      <div className="mt-[108px] max-w-[1280px] mx-auto p-6 mb-20">
         {userData && (
           <ProfileHeader
             nickname={userData.nickname}
@@ -58,7 +58,9 @@ const UserPage = () => {
               <PostCard key={index} post={post} onLikeToggle={async () => {}} />
             ))
           ) : (
-            <p className="text-gray-40">해당 데이터가 없습니다.</p>
+            <div className="col-span-3 flex justify-center items-center h-[200px]">
+              <p className="text-gray-40">작성된 포스트가 없습니다.</p>
+            </div>
           )}
         </div>
       </div>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import InputField from "../../components/ui/InputField";
 import CustomButton from "../../components/ui/CustomButton";
 import api from "../../api/api";
+import { useModalStore } from "../../stores/modalStore";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -66,10 +67,10 @@ const Signup = () => {
   };
 
   const handleSignUp = async () => {
+    const { openModal } = useModalStore.getState();
     if (!validate()) return;
     try {
-      console.log(form);
-      const response = await api.post(
+      await api.post(
         "/api/signup",
         {
           email: form.email,
@@ -82,18 +83,22 @@ const Signup = () => {
           },
         }
       );
-      console.log("회원가입 성공:", response.data);
-      alert("회원가입이 완료되었습니다.");
-      navigate("/login");
+      openModal("회원가입이 완료되었습니다.🎉", "", "닫기");
     } catch (error) {
       console.error("회원가입 실패:", error);
-      alert("회원가입에 실패했습니다.");
+      setForm({
+        email: "",
+        nickname: "",
+        password: "",
+        confirmPassword: "",
+      });
+      openModal("회원가입에 실패했습니다.", "", "닫기");
     }
   };
 
   return (
-    <div className="mx-10 w-full flex flex-col items-center justify-center">
-      <h2 className="text-4xl mt-[264px] mb-[250px] font-serif italic text-blue-1">
+    <div className="mx-10 mt-64 h-[50vh] w-full flex flex-col items-center justify-center">
+      <h2 className="text-4xl  my-[60px] font-dm italic text-blue-1">
         On culture
       </h2>
 

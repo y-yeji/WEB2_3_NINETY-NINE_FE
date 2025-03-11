@@ -60,7 +60,7 @@ const InformationsGrid: FC<EventsGridProps> = ({
   if (loading) {
     return (
       <div className="flex justify-center items-center h-96">
-        <p>불러오는 중...</p>
+        <p>리스트를 불러오는 중입니다.</p>
       </div>
     );
   }
@@ -68,7 +68,7 @@ const InformationsGrid: FC<EventsGridProps> = ({
   if (events.length === 0) {
     return (
       <div className="flex justify-center items-center h-96">
-        <p>표시할 정보가 없습니다.</p>
+        <p>리스트가 없습니다.</p>
       </div>
     );
   }

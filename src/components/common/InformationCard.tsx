@@ -9,7 +9,7 @@ import { useDateFormatter } from "../../hooks/useInformationDateFormatter";
 
 interface InformationCardProps {
   id: number;
-  date?: string; // date 대신 startDate와 endDate로 변경
+  date?: string;
   imageUrl: string;
   title: string;
   startDate?: string;
@@ -18,6 +18,7 @@ interface InformationCardProps {
   isBookmarked: boolean;
   onBookmarkChange?: (id: number, newStatus: boolean) => void;
   category: string;
+  apiCategory?: string; // 새로 추가된 prop
 }
 
 function InformationCard({
@@ -30,6 +31,7 @@ function InformationCard({
   isBookmarked,
   onBookmarkChange,
   category,
+  apiCategory, // 구조 분해 할당에 추가
 }: InformationCardProps) {
   const navigate = useNavigate();
   const { isLoggedIn, checkAuth } = useAuthStore();
@@ -53,8 +55,9 @@ function InformationCard({
 
   // 카드 클릭 시 상세 페이지로 이동
   const handleClick = () => {
-    const apiCategory = mapToApiCategory(category);
-    navigate(`/informations/${apiCategory}/${id}`);
+    // apiCategory가 있으면 사용, 없으면 mapToApiCategory 함수 사용
+    const routeCategory = apiCategory || mapToApiCategory(category);
+    navigate(`/informations/${routeCategory}/${id}`);
   };
 
   // 북마크 토글 처리
@@ -73,7 +76,8 @@ function InformationCard({
       return;
     }
 
-    const result = await handleToggleBookmark();
+    // apiCategory를 전달하도록 수정
+    const result = await handleToggleBookmark(apiCategory);
 
     // 부모 컴포넌트에 변경 알림
     if (result.success && onBookmarkChange) {
@@ -91,7 +95,7 @@ function InformationCard({
         alt={formattedTitle}
         className="w-full h-full absolute left-0 top-0 object-cover"
         onError={(e) => {
-          // 이미지 로딩 실패 시 기본 이미지로 대체
+          console.error(`이미지 로드 실패: ${imageUrl}`);
           e.currentTarget.src = "/default-image.png";
         }}
       />

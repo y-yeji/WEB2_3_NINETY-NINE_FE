@@ -33,10 +33,10 @@ const InformationsFilters: React.FC<InformationsFiltersProps> = ({
     "제주특별자치도",
   ];
 
-  const statuses = ["진행 중", "진행 예정"];
+  const statuses = ["진행 중", "오픈 예정"];
 
   return (
-    <div className="flex ml-5 gap-5 w-full">
+    <div className="flex ml-[18.5px] gap-5 w-full">
       <Dropdown
         data={locations}
         onSelect={onLocationChange}

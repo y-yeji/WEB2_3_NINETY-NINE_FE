@@ -16,7 +16,6 @@ const categoryRoutes = {
 const MainPage = () => {
   const { data, loading } = useAllEventData();
   if (loading) return <p className="text-center">데이터 불러오는 중...</p>;
-  console.log(data);
   const getRandomItems = (items: { postUrl: string }[], count: number) => {
     if (!items || items.length === 0) return [];
     const shuffled = [...items].sort(() => 0.5 - Math.random());
@@ -54,7 +53,7 @@ const MainPage = () => {
           </Swiper>
         ) : (
           <p className="text-center text-lg font-semibold">
-            이벤트 데이터를 불러올 수 없습니다.
+            이벤트 데이터를 불러올 수 없습니다...
           </p>
         )}
       </section>

@@ -29,6 +29,7 @@ export interface MapPost {
   latitude?: number;
   longitude?: number;
   category: string;
+  apiCategory?: string;
 }
 
 export interface MapSearchResponse {

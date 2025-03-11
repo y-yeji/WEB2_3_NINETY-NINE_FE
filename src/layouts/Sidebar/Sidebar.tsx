@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Icon from "../../assets/icons/Icon";
 import React, { useEffect } from "react";
 import TeamIntroduce from "./TeamIntroduce";
@@ -13,16 +13,16 @@ interface SidebarProps {
 const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
   ({ isOpen, onClose }, ref) => {
     const { logout, checkAuth, isLoggedIn, user } = useAuthStore();
-
+    const navigate = useNavigate();
     useEffect(() => {
       checkAuth();
-    }, [checkAuth]);
+    }, [checkAuth, navigate]);
 
     const handleLogout = async () => {
       await logout();
+      navigate("/");
     };
 
-    // console.log(user);
     return (
       <aside
         ref={ref}
