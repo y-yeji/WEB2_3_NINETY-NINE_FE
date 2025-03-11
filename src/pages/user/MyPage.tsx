@@ -68,6 +68,12 @@ const MyPage = () => {
       setPostData([]);
     }
   }, [activeTab, userData]);
+  const cleanImageUrl = (url: string): string => {
+    if (!url) return "/default-image.png";
+
+    // 대괄호 제거
+    return url.replace(/^\[|\]$/g, "");
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -96,18 +102,49 @@ const MyPage = () => {
         return (
           <div className="grid grid-cols-3 gap-10 mt-15">
             {bookmarkData.length > 0 ? (
-              bookmarkData.map((post) => (
-                <InformationCard
-                  id={post.id}
-                  category={post.genre}
-                  key={post.id}
-                  imageUrl={post.postUrl}
-                  title={post.title}
-                  date={`${post.startDate} ~ ${post.endDate}`}
-                  location={post.location}
-                  isBookmarked={post.bookmarked}
-                />
-              ))
+              bookmarkData.map((post) => {
+                // 한글 카테고리를 영문으로 변환하는 함수
+                const getCategoryFromKorean = (koreanGenre: string): string => {
+                  const categoryMap: Record<string, string> = {
+                    팝업스토어: "popups",
+                    전시회: "exhibit",
+                    연극: "performances",
+                    축제: "festivals",
+                  };
+                  return categoryMap[koreanGenre] || "popups"; // 기본값 설정
+                };
+
+                // API 카테고리 변환
+                const getApiCategoryFromKorean = (
+                  koreanGenre: string
+                ): string => {
+                  const categoryMap: Record<string, string> = {
+                    팝업스토어: "popupstores",
+                    전시회: "exhibits",
+                    연극: "performances",
+                    축제: "festivals",
+                  };
+                  return categoryMap[koreanGenre] || "popupStore"; // 기본값 설정
+                };
+
+                const englishCategory = getCategoryFromKorean(post.genre);
+                const apiCategory = getApiCategoryFromKorean(post.genre);
+
+                return (
+                  <InformationCard
+                    id={post.id}
+                    category={englishCategory}
+                    apiCategory={apiCategory}
+                    key={post.id}
+                    imageUrl={cleanImageUrl(post.postUrl)}
+                    title={post.title}
+                    startDate={post.startDate}
+                    endDate={post.endDate}
+                    location={post.location}
+                    isBookmarked={post.bookmarked}
+                  />
+                );
+              })
             ) : (
               <div className="col-span-3 flex justify-center items-center h-[200px]">
                 <p className="text-gray-40 text-center">

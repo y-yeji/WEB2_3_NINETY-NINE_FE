@@ -1,7 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Link } from "react-router-dom";
 import InformationCard from "../common/InformationCard";
-// import { useDateFormatter } from "../../hooks/useInformationDateFormatter";
 import { useTitleFormatter } from "../../hooks/usePopupTitleFormatter";
 
 interface EventItem {
@@ -30,11 +29,17 @@ interface EventSectionProps {
 }
 
 const EventSection = ({ category, route, data }: EventSectionProps) => {
-  // const { formatDatePeriod } = useDateFormatter();
   const { formatTitle } = useTitleFormatter();
 
   // 디버깅을 위한 콘솔 로그 추가
-  // console.log("카테고리:", category, "라우트:", route);
+  console.log(
+    "카테고리:",
+    category,
+    "라우트:",
+    route,
+    "데이터 샘플:",
+    data.length > 0 ? data[0] : "없음"
+  );
 
   return (
     <section className="mb-12 mx-[50px]">
@@ -59,14 +64,7 @@ const EventSection = ({ category, route, data }: EventSectionProps) => {
       >
         {data.length > 0 ? (
           data.map((item) => {
-            // 디버깅용 로그 추가
-            if (category === "팝업스토어") {
-              // console.log("팝업스토어 제목 정제 전:", item.title);
-              // console.log("장르:", item.genre);
-              // const formattedTitle = formatTitle(item.title, "popupstores"); // 직접 "popupstores" 값 전달
-              // console.log("팝업스토어 제목 정제 후:", formattedTitle);
-            }
-
+            // 중요: 여기서 카테고리를 매핑하는 대신 route를 사용
             return (
               <SwiperSlide
                 key={item.id}
@@ -74,9 +72,9 @@ const EventSection = ({ category, route, data }: EventSectionProps) => {
               >
                 <InformationCard
                   id={item.id}
-                  category={item.genre}
+                  category={route} // item.genre 대신 route 값 사용
                   title={
-                    category === "팝업스토어"
+                    route === "popupstores"
                       ? formatTitle(item.title, "popupstores")
                       : item.title
                   }
@@ -100,6 +98,7 @@ const EventSection = ({ category, route, data }: EventSectionProps) => {
                         ? item.postUrl[0]
                         : ""
                   }
+                  apiCategory={route}
                 />
               </SwiperSlide>
             );
