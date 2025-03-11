@@ -123,7 +123,7 @@ const MapSearch: React.FC = () => {
       </section>
 
       {performanceData?.posts && performanceData.posts.length > 0 && (
-        <div className="mb-16">
+        <div className="my-20">
           <Pagination
             totalItems={performanceData?.totalElements || 0}
             itemsPerPage={9}
