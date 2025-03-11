@@ -84,7 +84,7 @@ const MyPage = () => {
               ))
             ) : (
               <div className="col-span-3 flex justify-center items-center h-[200px]">
-                <p className="text-gray-40">
+                <p className="text-gray-40 text-center">
                   아직 작성한 포스트가 없습니다.
                   <span className="block mt-3">포스트를 작성해보세요.</span>
                 </p>

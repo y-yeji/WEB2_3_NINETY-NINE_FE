@@ -1,25 +1,24 @@
 export const formatNotificationTime = (createdAt: string): string => {
-  // Parse the createdAt string into a Date object
   const createdAtDate = new Date(createdAt);
-  const now = new Date();
 
-  // Check if the notification was created on the same day
+  const kstDate = new Date(createdAtDate.getTime() + 9 * 60 * 60 * 1000);
+  const now = new Date();
+  const nowKST = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+
   if (
-    createdAtDate.getFullYear() === now.getFullYear() &&
-    createdAtDate.getMonth() === now.getMonth() &&
-    createdAtDate.getDate() === now.getDate()
+    kstDate.getFullYear() === nowKST.getFullYear() &&
+    kstDate.getMonth() === nowKST.getMonth() &&
+    kstDate.getDate() === nowKST.getDate()
   ) {
-    // Format as '오전 11:30' or '오후 7:44'
-    const hours = createdAtDate.getHours();
-    const minutes = createdAtDate.getMinutes();
+    const hours = kstDate.getHours();
+    const minutes = kstDate.getMinutes();
     const period = hours < 12 ? "오전" : "오후";
-    const formattedHour = hours % 12 || 12; // Convert 0 to 12 for AM/PM
+    const formattedHour = hours % 12 || 12;
     return `${period} ${formattedHour}:${minutes.toString().padStart(2, "0")}`;
   } else {
-    // Format as '25.3.10'
-    const year = createdAtDate.getFullYear() % 100; // Get last two digits of the year
-    const month = createdAtDate.getMonth() + 1; // Months are zero-based
-    const day = createdAtDate.getDate();
+    const year = kstDate.getFullYear() % 100;
+    const month = kstDate.getMonth() + 1;
+    const day = kstDate.getDate();
     return `${year}.${month}.${day}`;
   }
 };
