@@ -16,7 +16,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
     const navigate = useNavigate();
     useEffect(() => {
       checkAuth();
-    }, [checkAuth]);
+    }, [checkAuth, navigate]);
 
     const handleLogout = async () => {
       await logout();

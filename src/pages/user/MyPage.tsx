@@ -125,8 +125,6 @@ const MyPage = () => {
     }
   };
 
-  console.log(userData);
-  console.log(bookmarkData);
   return (
     <div className="w-full flex flex-col mx-auto">
       <div className="mt-[108px] max-w-[1280px] mx-auto p-6 mb-20">

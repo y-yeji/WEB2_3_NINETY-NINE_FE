@@ -7,7 +7,7 @@ const ProfileHeader = ({
   nickname = "닉네임을 설정해주세요.",
   description = "소개글을 작성해주세요.",
   interests = [],
-  profileImage = "/default-image.png",
+  profileImage,
   isMyPage = false,
 }: UserData) => {
   const navigate = useNavigate();
@@ -16,8 +16,8 @@ const ProfileHeader = ({
     <div className="w-full flex flex-col items-center mt-[50px]">
       <div className="flex items-center gap-[54px]">
         <img
-          src={profileImage}
-          alt="Profile"
+          src={profileImage ? profileImage : "/default-image.png"}
+          alt="profileImage"
           className="w-[150px] h-[150px] rounded-full object-cover"
         />
         <div className="flex flex-col justify-center h-[150px]">
