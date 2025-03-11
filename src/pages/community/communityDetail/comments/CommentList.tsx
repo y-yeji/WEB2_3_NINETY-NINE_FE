@@ -40,7 +40,6 @@ const CommentList: React.FC<CommentListProps> = ({
     onCommentUpdate,
     onCommentDelete
   );
-  const { currentTime } = useRealTimeDate();
 
   const isCommentAuthor = (comment: PostComment) => {
     return user && user.id === comment.userId;
@@ -64,7 +63,7 @@ const CommentList: React.FC<CommentListProps> = ({
                   </div>
                   <span className="body-normal-m">{comment.userNickname}</span>
                   <span className="caption-r text-gray-30">
-                    {formatCommentDate(comment.createdAt, currentTime)}
+                    {formatCommentDate(comment.createdAt)}
                   </span>
                 </div>
 

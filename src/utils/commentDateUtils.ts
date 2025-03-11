@@ -1,60 +1,35 @@
-// commentDateUtils.ts
-export const formatCommentDate = (
-  dateString: string,
-  currentTime: Date = new Date()
-) => {
-  const parsedDate = new Date(dateString);
+export const formatCommentDate = (utcDate: string): string => {
+  const commentDate = new Date(utcDate);
+  const now = new Date();
 
-  // 현재 시간을 UTC로 가져오기
-  const currentTimeUTC = new Date(
-    Date.UTC(
-      currentTime.getUTCFullYear(),
-      currentTime.getUTCMonth(),
-      currentTime.getUTCDate(),
-      currentTime.getUTCHours(),
-      currentTime.getUTCMinutes(),
-      currentTime.getUTCSeconds()
-    )
-  );
+  const kstCommentDate = new Date(commentDate.getTime() + 9 * 60 * 60 * 1000);
 
-  // 댓글 시간을 UTC로 변환
-  const commentDateUTC = new Date(
-    Date.UTC(
-      parsedDate.getUTCFullYear(),
-      parsedDate.getUTCMonth(),
-      parsedDate.getUTCDate(),
-      parsedDate.getUTCHours(),
-      parsedDate.getUTCMinutes(),
-      parsedDate.getUTCSeconds()
-    )
-  );
+  const diffInMs = now.getTime() - kstCommentDate.getTime();
+  const diffInSeconds = Math.floor(diffInMs / 1000);
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  const diffInDays = Math.floor(diffInHours / 24);
 
-  const diffInMs = currentTimeUTC.getTime() - commentDateUTC.getTime();
-
-  if (diffInMs < 0) {
+  if (diffInSeconds < 0) {
     return "방금 전";
   }
 
-  const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
-  const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
-  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-
-  if (diffInMinutes < 1) {
-    return "방금 전";
+  if (diffInSeconds < 60) {
+    return `${diffInSeconds}초 전`;
   } else if (diffInMinutes < 60) {
     return `${diffInMinutes}분 전`;
   } else if (diffInHours < 24) {
     return `${diffInHours}시간 전`;
-  } else if (diffInDays < 2) {
+  } else if (diffInDays === 1) {
     return "어제";
   } else {
-    return commentDateUTC
+    return kstCommentDate
       .toLocaleDateString("ko-KR", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
       })
-      .replace(/\. /g, ".")
-      .replace(/\.$/, "");
+      .replace(/\./g, ".")
+      .trim();
   }
 };
