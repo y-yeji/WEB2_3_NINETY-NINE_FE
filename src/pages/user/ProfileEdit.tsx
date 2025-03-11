@@ -378,9 +378,7 @@ const ProfileEdit = () => {
       });
 
       if (response.data.success) {
-        openModal("프로필이 성공적으로 업데이트되었습니다.", "", "확인", () =>
-          navigate("/")
-        );
+        openModal("프로필이 성공적으로 업데이트되었습니다.", "", "확인");
       } else {
         alert(
           `프로필 수정에 실패했습니다: ${response.data.message || "알 수 없는 오류가 발생했습니다."}`

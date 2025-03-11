@@ -86,6 +86,12 @@ const Signup = () => {
       openModal("회원가입이 완료되었습니다.🎉", "", "닫기");
     } catch (error) {
       console.error("회원가입 실패:", error);
+      setForm({
+        email: "",
+        nickname: "",
+        password: "",
+        confirmPassword: "",
+      });
       openModal("회원가입에 실패했습니다.", "", "닫기");
     }
   };

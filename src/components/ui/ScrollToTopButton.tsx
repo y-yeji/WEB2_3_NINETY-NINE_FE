@@ -23,7 +23,7 @@ const ScrollToTopButton = () => {
         >
           <Icon
             name="ChevronUp"
-            className="h-[42px] w-[42px] bg-blue-7 rounded-lg text-base-1"
+            className="h-[30px] w-[30px] bg-blue-7 rounded-lg text-base-1 shadow-2xl"
           />
         </button>
       )}
