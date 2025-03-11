@@ -5,6 +5,7 @@ import InputField from "../../components/ui/InputField";
 import QuillEditor from "../../components/texteditor/QuillEditor";
 import ShortButton from "../../components/ui/ShortButton";
 import api from "../../api/api";
+import { useModalStore } from "../../stores/modalStore";
 
 const CommunityEditor = () => {
   const [title, setTitle] = useState("");
@@ -18,53 +19,53 @@ const CommunityEditor = () => {
   };
 
   const handleSubmit = async () => {
+    const { openModal } = useModalStore.getState();
+
     if (!title.trim() || !content.trim()) {
-      alert("제목과 내용을 입력해주세요.");
+      openModal("제목과 내용을 입력해주세요.", "", "닫기");
       return;
     }
 
-    const confirmPost = window.confirm("게시글을 수정하시겠습니까?");
-    if (!confirmPost) return;
+    openModal("게시글을 생성하시겠습니까?", "취소", "확인", async () => {
+      const formData = new FormData();
+      const requestDTO = { title, content };
+      formData.append("requestDTO", JSON.stringify(requestDTO));
 
-    const formData = new FormData();
-    const requestDTO = { title, content };
-    formData.append("requestDTO", JSON.stringify(requestDTO));
-
-    imageFiles.forEach((img) => {
-      if (typeof img === "string") {
-        formData.append("existingImages", img); 
-      } else {
-        formData.append("images", img); 
-      }
-    });
-
-    try {
-      const token = localStorage.getItem("accessToken");
-      const response = await api.put("/api/socialPosts/", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: token,
-        },
+      imageFiles.forEach((img) => {
+        if (img instanceof File) {
+          formData.append("images", img);
+        } else {
+          console.error(`잘못된 이미지 타입: ${typeof img}`, img);
+        }
       });
 
-      console.log("게시글 수정 완료", response.data);
-      alert("게시글이 수정되었습니다.");
-      navigate("/mypage");
-    } catch (error) {
-      console.error("게시글 수정 중 오류 발생", error);
-    }
+      try {
+        const token = localStorage.getItem("accessToken");
+        const response = await api.post("/api/socialPosts", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: token,
+          },
+        });
+        console.log("게시글 생성 완료", response.data);
+        openModal("게시글이 생성되었습니다.", "", "확인", () => {
+          navigate("/mypage");
+        });
+      } catch (error) {
+        console.error("게시글 생성 중 오류 발생", error);
+        openModal("게시글 생성 중 오류가 발생했습니다.", "", "닫기");
+      }
+    });
   };
-
   const handleCancel = () => {
-    const confirmCancel = window.confirm(
-      "정말로 게시글 작성을 취소하시겠습니까?"
-    );
-    if (confirmCancel) {
+    const { openModal } = useModalStore.getState();
+
+    openModal("정말로 게시글 작성을 취소하시겠습니까?", "취소", "확인", () => {
       setTitle("");
       setContent("");
       setImageFiles([]);
-      navigate("/");
-    }
+      navigate("/mypage");
+    });
   };
 
   return (
@@ -77,7 +78,7 @@ const CommunityEditor = () => {
           customStyle="w-[1200px] h-[50px] mt-[67px] mb-5 body-l-m border-gray-5"
         />
         <QuillEditor value={content} onChange={setContent} />
-        {/* 🔹 수정된 부분: handleImageUpload 함수 적용 */}
+
         <ImageUploader onUpload={handleImageUpload} />
         <div className="w-full flex justify-between items-center mt-2.5 px-2.5">
           <p className="caption-r text-blue-4">
