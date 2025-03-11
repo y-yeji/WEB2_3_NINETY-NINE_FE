@@ -13,6 +13,7 @@ const CommunityEditPost = () => {
   const [imageUrls, setImageUrls] = useState<(File | string)[]>([]);
   const navigate = useNavigate();
 
+
   useEffect(() => {
     const fetchPostData = async () => {
       try {
@@ -30,6 +31,11 @@ const CommunityEditPost = () => {
     if (postId) fetchPostData();
   }, [postId]);
 
+
+  const handleImageUpload = (images: (File | string)[]) => {
+    setImageUrls(images);
+  };
+
   const handleSubmit = async () => {
     if (!title.trim() || !content.trim()) {
       alert("제목과 내용을 입력해주세요.");
@@ -43,11 +49,12 @@ const CommunityEditPost = () => {
     const requestDTO = { title, content };
     formData.append("requestDTO", JSON.stringify(requestDTO));
 
+    
     imageUrls.forEach((img) => {
       if (typeof img === "string") {
-        formData.append("existingImages", img);
+        formData.append("existingImages", img); 
       } else {
-        formData.append("images", img);
+        formData.append("images", img); 
       }
     });
 
@@ -82,35 +89,24 @@ const CommunityEditPost = () => {
           placeholder="제목을 입력해주세요."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          customStyle="w-[1200px] h-[50px] mt-[67px] mb-5 body-l-m border-gray-5"
         />
         <QuillEditor value={content} onChange={setContent} />
-        <ImageUploader
-          onUpload={setImageUrls}
-          initialImages={
-            imageUrls.filter((img) => img instanceof File) as File[]
-          } // 추후 오류 수정
-        />
+        <ImageUploader onUpload={handleImageUpload} initialImages={imageUrls} />
 
         <div className="w-full flex justify-between items-center mt-2.5 px-2.5">
-          <p className="caption-r text-blue-4">
-            이미지 업로드를 하지 않을 경우 기본 이미지로 업로드됩니다.
-          </p>
-          <div className="flex gap-5 mt-[74px]">
-            <ShortButton
-              text="취소"
-              textColor="blue-1"
-              bgColor="base-1"
-              onClick={handleCancel}
-            />
-            <ShortButton
-              text="포스트 수정"
-              bgColor="blue-1"
-              textColor="base-1"
-              hoverColor="blue-4"
-              onClick={handleSubmit}
-            />
-          </div>
+          <ShortButton
+            text="취소"
+            textColor="blue-1"
+            bgColor="base-1"
+            onClick={handleCancel}
+          />
+          <ShortButton
+            text="포스트 수정"
+            bgColor="blue-1"
+            textColor="base-1"
+            hoverColor="blue-4"
+            onClick={handleSubmit}
+          />
         </div>
       </div>
     </div>
