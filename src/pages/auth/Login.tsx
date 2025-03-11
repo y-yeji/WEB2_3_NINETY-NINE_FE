@@ -31,13 +31,11 @@ const Login = () => {
     try {
       await login(form.email, form.password);
       await login(form.email, form.password);
-      openModal(
-        "로그인 성공!\n온컬쳐에 온 걸 환영합니다.🎉",
-        "",
-        "닫기",
-        () => navigate("/")
+      openModal("로그인 성공!\n온컬쳐에 온 걸 환영합니다.🎉", "", "닫기", () =>
+        navigate("/")
       );
     } catch (error) {
+      setForm({ email: "", password: "" });
       openModal("아이디 또는 비밀번호가 잘못되었습니다.", "", "닫기");
     }
   };
