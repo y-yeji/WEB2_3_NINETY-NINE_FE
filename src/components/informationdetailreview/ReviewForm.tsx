@@ -3,6 +3,8 @@ import ShortButton from "../../components/ui/ShortButton";
 import StarRating from "../../components/informationdetailreview/StarRating";
 import { useAuthStore } from "../../stores/authStore";
 import Icon from "../../assets/icons/Icon";
+import { useModalStore } from "../../stores/modalStore";
+import { useNavigate } from "react-router-dom";
 
 interface ReviewFormProps {
   onSubmit?: (rating: number, content: string, imageFile?: File) => void;
@@ -16,6 +18,8 @@ const ReviewForm = ({ onSubmit }: ReviewFormProps) => {
   const [uploading, setUploading] = useState<boolean>(false);
   const { isLoggedIn } = useAuthStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { openModal } = useModalStore();
+  const navigate = useNavigate();
 
   // 이미지 선택 처리
   const handleImageSelect = () => {
@@ -61,17 +65,22 @@ const ReviewForm = ({ onSubmit }: ReviewFormProps) => {
   // 후기 등록 처리
   const handleReviewSubmit = async () => {
     if (!isLoggedIn) {
-      alert("로그인 후 이용해주세요");
+      openModal(
+        "로그인이 필요한 서비스입니다.\n 로그인 하러 가시겠어요?",
+        "취소하기",
+        "로그인하기",
+        () => navigate("/login")
+      );
       return;
     }
 
     if (selectedRating === 0) {
-      alert("별점을 선택해주세요.");
+      openModal("별점을 선택해주세요.", "", "닫기");
       return;
     }
 
     if (!reviewContent.trim()) {
-      alert("후기 내용을 입력해주세요.");
+      openModal("후기 내용을 입력해주세요.", "", "닫기");
       return;
     }
 
