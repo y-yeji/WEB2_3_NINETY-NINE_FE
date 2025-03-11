@@ -54,7 +54,7 @@ const MainPage = () => {
           </Swiper>
         ) : (
           <p className="text-center text-lg font-semibold">
-            이벤트 데이터를 불러올 수 없습니다..
+            이벤트 데이터를 불러올 수 없습니다.....
           </p>
         )}
       </section>
