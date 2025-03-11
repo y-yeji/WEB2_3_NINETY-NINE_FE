@@ -1,5 +1,0 @@
-[[redirects]]
-from = "/api/*"
-to = "http://15.164.154.120:8080/api/:splat"
-status = 200
-force = true
