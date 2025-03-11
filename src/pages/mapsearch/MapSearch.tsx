@@ -132,6 +132,17 @@ const MapSearch: React.FC = () => {
           />
         </div>
       )}
+
+      {performanceData?.posts && performanceData.posts.length > 0 && (
+        <div className="mb-16">
+          <Pagination
+            totalItems={performanceData?.totalElements || 0}
+            itemsPerPage={9}
+            currentPage={parseInt(searchParams.get("page") || "1")}
+            onPageChange={(page) => updateSearchParams("page", page.toString())}
+          />
+        </div>
+      )}
     </div>
   );
 };
