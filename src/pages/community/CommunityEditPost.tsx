@@ -13,7 +13,6 @@ const CommunityEditPost = () => {
   const [imageUrls, setImageUrls] = useState<(File | string)[]>([]);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     const fetchPostData = async () => {
       try {
@@ -30,7 +29,6 @@ const CommunityEditPost = () => {
 
     if (postId) fetchPostData();
   }, [postId]);
-
 
   const handleImageUpload = (images: (File | string)[]) => {
     setImageUrls(images);
@@ -49,12 +47,11 @@ const CommunityEditPost = () => {
     const requestDTO = { title, content };
     formData.append("requestDTO", JSON.stringify(requestDTO));
 
-    
     imageUrls.forEach((img) => {
       if (typeof img === "string") {
-        formData.append("existingImages", img); 
+        formData.append("existingImages", img);
       } else {
-        formData.append("images", img); 
+        formData.append("images", img);
       }
     });
 
@@ -93,7 +90,7 @@ const CommunityEditPost = () => {
         <QuillEditor value={content} onChange={setContent} />
         <ImageUploader onUpload={handleImageUpload} initialImages={imageUrls} />
 
-        <div className="w-full flex justify-between items-center mt-2.5 px-2.5">
+        <div className="w-full flex justify-between items-center mt-2.5 px-2.5 mb-20">
           <ShortButton
             text="취소"
             textColor="blue-1"

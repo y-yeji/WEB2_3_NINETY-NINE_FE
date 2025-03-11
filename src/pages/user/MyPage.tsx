@@ -83,9 +83,12 @@ const MyPage = () => {
                 />
               ))
             ) : (
-              <p className="text-gray-40">
-                해당 마이 포스트 데이터가 없습니다.
-              </p>
+              <div className="col-span-3 flex justify-center items-center h-[200px]">
+                <p className="text-gray-40">
+                  아직 작성한 포스트가 없습니다.
+                  <span className="block mt-3">포스트를 작성해보세요.</span>
+                </p>
+              </div>
             )}
           </div>
         );
@@ -106,7 +109,14 @@ const MyPage = () => {
                 />
               ))
             ) : (
-              <p className="text-gray-40">해당 북마크 데이터가 없습니다.</p>
+              <div className="col-span-3 flex justify-center items-center h-[200px]">
+                <p className="text-gray-40 text-center">
+                  북마크한 포스트가 없습니다.
+                  <span className="block mt-3">
+                    마음에 드는 포스트를 북마크해보세요.
+                  </span>
+                </p>
+              </div>
             )}
           </div>
         );
@@ -119,7 +129,7 @@ const MyPage = () => {
   console.log(bookmarkData);
   return (
     <div className="w-full flex flex-col mx-auto">
-      <div className="mt-[108px] max-w-[1280px] mx-auto p-6">
+      <div className="mt-[108px] max-w-[1280px] mx-auto p-6 mb-20">
         {userData && (
           <ProfileHeader
             nickname={userData.nickname}

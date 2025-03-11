@@ -34,7 +34,7 @@
   }
 
   .sidebar {
-    position: absolute;
+    position: fixed;
     top: 84px;
     right: 320px;
     width: 591px;
