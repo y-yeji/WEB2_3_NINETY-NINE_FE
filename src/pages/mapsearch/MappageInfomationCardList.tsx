@@ -33,7 +33,7 @@ const MappageInfomationCardList = ({
                 : post.postUrl
               : Array.isArray(post.postUrl)
                 ? post.postUrl[0]
-                : ""
+                : "/default-image.png"
           }
           startDate={post.startDate} // Pass startDate directly
           endDate={post.endDate} // Pass endDate directly
