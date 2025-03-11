@@ -1,6 +1,5 @@
 import { useCommentActions } from "../../../../hooks/useCommentAction";
 import { useCommentMenu } from "../../../../hooks/useCommentMenu";
-import { useRealTimeDate } from "../../../../hooks/useRealTimeDate";
 import { useAuthStore } from "../../../../stores/authStore";
 import { PostComment } from "../../../../types/comment";
 import { formatCommentDate } from "../../../../utils/commentDateUtils";
@@ -40,7 +39,6 @@ const CommentList: React.FC<CommentListProps> = ({
     onCommentUpdate,
     onCommentDelete
   );
-  const { currentTime } = useRealTimeDate();
 
   const isCommentAuthor = (comment: PostComment) => {
     return user && user.id === comment.userId;
@@ -64,7 +62,7 @@ const CommentList: React.FC<CommentListProps> = ({
                   </div>
                   <span className="body-normal-m">{comment.userNickname}</span>
                   <span className="caption-r text-gray-30">
-                    {formatCommentDate(comment.createdAt, currentTime)}
+                    {formatCommentDate(comment.createdAt)}
                   </span>
                 </div>
 
