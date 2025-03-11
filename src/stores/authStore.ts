@@ -20,21 +20,15 @@ export const useAuthStore = create<AuthState>((set) => ({
         { email, password },
         { withCredentials: true }
       );
-
       const token = response.data.data.accessToken;
-      console.log("토큰:", token);
-
       if (token) {
         localStorage.setItem("accessToken", token);
-        console.log(
-          "로컬스토리지 저장 완료 ",
-          localStorage.getItem("accessToken")
-        );
         await useAuthStore.getState().checkAuth();
+        return Promise.resolve(); 
       }
     } catch (error) {
       console.error("로그인 실패", error);
-      alert("이메일 또는 비밀번호가 잘못되었습니다.");
+      return Promise.reject(error); 
     }
   },
 
