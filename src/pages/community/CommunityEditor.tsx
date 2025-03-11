@@ -12,41 +12,46 @@ const CommunityEditor = () => {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const navigate = useNavigate();
 
+  const handleImageUpload = (images: (File | string)[]) => {
+    const validFiles = images.filter((img): img is File => img instanceof File);
+    setImageFiles(validFiles);
+  };
+
   const handleSubmit = async () => {
     if (!title.trim() || !content.trim()) {
       alert("제목과 내용을 입력해주세요.");
       return;
     }
 
-    const confirmPost = window.confirm("게시글을 등록하시겠습니까?");
+    const confirmPost = window.confirm("게시글을 수정하시겠습니까?");
     if (!confirmPost) return;
 
-    const requestDTO = { title, content };
     const formData = new FormData();
+    const requestDTO = { title, content };
     formData.append("requestDTO", JSON.stringify(requestDTO));
-    if (imageFiles.length > 0) {
-      imageFiles.forEach((file) => {
-        formData.append("images", file);
-      });
-    } else {
-      formData.append("images", "default-image.jpg");
-    }
 
-    console.log("FormData 전송:", formData);
+    imageFiles.forEach((img) => {
+      if (typeof img === "string") {
+        formData.append("existingImages", img); 
+      } else {
+        formData.append("images", img); 
+      }
+    });
 
     try {
       const token = localStorage.getItem("accessToken");
-      const response = await api.post("/api/socialPosts", formData, {
+      const response = await api.put("/api/socialPosts/", formData, {
         headers: {
-          Authorization: token,
           "Content-Type": "multipart/form-data",
+          Authorization: token,
         },
       });
-      console.log("게시글 등록 완료:", response.data);
-      alert("게시글이 등록되었습니다.");
+
+      console.log("게시글 수정 완료", response.data);
+      alert("게시글이 수정되었습니다.");
       navigate("/mypage");
     } catch (error) {
-      console.error("에러 발생", error);
+      console.error("게시글 수정 중 오류 발생", error);
     }
   };
 
@@ -72,7 +77,8 @@ const CommunityEditor = () => {
           customStyle="w-[1200px] h-[50px] mt-[67px] mb-5 body-l-m border-gray-5"
         />
         <QuillEditor value={content} onChange={setContent} />
-        <ImageUploader onUpload={setImageFiles} />
+        {/* 🔹 수정된 부분: handleImageUpload 함수 적용 */}
+        <ImageUploader onUpload={handleImageUpload} />
         <div className="w-full flex justify-between items-center mt-2.5 px-2.5">
           <p className="caption-r text-blue-4">
             이미지 업로드를 하지 않을 경우 기본 이미지로 업로드 됩니다.

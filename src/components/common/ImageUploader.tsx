@@ -2,19 +2,21 @@ import React, { useState, useEffect } from "react";
 import Icon from "../../assets/icons/Icon";
 
 interface ImageUploaderProps {
-  onUpload: (images: File[]) => void;
-  initialImages?: File[] ;
+  onUpload: (images: (File | string)[]) => void;
+  initialImages?: (File | string)[]; 
 }
 
 const ImageUploader = ({
   onUpload,
   initialImages = [],
 }: ImageUploaderProps) => {
-  const [images, setImages] = useState<File[]>(initialImages);
+  const [images, setImages] = useState<(File | string)[]>([]); 
 
   useEffect(() => {
-    setImages(initialImages);
-  }, []);
+    if (images.length === 0 && initialImages.length > 0) {
+      setImages(initialImages);
+    }
+  }, [initialImages]); 
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -41,20 +43,13 @@ const ImageUploader = ({
     <div className="w-[1200px] h-[362px] mt-5 flex flex-col justify-between items-center mx-auto border border-gray-5 rounded-lg p-6 bg-white">
       <div className="flex gap-[54px]">
         {images.map((file, index) => (
-          <div
-            key={index}
-            className="relative w-60 h-60 overflow-hidden rounded-lg border"
-          >
+          <div key={index} className="relative w-60 h-60 overflow-hidden rounded-lg border">
             <img
-              src={URL.createObjectURL(file)} 
+              src={typeof file === "string" ? file : URL.createObjectURL(file)}
               alt={`uploaded-${index}`}
               className="w-full h-full object-cover"
             />
-
-            <button
-              onClick={() => handleRemoveImage(index)}
-              className="absolute top-2 right-2 "
-            >
+            <button onClick={() => handleRemoveImage(index)} className="absolute top-2 right-2 ">
               <Icon
                 name="Trash2"
                 size={20}
@@ -71,22 +66,9 @@ const ImageUploader = ({
               onClick={() => document.getElementById("file-upload")?.click()}
               className="w-full h-full flex items-center justify-center"
             >
-              <Icon
-                name="ImagePlus"
-                size={80}
-                strokeWidth={1}
-                className="text-gray-20 hover:text-blue-1"
-              />
+              <Icon name="ImagePlus" size={80} strokeWidth={1} className="text-gray-20 hover:text-blue-1" />
             </button>
-
-            <input
-              id="file-upload"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageUpload}
-              className="hidden"
-            />
+            <input id="file-upload" type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" />
           </label>
         )}
       </div>
