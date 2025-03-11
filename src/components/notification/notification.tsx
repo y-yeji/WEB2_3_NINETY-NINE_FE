@@ -163,7 +163,7 @@ const Notification = forwardRef<HTMLDivElement, NotificationProps>(
     return (
       <article
         ref={ref}
-        className="absolute top-[-25px] right-[360px] z-30 w-[400px] h-[486px] mt-[84px] pt-[22px] px-[25px] bg-blue-7 border border-base-2 rounded text-blue-1 shadow-user-postcard-shadow"
+        className="fixed top-[-25px] right-[360px] z-30 w-[400px] h-[486px] mt-[84px] pt-[22px] px-[25px] bg-blue-7 border border-base-2 rounded text-blue-1 shadow-user-postcard-shadow"
       >
         {/* 닫기 버튼 */}
         <button onClick={onClose} className="absolute top-4 right-5">

@@ -92,8 +92,8 @@ const Signup = () => {
   };
 
   return (
-    <div className="mx-10 w-full flex flex-col items-center justify-center">
-      <h2 className="text-4xl mt-[264px] mb-[250px] font-serif italic text-blue-1">
+    <div className="mx-10 mt-64 h-[50vh] w-full flex flex-col items-center justify-center">
+      <h2 className="text-4xl  my-[60px] font-dm italic text-blue-1">
         On culture
       </h2>
 

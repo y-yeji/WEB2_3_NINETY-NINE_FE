@@ -63,12 +63,14 @@ const Informations = () => {
         <EventsGrid events={events} loading={loading} />
 
         <div className="w-full flex justify-center mt-24">
-          <Pagination
-            totalItems={totalItems}
-            itemsPerPage={itemsPerPage}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
+          {totalItems > 0 && (
+            <Pagination
+              totalItems={totalItems}
+              itemsPerPage={itemsPerPage}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          )}
         </div>
       </div>
     </div>

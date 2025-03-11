@@ -85,7 +85,9 @@ const InfoCardDetailReview = ({
         const { key, id } = getCategoryIdParam();
 
         if (!key || !id) {
-          setError("유효하지 않은 카테고리입니다.");
+          setError(
+            "페이지를 불러오는 데 문제가 발생했습니다. 다시 시도해주세요."
+          );
           setLoading(false);
           return;
         }

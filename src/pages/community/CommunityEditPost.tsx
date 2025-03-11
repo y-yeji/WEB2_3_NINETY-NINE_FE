@@ -31,7 +31,6 @@ const CommunityEditPost = () => {
     if (postId) fetchPostData();
   }, [postId]);
 
-
   const handleImageUpload = (images: (File | string)[]) => {
     setImageUrls(images);
   };
@@ -93,7 +92,8 @@ const CommunityEditPost = () => {
         <QuillEditor value={content} onChange={setContent} />
         <ImageUploader onUpload={handleImageUpload} initialImages={imageUrls} />
 
-        <div className="w-full flex justify-between items-center mt-2.5 px-2.5">
+
+        <div className="w-full flex justify-between items-center mt-2.5 px-2.5 mb-20">
           <ShortButton
             text="취소"
             textColor="blue-1"

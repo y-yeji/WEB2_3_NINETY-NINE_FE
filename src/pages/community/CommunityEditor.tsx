@@ -32,9 +32,9 @@ const CommunityEditor = () => {
 
     imageFiles.forEach((img) => {
       if (typeof img === "string") {
-        formData.append("existingImages", img); 
+        formData.append("existingImages", img);
       } else {
-        formData.append("images", img); 
+        formData.append("images", img);
       }
     });
 
@@ -79,11 +79,10 @@ const CommunityEditor = () => {
         <QuillEditor value={content} onChange={setContent} />
         {/* 🔹 수정된 부분: handleImageUpload 함수 적용 */}
         <ImageUploader onUpload={handleImageUpload} />
-        <div className="w-full flex justify-between items-center mt-2.5 px-2.5">
-          <p className="caption-r text-blue-4">
-            이미지 업로드를 하지 않을 경우 기본 이미지로 업로드 됩니다.
-          </p>
-
+        <p className="caption-r text-blue-4 mt-4">
+          이미지 업로드를 하지 않을 경우 기본 이미지로 업로드 됩니다.
+        </p>
+        <div className="w-full flex justify-end items-center mt-2.5 px-2.5 mb-20">
           <div className="flex gap-5 mt-[74px]">
             <ShortButton
               text="취소"
