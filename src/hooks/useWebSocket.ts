@@ -5,6 +5,7 @@ import { Client } from "@stomp/stompjs";
 interface WebSocketHook {
   connect: () => void;
   disconnect: () => void;
+  isConnected: boolean;
 }
 
 const useWebSocket = (
@@ -16,7 +17,6 @@ const useWebSocket = (
   const clientRef = useRef<Client | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
-  // WebSocket 연결 설정
   const configureClient = () => {
     const socket = new SockJS(url);
 

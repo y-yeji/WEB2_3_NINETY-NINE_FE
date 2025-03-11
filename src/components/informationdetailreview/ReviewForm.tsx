@@ -159,7 +159,7 @@ const ReviewForm = ({ onSubmit }: ReviewFormProps) => {
             onClick={handleImageSelect}
           />
           <ShortButton
-            text={uploading ? "등록 중..." : "후기 등록"}
+            text={uploading ? "등록 중" : "후기 등록"}
             bgColor="blue-1"
             textColor="base-1"
             hoverColor="blue-2"
