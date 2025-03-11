@@ -10,7 +10,7 @@ const categoryTitles: { [key: string]: string } = {
   popups: "팝업스토어",
   exhibition: "전시회",
   musical: "뮤지컬 | 연극",
-  concert: "페스티벌",
+  festivals: "페스티벌",
 };
 
 const Informations = () => {

@@ -369,7 +369,7 @@ const InfoCardDetail = () => {
               activeTab === "info" ? "text-blue-6" : "text-gray-20"
             }`}
           >
-            <p className="h3-b">후기 ({reviewCount})</p>
+            <p className="h3-b">후기</p>
           </button>
         </div>
         <div className="relative w-[1120px] h-[4px] bg-gray-20">
