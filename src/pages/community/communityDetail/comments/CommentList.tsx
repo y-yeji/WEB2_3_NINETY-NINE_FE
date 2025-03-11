@@ -1,6 +1,5 @@
 import { useCommentActions } from "../../../../hooks/useCommentAction";
 import { useCommentMenu } from "../../../../hooks/useCommentMenu";
-import { useRealTimeDate } from "../../../../hooks/useRealTimeDate";
 import { useAuthStore } from "../../../../stores/authStore";
 import { PostComment } from "../../../../types/comment";
 import { formatCommentDate } from "../../../../utils/commentDateUtils";
