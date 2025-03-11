@@ -22,7 +22,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
       await logout();
     };
 
-    console.log(user);
+    // console.log(user);
     return (
       <aside
         ref={ref}
