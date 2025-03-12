@@ -39,6 +39,10 @@ const Notification = forwardRef<HTMLDivElement, NotificationProps>(
       checkAuth();
     }, []);
 
+    const sortNotifications = notificationList.slice().sort((a, b) => {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+
     return (
       <article
         ref={ref}
@@ -71,7 +75,7 @@ const Notification = forwardRef<HTMLDivElement, NotificationProps>(
             </div>
           ) : (
             <ul>
-              {notificationList.map((notification) => (
+              {sortNotifications.map((notification) => (
                 <NotificationItem
                   key={notification.notiId}
                   notification={notification}
