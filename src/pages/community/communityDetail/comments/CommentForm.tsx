@@ -19,7 +19,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
   const [commentValue, setCommentValue] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const { isLoggedIn, checkAuth } = useAuthStore();
+  const { isLoggedIn, checkAuth, user } = useAuthStore();
   const { openModal } = useModalStore();
   const navigate = useNavigate();
 
@@ -83,8 +83,6 @@ const CommentForm: React.FC<CommentFormProps> = ({
           }
         );
 
-        console.log("댓글 응답:", response);
-
         if (response.status === 201) {
           const newComment = response.data.data;
           onSubmit(newComment);
@@ -92,7 +90,6 @@ const CommentForm: React.FC<CommentFormProps> = ({
           if (textareaRef.current) {
             textareaRef.current.style.height = "auto";
           }
-          console.log("댓글 등록 성공");
         }
       } catch (error) {
         console.error("댓글 등록에 실패했습니다.", error);
@@ -108,7 +105,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
         <div className="w-[50px] h-[50px] rounded-full overflow-hidden userProfile-shadow ">
           <img
             className="w-full h-full object-cover bg-center"
-            src="/default-image.png"
+            src={user.profileImage || "/default-image.png"}
             alt="유저 프로필 이미지"
           />
         </div>
