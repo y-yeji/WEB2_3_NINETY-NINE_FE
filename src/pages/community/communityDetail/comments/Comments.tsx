@@ -5,7 +5,6 @@ import api from "../../../../api/api";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "../../../../components/ui/Pagination";
 import { PostComment } from "../../../../types/comment";
-
 interface CommentsProps {
   socialPostId: number;
   onCommentCountChange: (newCount: number) => void;
@@ -70,19 +69,15 @@ const Comments: React.FC<CommentsProps> = ({
   }, [socialPostId, currentPage]);
 
   const handleCommentSubmit = (newComment: PostComment) => {
-    // 새 댓글을 목록 맨 앞에 추가
     setComments((prevComments) => [newComment, ...prevComments]);
-    // 댓글 수 업데이트 (현재 댓글 수 + 1)
     onCommentCountChange(comments.length + 1);
   };
 
   const handleCommentUpdate = () => {
-    // 댓글 수 변경 없음, 내용만 업데이트
     onCommentCountChange(comments.length);
   };
 
   const handleCommentDelete = () => {
-    // 댓글 삭제 후 카운트 감소
     onCommentCountChange(comments.length - 1);
   };
 
