@@ -155,7 +155,7 @@ const InfoCardHeader = ({
           <ShareButton
             url={window.location.href}
             title={showInfo.title}
-            posterUrl={`http://localhost:5173${showInfo.posterUrl}`}
+            posterUrl={showInfo.posterUrl}
           />
         </div>
       </div>
