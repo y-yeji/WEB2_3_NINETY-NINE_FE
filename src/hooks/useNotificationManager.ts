@@ -40,7 +40,7 @@ const useNotificationManager = (
             const regex = /([^님]+)님/;
             const match = notification.content.match(regex);
             const senderNickname = match ? match[1] : null;
-
+            console.log("알림", response.data.data);
             console.log(senderNickname);
             return (
               senderNickname !== currentUserNickname &&
@@ -50,7 +50,6 @@ const useNotificationManager = (
         );
 
         setNotificationList(filteredNotifications);
-        console.log("필터된 알림 목록:", filteredNotifications);
       }
     } catch (error) {
       console.error("알림 목록을 가져오는 중 오류 발생:", error);
