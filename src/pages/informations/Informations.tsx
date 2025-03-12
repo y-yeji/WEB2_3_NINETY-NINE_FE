@@ -8,8 +8,11 @@ import Pagination from "../../components/ui/Pagination";
 
 const categoryTitles: { [key: string]: string } = {
   popups: "팝업스토어",
+  popupstores: "팝업스토어",
   exhibition: "전시회",
+  exhibits: "전시회",
   musical: "뮤지컬 | 연극",
+  performances: "뮤지컬 | 연극",
   festivals: "페스티벌",
 };
 
