@@ -90,10 +90,10 @@ const InfoCardHeader = ({
         }}
       />
       <div className="flex flex-col justify-between ml-32">
-        <p className="h3-b font-bold text-left text-gray-80 mb-24 mt-3">
+        <p className="h3-b font-bold text-left text-gray-80 mb-12 md:mb-16 lg:mb-2 mt-3">
           {showInfo.title}
         </p>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           <div className="flex items-center gap-1.5">
             <Icon name="UsersRound" className="w-[18px] h-[18px] ml-0.5" />
             <p className="body-normal-r text-left text-gray-80">
@@ -112,16 +112,20 @@ const InfoCardHeader = ({
               {showInfo.location}
             </p>
           </div>
-          <div className="flex items-center gap-1.5">
-            <Icon name="Clock" className="w-[18px] h-[18px] ml-0.5" />
+          <div className="flex items-start gap-1.5">
+            <Icon
+              name="Clock"
+              className="w-[18px] h-[18px] ml-0.5 flex-shrink-0 mt-1"
+            />
             <p className="body-normal-r text-left text-gray-80">
               {showInfo.times}
             </p>
           </div>
-          <div className="flex items-center gap-[5px]">
+
+          <div className="flex items-start gap-[5px]">
             <Icon
               name="Pin"
-              className="w-[18px] h-[18px] ml-0.5"
+              className="w-[18px] h-[18px] ml-0.5 flex-shrink-0 mt-1"
               style={{ transform: "rotate(-22.23deg)" }}
             />
             <p className="body-normal-r text-left text-gray-80">
