@@ -40,8 +40,6 @@ const useNotificationManager = (
             const regex = /([^님]+)님/;
             const match = notification.content.match(regex);
             const senderNickname = match ? match[1] : null;
-            console.log("알림", response.data.data);
-            console.log(senderNickname);
             return (
               senderNickname !== currentUserNickname &&
               !userPosts.includes(notification.relatedId)
