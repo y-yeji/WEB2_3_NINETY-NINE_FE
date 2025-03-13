@@ -37,7 +37,6 @@ const Community: React.FC = () => {
       if (response.data && Array.isArray(response.data.data.posts)) {
         setPosts(response.data.data.posts);
         setTotalItems(response.data.data.totalElements);
-        console.log("data", response.data);
       } else {
         console.error("Posts 배열", response.data);
       }

@@ -27,7 +27,6 @@ const CommunityDetail: React.FC = () => {
         });
 
         setPostDetailContent(response.data.data);
-        console.log("포스트상세페이지:", response.data);
         setIsLoading(false);
       } catch (error) {
         console.error("포스트 내용을 가져오는데 실패했습니다.", error);

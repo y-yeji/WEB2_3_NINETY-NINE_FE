@@ -40,7 +40,6 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLikeToggle }) => {
 
   const handlePostCardClick = () => {
     navigate(`/community/${post.id}`);
-    console.log("클릭한 포스트카드id", post.id);
   };
 
   const handleUserProfileClick = (e: React.MouseEvent) => {

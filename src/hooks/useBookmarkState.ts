@@ -75,13 +75,6 @@ export const useBookmarkState = (
                 : overrideCategory
         : getCategoryParam();
 
-      console.log("북마크 요청 정보:", {
-        id,
-        categoryParam,
-        overrideCategory,
-        currentPath: window.location.pathname,
-      });
-
       // Make API request to toggle bookmark
       const response = await api.post(
         `/api/events/${id}/bookmarks?genre=${categoryParam}`,
@@ -92,8 +85,6 @@ export const useBookmarkState = (
           },
         }
       );
-
-      console.log("북마크 응답:", response);
 
       // Check if the request was successful
       if (response.data?.success) {

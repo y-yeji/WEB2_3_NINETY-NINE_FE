@@ -45,22 +45,10 @@ const MapSearch: React.FC = () => {
     refetch();
   };
 
-  useEffect(() => {
-    console.log("performanceData.posts:", performanceData?.posts);
-  }, [performanceData]);
+  useEffect(() => {}, [performanceData]);
 
   useEffect(() => {
     if (performanceData?.posts) {
-      console.log("Original posts:", performanceData.posts);
-      console.log(
-        "Mapped posts:",
-        performanceData.posts.map((post) => ({
-          ...post,
-          isBookmarked: post.bookmarked || false,
-          category:
-            post.category || mapToApiCategory(performanceOptionsSelected),
-        }))
-      );
     }
   }, [performanceData, performanceOptionsSelected]);
 

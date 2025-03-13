@@ -3,7 +3,7 @@ import PostCard from "../../components/common/PostCard";
 import ProfileHeader from "../../components/common/ProfileHeader";
 import ScrollToTopButton from "../../components/ui/ScrollToTopButton";
 import { TitleBar } from "../../components/ui/TitleBar";
-import { PostCardProps } from "../../types/post";
+import { PostCardProps } from "../../types/Post";
 import api from "../../api/api";
 import { UserData } from "../../types/user";
 import { useParams } from "react-router-dom";
@@ -37,7 +37,6 @@ const UserPage = () => {
     getPostsData();
   }, []);
 
-  console.log(userData);
   return (
     <div className="w-full flex flex-col mx-auto ">
       <div className="mt-[108px] max-w-[1280px] mx-auto p-6 mb-20">

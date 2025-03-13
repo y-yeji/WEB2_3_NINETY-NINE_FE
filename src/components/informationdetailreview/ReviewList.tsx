@@ -75,7 +75,7 @@ const ReviewList = ({
               <div className="flex justify-between items-start flex-grow-0 flex-shrink-0 w-full relative">
                 <div className="flex flex-col justify-start items-start flex-grow w-full gap-5">
                   <div className="flex justify-start items-center flex-grow-0 flex-shrink-0 relative gap-2">
-                    <p className="flex-grow-0 flex-shrink-0 body-normal-r text-center text-gray-80 cursor-pointer">
+                    <p className="flex-grow-0 flex-shrink-0 body-normal-r text-center text-gray-80">
                       {review.username}
                     </p>
                     <p className="flex-grow-0 flex-shrink-0 body-normal-r text-center text-gray-80">

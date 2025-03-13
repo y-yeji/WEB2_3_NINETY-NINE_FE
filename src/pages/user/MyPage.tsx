@@ -68,11 +68,22 @@ const MyPage = () => {
       setPostData([]);
     }
   }, [activeTab, userData]);
+
   const cleanImageUrl = (url: string): string => {
     if (!url) return "/default-image.png";
 
     // 대괄호 제거
     return url.replace(/^\[|\]$/g, "");
+  };
+
+  // 북마크 상태 변경 핸들러 추가
+  const handleBookmarkChange = (id: number, newStatus: boolean) => {
+    if (!newStatus && activeTab === "bookmark") {
+      // 북마크 해제된 경우, 해당 카드를 북마크 데이터에서 제거
+      setBookMarkData((currentData) =>
+        currentData.filter((post) => post.id !== id)
+      );
+    }
   };
 
   const renderContent = () => {
@@ -111,7 +122,7 @@ const MyPage = () => {
                     연극: "performances",
                     축제: "festivals",
                   };
-                  return categoryMap[koreanGenre] || "popups"; // 기본값 설정
+                  return categoryMap[koreanGenre] || "popups";
                 };
 
                 // API 카테고리 변환
@@ -124,7 +135,7 @@ const MyPage = () => {
                     연극: "performances",
                     축제: "festivals",
                   };
-                  return categoryMap[koreanGenre] || "popupStore"; // 기본값 설정
+                  return categoryMap[koreanGenre] || "popupStore";
                 };
 
                 const englishCategory = getCategoryFromKorean(post.genre);
@@ -142,6 +153,7 @@ const MyPage = () => {
                     endDate={post.endDate}
                     location={post.location}
                     isBookmarked={post.bookmarked}
+                    onBookmarkChange={handleBookmarkChange}
                   />
                 );
               })
