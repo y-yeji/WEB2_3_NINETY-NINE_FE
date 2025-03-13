@@ -20,7 +20,7 @@ const Informations = () => {
   const [selectedLocation, setSelectedLocation] = useState<string>("전체");
   const [selectedStatus, setSelectedStatus] = useState<string>("진행 중");
   const { category } = useParams<{ category: string }>();
-  const itemsPerPage = 9; // 3x3 그리드
+  const itemsPerPage = 9;
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const { events, totalItems, loading, fetchEvents } = useEventsData(

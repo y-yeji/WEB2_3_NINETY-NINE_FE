@@ -4,7 +4,7 @@ import ScrollToTopButton from "../../components/ui/ScrollToTopButton";
 import ProfileHeader from "../../components/common/ProfileHeader";
 import { UserData } from "../../types/user";
 import PostCard from "../../components/common/PostCard";
-import { PostCardProps } from "../../types/post";
+import { PostCardProps } from "../../types/Post";
 import { TabNavigation } from "../../components/ui/TabNavigation";
 import { BookMarkProps } from "../../types/bookmark";
 import InformationCard from "../../components/common/InformationCard";
