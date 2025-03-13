@@ -83,7 +83,9 @@ const Signup = () => {
           },
         }
       );
-      openModal("회원가입이 완료되었습니다.🎉", "", "닫기");
+      openModal("회원가입이 완료되었습니다.🎉", "", "닫기", 
+        () => navigate("/login")  
+      );
     } catch (error) {
       console.error("회원가입 실패:", error);
       setForm({
