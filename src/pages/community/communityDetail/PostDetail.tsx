@@ -7,7 +7,7 @@ import api from "../../../api/api";
 import { useModalStore } from "../../../stores/modalStore";
 import { useLikeState } from "../../../hooks/useLikeState";
 import { useAuthStore } from "../../../stores/authStore";
-import { PostCardProps } from "../../../types/post";
+import { PostCardProps } from "../../../types/Post";
 import DOMPurify from "dompurify";
 
 interface PostDetailProps {
@@ -19,6 +19,7 @@ interface PostDetailProps {
 const PostDetail: React.FC<PostDetailProps> = ({
   postDetail,
   socialPostId,
+  onLikeToggle,
 }: PostDetailProps) => {
   const navigate = useNavigate();
   const { openModal } = useModalStore();
@@ -27,6 +28,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
 
   const [isPostMenuOpen, setIsPostMenuOpen] = useState(false);
   const [isAuthor, setIsAuthor] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const { isLiked, likeCount, toggleLike } = useLikeState(
@@ -85,17 +87,36 @@ const PostDetail: React.FC<PostDetailProps> = ({
   };
 
   const handleLikeClick = async () => {
+    setIsLoading(true);
     await checkAuth();
+
     if (!isLoggedIn) {
+      setIsLoading(false);
       openModal(
-        "로그인이 필요한 서비스입니다.\n 로그인 하러 가시겠어요?",
+        "로그인이 필요한 서비스입니다.\n로그인 하러 가시겠어요?",
         "취소하기",
         "로그인하기",
         () => navigate("/login")
       );
       return;
     }
-    await toggleLike();
+
+    const result = await toggleLike();
+    if (result && result.success) {
+      onLikeToggle(result.newLikeStatus, result.newLikeCount);
+    }
+    setIsLoading(false);
+  };
+
+  // 사용자 프로필 클릭 처리 함수 추가
+  const handleUserProfileClick = () => {
+    if (!postDetail || !postDetail.userId) return;
+
+    if (user && user.id === postDetail.userId) {
+      navigate("/mypage");
+    } else {
+      navigate(`/userpage/${postDetail.userId}`);
+    }
   };
 
   return (
@@ -107,11 +128,17 @@ const PostDetail: React.FC<PostDetailProps> = ({
             <div className="flex items-center gap-5">
               <div className="flex items-center gap-2">
                 <img
-                  className="w-[30px] h-[30px] rounded-full"
+                  className="w-[30px] h-[30px] rounded-full cursor-pointer"
                   src={postDetail?.userProfileImage || "/default-image.png"}
                   alt="유저프로필 이미지"
+                  onClick={handleUserProfileClick}
                 />
-                <span className="caption-m">{postDetail?.userNickname}</span>
+                <span
+                  className="caption-m cursor-pointer"
+                  onClick={handleUserProfileClick}
+                >
+                  {postDetail?.userNickname}
+                </span>
               </div>
               <span className="flex items-center gap-1 text-gray-60">
                 <Icon name="CalendarRange" size={16} />
@@ -161,7 +188,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
         <div className="mb-[34px]">
           <div className="flex gap-[10px]">
             <div className="flex items-center gap-[6px]">
-              <button onClick={handleLikeClick}>
+              <button onClick={handleLikeClick} disabled={isLoading}>
                 <Icon
                   name="Heart"
                   size={30}

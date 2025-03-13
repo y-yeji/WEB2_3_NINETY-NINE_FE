@@ -5,7 +5,7 @@ const categoryEndpoints: { [key: string]: string } = {
   popups: "popupstores",
   exhibition: "exhibits",
   musical: "performances",
-  concert: "festivals",
+  festival: "festivals",
 };
 
 export interface EventData {

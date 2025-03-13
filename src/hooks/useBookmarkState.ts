@@ -25,7 +25,7 @@ export const useBookmarkState = (
       popups: "popupStore",
       exhibition: "exhibit",
       musical: "performance",
-      concert: "festival",
+      festival: "festival",
       팝업스토어: "popupStore",
       전시회: "exhibit",
       "뮤지컬 | 연극": "performance",

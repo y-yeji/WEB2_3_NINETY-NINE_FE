@@ -15,7 +15,7 @@ export const useCategoryMapper = () => {
     popups: "popupstores",
     exhibition: "exhibits",
     musical: "performances",
-    concert: "festivals",
+    festival: "festivals",
     // 한글 카테고리 이름
     팝업스토어: "popupstores",
     전시회: "exhibits",
