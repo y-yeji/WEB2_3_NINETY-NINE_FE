@@ -11,7 +11,7 @@ const NotificationItem = ({
     relatedId: number;
     relatedType: string;
     notiId: number;
-    isRead: boolean;
+    read: boolean;
     createdAt: string;
     content: string;
   };
@@ -71,7 +71,7 @@ const NotificationItem = ({
       className={`${
         isScrollable ? "w-[376px]" : "w-[400px]"
       } h-[60px] px-[10px] py-2 rounded mb-[10px] ${
-        !notification.isRead ? "bg-white" : "bg-base-1"
+        !notification.read ? "bg-white" : "bg-base-1"
       }`}
       onClick={() => onRead(notification.notiId)}
     >
@@ -82,10 +82,10 @@ const NotificationItem = ({
           notification.relatedType
         )}
       >
-        <div className={notification.isRead ? "text-gray-30" : ""}>
+        <div className={notification.read ? "text-gray-30" : ""}>
           <p
             className={`flex items-center justify-between mb-1 ${
-              notification.isRead ? "text-gray-30" : "text-blue-1"
+              notification.read ? "text-gray-30" : "text-blue-1"
             }`}
           >
             <span className="body-small-m">
@@ -97,7 +97,7 @@ const NotificationItem = ({
           </p>
           <p
             className={`body-small-r ${
-              notification.isRead ? "text-gray-30" : "text-blue-5"
+              notification.read ? "text-gray-30" : "text-blue-5"
             }`}
           >
             {notification.content}
