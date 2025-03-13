@@ -48,22 +48,15 @@ const Notification = forwardRef<HTMLDivElement, NotificationProps>(
         ref={ref}
         className="fixed top-[-25px] right-[352px] z-30 w-[460px] h-[486px] mt-[84px] pt-[22px] px-[25px] bg-blue-7 border border-base-2 rounded text-blue-1 shadow-user-postcard-shadow"
       >
-        {/* 닫기 버튼 */}
         <button onClick={onClose} className="absolute top-4 right-5">
           <Icon name="X" size={20} className="text-blue-1" />
         </button>
 
-        {/* 알림 헤더 */}
-        <NotificationHeader
-          onMarkAllAsRead={markAllAsRead}
-          onDeleteAllNotifications={deleteAllNotifications}
-        />
         <NotificationHeader
           onMarkAllAsRead={markAllAsRead}
           onDeleteAllNotifications={deleteAllNotifications}
         />
 
-        {/* 알림 리스트 */}
         <section className="notification-container">
           {isLoading ? (
             <div className="flex justify-center items-center">
