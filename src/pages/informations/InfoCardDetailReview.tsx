@@ -53,7 +53,7 @@ const InfoCardDetailReview = ({
       popups: "popupStoreId",
       exhibition: "exhibitId",
       musical: "performanceId",
-      concert: "festivalId",
+      festival: "festivalId",
     };
 
     const paramKey = categoryMapping[category || ""] || "";

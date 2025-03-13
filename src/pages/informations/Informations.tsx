@@ -10,14 +10,14 @@ const categoryTitles: { [key: string]: string } = {
   popups: "팝업스토어",
   exhibition: "전시회",
   musical: "뮤지컬 | 연극",
-  concert: "페스티벌",
+  festivals: "페스티벌",
 };
 
 const Informations = () => {
   const [selectedLocation, setSelectedLocation] = useState<string>("전체");
   const [selectedStatus, setSelectedStatus] = useState<string>("진행 중");
   const { category } = useParams<{ category: string }>();
-  const itemsPerPage = 9; // 3x3 그리드
+  const itemsPerPage = 9;
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const { events, totalItems, loading, fetchEvents } = useEventsData(
