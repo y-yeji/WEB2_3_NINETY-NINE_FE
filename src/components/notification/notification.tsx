@@ -58,6 +58,10 @@ const Notification = forwardRef<HTMLDivElement, NotificationProps>(
           onMarkAllAsRead={markAllAsRead}
           onDeleteAllNotifications={deleteAllNotifications}
         />
+        <NotificationHeader
+          onMarkAllAsRead={markAllAsRead}
+          onDeleteAllNotifications={deleteAllNotifications}
+        />
 
         {/* 알림 리스트 */}
         <section className="notification-container">
