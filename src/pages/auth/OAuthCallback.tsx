@@ -8,7 +8,9 @@ const OAuthCallback = () => {
 
   useEffect(() => {
     const handleAuth = async () => {
-      const accessToken = new URL(window.location.href).searchParams.get("access_token");
+      const accessToken = new URL(window.location.href).searchParams.get(
+        "access_token"
+      );
 
       if (!accessToken) {
         console.error("액세스 토큰이 없습니다.");
@@ -17,10 +19,9 @@ const OAuthCallback = () => {
       }
 
       localStorage.setItem("accessToken", accessToken);
-      console.log("로그인 성공! 액세스 토큰:", accessToken);
 
       try {
-        await checkAuth(); 
+        await checkAuth();
       } catch (error) {
         console.error("checkAuth 실행 중 오류:", error);
         navigate("/login");
@@ -31,9 +32,6 @@ const OAuthCallback = () => {
   }, [checkAuth, navigate]);
 
   useEffect(() => {
-    console.log("isLoggedIn:", isLoggedIn);
-    console.log("user:", user);
-
     if (isLoggedIn && user) {
       navigate("/");
     }

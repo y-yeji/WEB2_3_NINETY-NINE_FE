@@ -50,7 +50,6 @@ const Comments: React.FC<CommentsProps> = ({
         if (response.data && response.data.data) {
           const commentsData = response.data.data.comments || [];
           setComments(commentsData);
-          console.log("댓글리스트:", response.data.data, comments);
           if (response.data.data.totalElements !== undefined) {
             setTotalItems(response.data.data.totalElements);
             onCommentCountChange(response.data.data.totalElements);

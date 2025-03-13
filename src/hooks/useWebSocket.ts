@@ -22,7 +22,6 @@ const useWebSocket = (
 
     const client = new Client({
       webSocketFactory: () => socket,
-      debug: (str) => console.log(str),
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
@@ -32,7 +31,6 @@ const useWebSocket = (
     });
 
     client.onConnect = () => {
-      console.log("WebSocket에 연결되었습니다.");
       setIsConnected(true);
       // 서버에서 특정 채널 구독
       client.subscribe(`topic/notifications/${userId}`, (message) => {
@@ -44,9 +42,7 @@ const useWebSocket = (
       console.error("STOMP Error:", error);
     };
 
-    client.onDisconnect = () => {
-      console.log("WebSocket에서 연결이 끊겼습니다.");
-    };
+    client.onDisconnect = () => {};
 
     clientRef.current = client;
   };

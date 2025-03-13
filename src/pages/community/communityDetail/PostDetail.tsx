@@ -76,7 +76,6 @@ const PostDetail: React.FC<PostDetailProps> = ({
             headers: { Authorization: token },
           });
           if (response.status === 200) {
-            console.log("포스트 삭제가 완료되었습니다.", response.data);
             navigate("/community");
           }
         } catch (error) {

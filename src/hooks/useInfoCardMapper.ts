@@ -46,27 +46,19 @@ export const useCategoryMapper = () => {
 
   // 카테고리를 API 경로로 변환하는 함수
   const mapToApiCategory = (category: string): string => {
-    // Logging for debugging
-    console.log("Input category to map:", category);
-
-    // Handle empty or undefined cases
     if (!category || category === "카테고리 선택") {
-      return "popupstores"; // Default value
+      return "popupstores";
     }
 
-    // Check if it's directly in the mapping
     if (categoryMappings[category]) {
       return categoryMappings[category];
     }
 
-    // Current path extraction logic...
     const pathCategory = extractCategoryFromPath();
     if (pathCategory && categoryMappings[pathCategory]) {
       return categoryMappings[pathCategory];
     }
 
-    // Return original if no mapping found
-    console.log("No mapping found for:", category);
     return category;
   };
 

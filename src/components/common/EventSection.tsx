@@ -31,16 +31,6 @@ interface EventSectionProps {
 const EventSection = ({ category, route, data }: EventSectionProps) => {
   const { formatTitle } = useTitleFormatter();
 
-  // 디버깅을 위한 콘솔 로그 추가
-  console.log(
-    "카테고리:",
-    category,
-    "라우트:",
-    route,
-    "데이터 샘플:",
-    data.length > 0 ? data[0] : "없음"
-  );
-
   return (
     <section className="mb-12 mx-[50px]">
       <div className="flex justify-between items-center mb-[64px] h-full">
