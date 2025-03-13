@@ -69,10 +69,6 @@ export const useEventsData = (category: string) => {
           params,
           headers, // 토큰이 있으면 헤더에 추가
         });
-        // useEventsData에서
-        console.log("API Response with auth token:", response.data);
-        console.log("Events with bookmark status:", response.data.data.posts);
-        console.log("API Response:", response.data);
         setEvents(response.data.data.posts);
         setTotalItems(response.data.data.totalElements);
       } catch (error) {

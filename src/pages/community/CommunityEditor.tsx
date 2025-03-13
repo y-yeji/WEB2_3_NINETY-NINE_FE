@@ -46,7 +46,6 @@ const CommunityEditor = () => {
             Authorization: token,
           },
         });
-        console.log("게시글 생성 완료", response.data);
         openModal("게시글이 생성되었습니다.", "", "확인", () => {
           navigate("/mypage");
         });

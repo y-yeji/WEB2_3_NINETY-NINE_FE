@@ -36,11 +36,6 @@ export const useLikeState = (
       if (response.status === 201) {
         setIsLiked(true);
         setLikeCount((prev: number) => prev + 1);
-        console.log(
-          "좋아요 추가 성공",
-          response.data.success,
-          response.data.code
-        );
         return {
           success: true,
           newLikeStatus: true,
@@ -49,11 +44,6 @@ export const useLikeState = (
       } else if (response.status === 200) {
         setIsLiked(false);
         setLikeCount((prev: number) => prev - 1);
-        console.log(
-          "좋아요 삭제 성공",
-          response.data.success,
-          response.data.code
-        );
       } else {
         console.error("예상치도 못한 응답상태", response.status);
         return { status: false };
