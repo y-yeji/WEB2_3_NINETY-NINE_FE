@@ -2,26 +2,32 @@ import { useEffect, useRef, useState } from "react";
 import Icon from "../assets/icons/Icon";
 import Sidebar from "./Sidebar/Sidebar";
 import Notification from "../components/notification/notification";
+import { useAuthStore } from "../stores/authStore";
 
 const Header: React.FC = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const notificationRef = useRef<HTMLDivElement | null>(null);
+  const notificationButtonRef = useRef<HTMLButtonElement | null>(null);
 
-  // 알림창 토글
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
   const toggleNotification = () => {
     setShowNotification((prev) => !prev);
-    if (!showNotification) {
-      setIsSidebarOpen(false); // 알림창이 열리면 사이드바는 닫힘
-    }
   };
 
-  // 사이드바 토글
+  useEffect(() => {
+    if (showNotification) {
+      setIsSidebarOpen(false);
+    }
+  }, [showNotification]);
+
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
     if (!isSidebarOpen) {
-      setShowNotification(false); // 사이드바가 열리면 알림창은 닫힘
+      setShowNotification(false);
     }
   };
 
@@ -38,13 +44,16 @@ const Header: React.FC = () => {
       if (
         notificationRef.current &&
         !notificationRef.current.contains(event.target as Node) &&
-        showNotification
+        showNotification &&
+        notificationButtonRef.current &&
+        !notificationButtonRef.current.contains(event.target as Node)
       ) {
         setShowNotification(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -61,9 +70,15 @@ const Header: React.FC = () => {
           </a>
           <div className="flex gap-4">
             {/* 알림 버튼 */}
-            <button onClick={toggleNotification} aria-label="알림 열기">
-              <Icon name="Bell" size={24} className="text-blue-1" />
-            </button>
+            {isLoggedIn && (
+              <button
+                ref={notificationButtonRef}
+                onClick={toggleNotification}
+                aria-label="알림 열기"
+              >
+                <Icon name="Bell" size={24} className="text-blue-1" />
+              </button>
+            )}
 
             {/* 사이드바 버튼 */}
             <button onClick={toggleSidebar} aria-label="메뉴 열기">
