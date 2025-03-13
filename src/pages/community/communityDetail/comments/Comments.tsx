@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
 import api from "../../../../api/api";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import Pagination from "../../../../components/ui/Pagination";
 import { PostComment } from "../../../../types/comment";
+import { useAuthStore } from "../../../../stores/authStore";
+import { useModalStore } from "../../../../stores/modalStore";
+
 interface CommentsProps {
   socialPostId: number;
   onCommentCountChange: (newCount: number) => void;
@@ -21,12 +24,18 @@ const Comments: React.FC<CommentsProps> = ({
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
   const [totalItems, setTotalItems] = useState(0);
+  const { isLoggedIn } = useAuthStore();
+  const { openModal } = useModalStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPostComment = async (page: number) => {
       setIsLoading(true);
       setError(null);
       try {
+        // 토큰이 없어도 댓글 목록은 조회 가능하도록 변경
+        const headers = token ? { Authorization: token } : {};
+
         const response = await api.get(
           `api/socialPosts/${socialPostId}/comments`,
           {
@@ -34,6 +43,7 @@ const Comments: React.FC<CommentsProps> = ({
               pageNum: page - 1,
               pageSize: 9,
             },
+            headers,
           }
         );
 
@@ -66,19 +76,30 @@ const Comments: React.FC<CommentsProps> = ({
     if (socialPostId) {
       fetchPostComment(currentPage);
     }
-  }, [socialPostId, currentPage]);
+  }, [socialPostId, currentPage, token]);
 
   const handleCommentSubmit = (newComment: PostComment) => {
     setComments((prevComments) => [newComment, ...prevComments]);
-    onCommentCountChange(comments.length + 1);
+    onCommentCountChange(totalItems + 1);
+    setTotalItems((prev) => prev + 1);
   };
 
   const handleCommentUpdate = () => {
-    onCommentCountChange(comments.length);
+    onCommentCountChange(totalItems);
   };
 
   const handleCommentDelete = () => {
-    onCommentCountChange(comments.length - 1);
+    onCommentCountChange(totalItems - 1);
+    setTotalItems((prev) => prev - 1);
+  };
+
+  const handleLoginRedirect = () => {
+    openModal(
+      "로그인이 필요한 서비스입니다.\n로그인 하러 가시겠어요?",
+      "취소하기",
+      "로그인하기",
+      () => navigate("/login")
+    );
   };
 
   if (isLoading) {
@@ -94,17 +115,31 @@ const Comments: React.FC<CommentsProps> = ({
       <div className="body-small-r text-center py-4 text-red-500">{error}</div>
     );
   }
+
   const onPageChange = (page: number) => {
     setSearchParams({ page: page.toString() });
   };
 
   return (
     <>
-      <CommentForm
-        onSubmit={handleCommentSubmit}
-        socialPostId={socialPostId}
-        accessToken={token || ""}
-      />
+      {isLoggedIn ? (
+        <CommentForm
+          onSubmit={handleCommentSubmit}
+          socialPostId={socialPostId}
+          accessToken={token || ""}
+        />
+      ) : (
+        <div className="mb-8 text-center p-4 bg-gray-10 rounded-lg">
+          <p className="mb-2">댓글을 작성하려면 로그인이 필요합니다.</p>
+          <button
+            onClick={handleLoginRedirect}
+            className="px-4 py-2 bg-blue-1 text-white rounded hover:bg-blue-2 transition-colors"
+          >
+            로그인하기
+          </button>
+        </div>
+      )}
+
       <CommentList
         comments={comments}
         setComments={setComments}
@@ -112,7 +147,9 @@ const Comments: React.FC<CommentsProps> = ({
         accessToken={token || ""}
         onCommentUpdate={handleCommentUpdate}
         onCommentDelete={handleCommentDelete}
+        isLoggedIn={isLoggedIn}
       />
+
       {totalItems > 9 && (
         <div className="my-16">
           <Pagination
