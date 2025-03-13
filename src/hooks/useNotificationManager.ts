@@ -9,7 +9,7 @@ interface NotificationItem {
   content: string;
   relatedId: number;
   relatedType: string;
-  isRead: boolean;
+  read: boolean;
   createdAt: string;
   success: boolean;
 }
@@ -73,10 +73,11 @@ const useNotificationManager = (
         setNotificationList((prevList) =>
           prevList.map((notification) =>
             notification.notiId === notiId
-              ? { ...notification, isRead: true }
+              ? { ...notification, read: true }
               : notification
           )
         );
+        // fetchNotifications();
       }
     } catch (error) {
       console.error("특정 알림 읽음 처리 실패:", error);
@@ -96,7 +97,7 @@ const useNotificationManager = (
       );
       if (response.data.success === true) {
         setNotificationList((prevList) =>
-          prevList.map((notification) => ({ ...notification, isRead: true }))
+          prevList.map((notification) => ({ ...notification, read: true }))
         );
       }
     } catch (error) {
