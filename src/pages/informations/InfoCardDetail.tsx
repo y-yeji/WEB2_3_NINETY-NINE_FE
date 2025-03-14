@@ -199,7 +199,19 @@ const InfoCardDetail = () => {
       return;
     }
 
-    await handleToggleBookmark();
+    // 현재 카테고리와 경로 출력
+    console.log("상세 페이지 북마크:", { category, eventId });
+
+    // category와 일치하는 API 매개변수 지정
+    const apiCategoryMap: Record<string, string> = {
+      popups: "popupstores",
+      exhibition: "exhibits",
+      musical: "performances",
+      concert: "festivals",
+    };
+
+    const normalizedCategory = apiCategoryMap[category || ""] || category;
+    await handleToggleBookmark(normalizedCategory);
   };
 
   const mapToShowInfo = (data: EventDetail): ShowInfo => {
