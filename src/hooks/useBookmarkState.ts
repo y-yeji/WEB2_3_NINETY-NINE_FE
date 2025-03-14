@@ -21,25 +21,28 @@ export const useBookmarkState = (
   // Map category from URL path to API parameter
   const getCategoryParam = (): string => {
     const pathname = window.location.pathname;
+    console.log("현재 경로:", pathname);
+
     const categoryMap: { [key: string]: string } = {
       popups: "popupStore",
+      popupstores: "popupStore",
       exhibition: "exhibit",
+      exhibits: "exhibit",
       musical: "performance",
+      performances: "performance",
       festival: "festival",
-      팝업스토어: "popupStore",
-      전시회: "exhibit",
-      "뮤지컬 | 연극": "performance",
-      공연: "performance",
-      페스티벌: "festival",
-      축제: "festival",
+      festivals: "festival",
     };
 
     for (const [urlPath, apiParam] of Object.entries(categoryMap)) {
       if (pathname.includes(`/informations/${urlPath}`)) {
+        console.log(`매핑된 카테고리: ${urlPath} -> ${apiParam}`);
         return apiParam;
       }
     }
-    return "performance"; // Default fallback
+
+    console.log("기본 카테고리로 fallback");
+    return "exhibit"; // 현재 경로가 exhibits이므로 기본값 수정
   };
 
   const toggleBookmark = async (
@@ -62,18 +65,28 @@ export const useBookmarkState = (
       const newStatus = !isBookmarked;
       setIsBookmarked(newStatus);
 
+      // 요청 파라미터와 현재 경로를 로깅
+      const currentPath = window.location.pathname;
+
       // overrideCategory가 있으면 사용, 없으면 URL에서 추출
-      const categoryParam = overrideCategory
-        ? overrideCategory === "popupstores"
-          ? "popupStore"
-          : overrideCategory === "exhibits"
-            ? "exhibit"
-            : overrideCategory === "performances"
-              ? "performance"
-              : overrideCategory === "festivals"
-                ? "festival"
-                : overrideCategory
-        : getCategoryParam();
+      let categoryParam = getCategoryParam();
+
+      if (overrideCategory) {
+        // 전달받은 카테고리를 API 매개변수로 변환
+        if (overrideCategory === "popupstores") categoryParam = "popupStore";
+        else if (overrideCategory === "exhibits") categoryParam = "exhibit";
+        else if (overrideCategory === "performances")
+          categoryParam = "performance";
+        else if (overrideCategory === "festivals") categoryParam = "festival";
+        else categoryParam = overrideCategory;
+      }
+
+      console.log("북마크 요청 정보:", {
+        id,
+        categoryParam,
+        overrideCategory,
+        currentPath,
+      });
 
       // Make API request to toggle bookmark
       const response = await api.post(
@@ -86,8 +99,10 @@ export const useBookmarkState = (
         }
       );
 
-      // Check if the request was successful
-      if (response.data?.success) {
+      console.log("북마크 응답:", response);
+
+      // 응답 상태 코드로 성공 여부 판단 (204 No Content는 성공)
+      if (response.status >= 200 && response.status < 300) {
         return {
           success: true,
           newBookmarkStatus: newStatus,
