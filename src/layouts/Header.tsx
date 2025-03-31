@@ -1,68 +1,34 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useState, useRef } from "react";
 import Icon from "../assets/icons/Icon";
 import Sidebar from "./Sidebar/Sidebar";
-import Notification from "../components/notification/notification";
+import NotificationManager from "../components/notification/NotificationManager";
 import { useAuthStore } from "../stores/authStore";
 
 const Header: React.FC = () => {
-  const [showNotification, setShowNotification] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement | null>(null);
-  const notificationRef = useRef<HTMLDivElement | null>(null);
-  const notificationButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
-  const toggleNotification = () => {
-    setShowNotification((prev) => !prev);
-  };
-
-  useEffect(() => {
-    if (showNotification) {
-      setIsSidebarOpen(false);
-    }
-  }, [showNotification]);
-
   const toggleSidebar = () => {
-    setIsSidebarOpen((prev) => !prev);
-    if (!isSidebarOpen) {
-      setShowNotification(false);
-    }
+    setIsSidebarOpen((prev) => {
+      if (!prev) setIsNotificationOpen(false);
+      return !prev;
+    });
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        sidebarRef.current &&
-        !sidebarRef.current.contains(event.target as Node) &&
-        isSidebarOpen
-      ) {
-        setIsSidebarOpen(false);
-      }
-
-      if (
-        notificationRef.current &&
-        !notificationRef.current.contains(event.target as Node) &&
-        showNotification &&
-        notificationButtonRef.current &&
-        !notificationButtonRef.current.contains(event.target as Node)
-      ) {
-        setShowNotification(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isSidebarOpen, showNotification]);
+  const toggleNotification = () => {
+    setIsNotificationOpen((prev) => {
+      if (!prev) setIsSidebarOpen(false);
+      return !prev;
+    });
+  };
 
   return (
     <>
       <header className="w-full h-[84px] top-0 left-0 fixed px-10 py-[21px] z-20 bg-blue-7">
-        <div className="max-w-[1280px] mx-auto flex justify-between items-center">
+        <div className="max-w-[1280px] mx-auto flex justify-between">
           <a href="/" aria-label="홈페이지로 이동">
             <h1 className="font-dm italic text-blue-1 text-2xl/[38px]">
               On culture
@@ -71,13 +37,11 @@ const Header: React.FC = () => {
           <div className="flex gap-4">
             {/* 알림 버튼 */}
             {isLoggedIn && (
-              <button
-                ref={notificationButtonRef}
-                onClick={toggleNotification}
-                aria-label="알림 열기"
-              >
-                <Icon name="Bell" size={24} className="text-blue-1" />
-              </button>
+              <NotificationManager
+                isOpen={isNotificationOpen}
+                onClose={() => setIsNotificationOpen(false)}
+                onToggle={toggleNotification}
+              />
             )}
 
             {/* 사이드바 버튼 */}
@@ -98,15 +62,6 @@ const Header: React.FC = () => {
           ref={sidebarRef}
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
-        />
-      )}
-
-      {/* 알림창 */}
-      {showNotification && (
-        <Notification
-          ref={notificationRef}
-          isOpen={showNotification}
-          onClose={() => setShowNotification(false)}
         />
       )}
     </>
