@@ -1,102 +1,209 @@
 @layer base {
-  .logo {
-    font-size: 50px;
-    font-weight: 400;
-    /* line-height: 65px; */
-  }
+  @media (min-width: 0px) and (max-width: 767px) {
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 400;
+    }
 
-  .h1-b {
-    font-size: 32px;
-    font-weight: 700;
-    line-height: 38px;
-  }
+    .h1-b {
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 2rem;
+    }
 
-  .h2-b {
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 34px;
-  }
+    .h2-b {
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.875rem;
+    }
 
-  .h3-b {
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 29px;
-  }
+    .h3-b {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.625rem;
+    }
 
-  .h4-b {
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 24px;
-  }
+    .h4-b {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.375rem;
+    }
 
-  .body-large-b {
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 27px;
-  }
+    .body-large-b {
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.5rem;
+    }
 
-  .body-large-m {
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 27px;
-  }
+    .body-large-m {
+      font-size: 1rem;
+      font-weight: 500;
+      line-height: 1.5rem;
+    }
 
-  .body-large-r {
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 27px;
-  }
-  .body-normal-b {
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 24px;
-  }
+    .body-large-r {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5rem;
+    }
 
-  .body-normal-m {
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 24px;
-  }
+    .body-normal-b {
+      font-size: 0.875rem;
+      font-weight: 700;
+      line-height: 1.3125rem;
+    }
 
-  .body-normal-r {
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 24px;
-  }
+    .body-normal-m {
+      font-size: 0.875rem;
+      font-weight: 500;
+      line-height: 1.3125rem;
+    }
 
-  .body-small-b {
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 21px;
-  }
+    .body-normal-r {
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1.3125rem;
+    }
 
-  .body-small-m {
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 21px;
-  }
+    .body-small-b {
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1.125rem;
+    }
 
-  .body-small-r {
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 21px;
-  }
+    .body-small-m {
+      font-size: 0.75rem;
+      font-weight: 500;
+      line-height: 1.125rem;
+    }
 
-  .caption-b {
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 17px;
-  }
+    .body-small-r {
+      font-size: 0.75rem;
+      font-weight: 400;
+      line-height: 1.125rem;
+    }
 
-  .caption-m {
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 17px;
-  }
+    .caption-b {
+      font-size: 0.625rem;
+      font-weight: 700;
+      line-height: 0.9375rem;
+    }
 
-  .caption-r {
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 17px;
+    .caption-m {
+      font-size: 0.625rem;
+      font-weight: 500;
+      line-height: 0.9375rem;
+    }
+
+    .caption-r {
+      font-size: 0.625rem;
+      font-weight: 400;
+      line-height: 0.9375rem;
+    }
+  }
+}
+
+@layer base {
+  @media (min-width: 768px) and (max-width: 1920px) {
+    .logo {
+      font-size: 3.125rem;
+      font-weight: 400;
+    }
+
+    .h1-b {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 2.38rem;
+    }
+
+    .h2-b {
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 2.12rem;
+    }
+
+    .h3-b {
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.81rem;
+    }
+
+    .h4-b {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.5rem;
+    }
+
+    .body-large-b {
+      font-size: 1.12rem;
+      font-weight: 700;
+      line-height: 1.69rem;
+    }
+
+    .body-large-m {
+      font-size: 1.12rem;
+      font-weight: 500;
+      line-height: 1.69rem;
+    }
+
+    .body-large-r {
+      font-size: 1.12rem;
+      font-weight: 400;
+      line-height: 1.69rem;
+    }
+
+    .body-normal-b {
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.5rem;
+    }
+
+    .body-normal-m {
+      font-size: 1rem;
+      font-weight: 500;
+      line-height: 1.5rem;
+    }
+
+    .body-normal-r {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5rem;
+    }
+
+    .body-small-b {
+      font-size: 0.88rem;
+      font-weight: 700;
+      line-height: 1.31rem;
+    }
+
+    .body-small-m {
+      font-size: 0.88rem;
+      font-weight: 500;
+      line-height: 1.31rem;
+    }
+
+    .body-small-r {
+      font-size: 0.88rem;
+      font-weight: 400;
+      line-height: 1.31rem;
+    }
+
+    .caption-b {
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1.12rem;
+    }
+
+    .caption-m {
+      font-size: 0.75rem;
+      font-weight: 500;
+      line-height: 1.12rem;
+    }
+
+    .caption-r {
+      font-size: 0.75rem;
+      font-weight: 400;
+      line-height: 1.12rem;
+    }
   }
 }
