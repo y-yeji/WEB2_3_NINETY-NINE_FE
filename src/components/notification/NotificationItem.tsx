@@ -8,8 +8,8 @@ const NotificationItem = ({
 }: {
   notification: {
     type: string;
-    relatedId: number;
-    relatedType: string;
+    relatedId?: number;
+    relatedType?: string;
     notiId: number;
     read: boolean;
     createdAt: string;
@@ -37,8 +37,8 @@ const NotificationItem = ({
 
   const getNotificationPath = (
     type: string,
-    relatedId: number,
-    relatedType: string
+    relatedId?: number,
+    relatedType?: string
   ): string => {
     if (!type || !relatedId || !relatedType) {
       console.error("유효하지 않은 알림 데이터:", {

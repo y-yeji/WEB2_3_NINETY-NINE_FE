@@ -1,43 +1,42 @@
-import { forwardRef, useEffect } from "react";
+import { forwardRef } from "react";
 import Icon from "../../assets/icons/Icon";
-import { useAuthStore } from "../../stores/authStore";
-import useNotificationManager from "../../hooks/useNotificationManager";
 import NotificationItem from "./NotificationItem";
 import NotificationHeader from "./NotificationHeader";
 
 interface NotificationProps {
   isOpen: boolean;
   onClose: () => void;
+  notificationList: Array<{
+    notiId: number;
+    type: string;
+    content: string;
+    createdAt: string;
+    read: boolean;
+    relatedId?: number;
+    relatedType?: string;
+  }>;
+  onRead: (notiId: number) => void;
+  onMarkAllAsRead: () => void;
+  onDeleteAllNotifications: () => void;
+  isLoading?: boolean;
 }
 
 const Notification = forwardRef<HTMLDivElement, NotificationProps>(
-  ({ isOpen, onClose }, ref) => {
-    const token = localStorage.getItem("accessToken");
-
-    const { user, checkAuth } = useAuthStore();
-    const currentUserNickname = user.nickname;
-    const userPosts = user.posts || [];
-
-    const {
+  (
+    {
+      isOpen,
+      onClose,
       notificationList,
+      onRead,
+      onMarkAllAsRead,
+      onDeleteAllNotifications,
       isLoading,
-      fetchNotifications,
-      markAsRead,
-      markAllAsRead,
-      deleteAllNotifications,
-    } = useNotificationManager(token || "", currentUserNickname, userPosts);
-
-    useEffect(() => {
-      if (isOpen && currentUserNickname) fetchNotifications();
-    }, [isOpen, currentUserNickname]);
-
-    if (!isOpen || !currentUserNickname) return null;
+    },
+    ref
+  ) => {
+    if (!isOpen) return null;
 
     const isScrollable = notificationList.length >= 6;
-
-    useEffect(() => {
-      checkAuth();
-    }, []);
 
     const sortNotifications = notificationList.slice().sort((a, b) => {
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -49,14 +48,16 @@ const Notification = forwardRef<HTMLDivElement, NotificationProps>(
         className="fixed top-[-25px] right-[352px] z-30 w-[460px] h-[486px] mt-[84px] pt-[22px] px-[25px] bg-blue-7 border border-base-2 rounded text-blue-1 shadow-user-postcard-shadow"
       >
         <button onClick={onClose} className="absolute top-4 right-5">
-          <Icon name="X" size={20} className="text-blue-1" />
+          <Icon name="X" size={20} />
         </button>
 
+        {/* 헤더 */}
         <NotificationHeader
-          onMarkAllAsRead={markAllAsRead}
-          onDeleteAllNotifications={deleteAllNotifications}
+          onMarkAllAsRead={onMarkAllAsRead}
+          onDeleteAllNotifications={onDeleteAllNotifications}
         />
 
+        {/* 내용 */}
         <section className="notification-container">
           {isLoading ? (
             <div className="flex justify-center items-center">
@@ -76,7 +77,7 @@ const Notification = forwardRef<HTMLDivElement, NotificationProps>(
                 <NotificationItem
                   key={notification.notiId}
                   notification={notification}
-                  onRead={markAsRead}
+                  onRead={onRead}
                   isScrollable={isScrollable}
                 />
               ))}
