@@ -6,7 +6,9 @@ const RootLayout = () => {
     <>
       <Header />
       <main className="w-full max-w-[1280px] mx-auto">
-        <Outlet />
+        <div className="max-xm: mx-4 xm:mx-5 sm:mx-6 md:mx-8 lg:mx-10 xl:mx-12">
+          <Outlet />
+        </div>
       </main>
     </>
   );
