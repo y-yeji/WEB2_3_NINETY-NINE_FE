@@ -27,23 +27,22 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
     return (
       <aside
         ref={ref}
-        className={`sidebar ${isOpen ? "open" : ""} flex pt-[43px] px-10 pb-[15px] bg-blue-7 z-30 rounded border border-base-1`}
+        className={`sidebar ${isOpen ? "open" : ""} flex max-xm:flex-col xm:flex-col pt-[43px] xl:px-10 max-xm:px-[30px] xm:px-[72px] md:px-[60px] pb-[15px] bg-blue-7 z-30 rounded border border-base-1`}
       >
         <button onClick={onClose} className="absolute top-[14px] left-[16px]">
           <Icon name="X" size={22} className="blue-1" />
         </button>
-
-        <section className="mr-[50px]">
-          <article>
+        <section className="flex xl:gap-[50px] max-xm:flex-col xm:flex-col xl:flex-row">
+          <article className="xl:w-[210px]">
             {!isLoggedIn ? (
-              <div className="mt-[52px]">
+              <div className="max-xm:mt-5 xm:mt-5 xl:mt-[52px]">
                 <div className="mb-[17px]">
                   <h4 className="h4-b mb-5">안녕하세요.</h4>
                   <span className="caption-r">
                     온컬쳐와 함께 문화생활을 즐겨보시겠어요?
                   </span>
                 </div>
-                <div className="flex justify-end mb-[44px]">
+                <div className="flex justify-end xl:mb-[44px] max-xm:mb-5 xm:mb-5">
                   <Link to="/login" onClick={onClose}>
                     <button className="w-[72px] h-[30px] py-[4.5px] rounded border border-base-1 bg-blue-7 text-blue-1 hover:bg-blue-4 hover:text-base-1 hover:border-transparent body-small-r">
                       로그인
@@ -52,7 +51,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
                 </div>
               </div>
             ) : (
-              <div className="mt-[30px] mb-[25px]">
+              <div className="xl:mt-[30px] xl:mb-[25px]  max-xm:mb-5 xm:mb-5">
                 <div className="flex items-center justify-between mb-[3px]">
                   <div className="flex items-center gap-2">
                     <div className="w-[50px] h-[50px] rounded-full overflow-hidden userProfile-shadow">
@@ -98,11 +97,12 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
               </div>
             )}
           </article>
-          <TeamIntroduce />
+          <article className="xm:h-[366px] xl:h-[430px] flex-grow mb-[18px] border-t border-b border-base-1">
+            <Category onClick={onClose} />
+          </article>
         </section>
-
-        <section className="h-[430px] flex-grow mb-[18px] border-t border-b border-base-1">
-          <Category onClick={onClose} />
+        <section className="absolute xl:top-[265px] xl:left-10 max-xm:top-[564px] xm:top-[564px] xm:left-[72px] md:left-[60px] lg:block">
+          <TeamIntroduce />
         </section>
       </aside>
     );

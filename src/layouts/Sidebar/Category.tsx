@@ -23,7 +23,7 @@ const Category: React.FC<CategoryProps> = ({ onClick }) => {
           to={item.to}
           onClick={onClick}
           className={({ isActive }) => {
-            return `block w-[230px] h-[46px] mb-5 rounded ${
+            return `block max-xm:w-[91%] xm:w-[91%] xl:w-[230px] h-[46px] max-xm:mb-[10px] xm:mb-[10px] xl:mb-5 rounded ${
               isActive
                 ? "bg-base-1 text-blue-7"
                 : "text-base-1 hover:bg-base-1 hover:text-blue-7"

@@ -27,8 +27,8 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <header className="w-full h-[84px] top-0 left-0 fixed px-10 py-[21px] z-20 bg-blue-7">
-        <div className="max-w-[1280px] mx-auto flex justify-between">
+      <header className="w-full xl:h-[84px] max-xm:h-16 xm:h-16 top-0 left-0 fixed px-10 xl:py-[21px] max-xm:py-[18px] xm:py-[18px] z-20 bg-blue-7">
+        <div className="max-w-[1280px] mx-auto flex justify-between self-center items-center h-full">
           <a href="/" aria-label="홈페이지로 이동">
             <h1 className="font-dm italic text-blue-1 text-2xl/[38px]">
               On culture
