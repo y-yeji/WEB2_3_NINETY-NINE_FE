@@ -29,11 +29,11 @@ const teamData = [
 ];
 
 const TeamIntroduce = () => (
-  <article className="body-small-r text-blue-1 border-t border-base-1">
+  <article className="xm:w-[229px] md:w-[253px] xl:w-[230px] xl: body-small-r text-blue-1 xl:border-t xl:border-base-1">
     {teamData.map((team, index) => (
       <div
         key={team.name}
-        className={`flex flex-col items-start ${index === 0 ? "mt-[32px] mb-[30px]" : "mb-[32px]"} px-4`}
+        className={`flex flex-col items-start ${index === 0 ? "mt-[32px] mb-[30px]" : "mb-[32px] md:mb-5"} px-4`}
       >
         <div className="flex items-center gap-2 mb-2">
           <a

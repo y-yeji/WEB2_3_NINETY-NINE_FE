@@ -82,8 +82,8 @@ const Community: React.FC = () => {
 
   return (
     <div className="mt-[168px]">
-      <h2 className="ml-[39px] h1-b">소셜 커뮤니티</h2>
-      <div className="flex items-center justify-end mr-[39px] bg-white">
+      <h2 className="ml-[22px] max-xm:ml-0 h1-b">소셜 커뮤니티</h2>
+      <div className="mr-[22px] max-xm:mr-0 flex items-center justify-end bg-white max-xm:mt-5 xm:mt-5">
         <Dropdown
           data={postCardSortOptionLabels}
           onSelect={handleSortChange}
@@ -91,12 +91,12 @@ const Community: React.FC = () => {
           sizeClassName="w-[114px] h-[30px]"
         />
       </div>
-      <div className="grid grid-cols-3 grid-rows-3 gap-[70px] place-items-center mt-9">
+      <div className=" grid lg:grid-cols-3 sm:grid-cols-2 xm:grid-cols-1 lg:gap-[70px] xm:gap-[35px] max-xm:gap-[35px] max-xm: mb-[82px] place-items-center mt-9">
         {posts.map((post) => (
           <PostCard key={post.id} post={post} onLikeToggle={handleLikeToggle} />
         ))}
       </div>
-      <div className="flex justify-center mt-[104px] mb-[108px]">
+      <div className="sm:flex justify-center mt-[104px] mb-[108px] xm:hidden max-xm:hidden">
         <Pagination
           totalItems={totalItems}
           itemsPerPage={9}

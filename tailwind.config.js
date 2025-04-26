@@ -45,6 +45,17 @@ export default {
       boxShadow: {
         "user-postcard-shadow": "5px 6px 25px 0px rgba(0, 0, 0, 0.1)",
       },
+      screens: {
+        xm: "375px",
+
+        sm: "640px",
+
+        md: "768px",
+
+        lg: "1024px",
+
+        xl: "1280px",
+      },
     },
   },
   plugins: [],
