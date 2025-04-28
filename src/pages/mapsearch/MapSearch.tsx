@@ -53,7 +53,7 @@ const MapSearch: React.FC = () => {
   }, [performanceData, performanceOptionsSelected]);
 
   return (
-    <div className="mt-[160px]">
+    <div className="flex flex-col justify-center xm:mt-[160px] max-xm:mt-[120px]">
       <SearchForm
         performanceOptions={performanceOptions}
         progressStatusOptions={progressStatusOptions}
@@ -74,7 +74,7 @@ const MapSearch: React.FC = () => {
         onSubmitSearch={handleSearchSubmit}
       />
 
-      <section className="flex justify-center items-center">
+      <section className="flex justify-center items-center w-full ">
         <Map
           center={{
             lat: parseFloat(searchParams.get("lat") || "37.5665"),
@@ -107,7 +107,7 @@ const MapSearch: React.FC = () => {
       </section>
 
       {performanceData?.posts && performanceData.posts.length > 0 && (
-        <div className="my-20">
+        <div className="sm:my-20 sm:block xm:hidden max-xm:hidden">
           <Pagination
             totalItems={performanceData?.totalElements || 0}
             itemsPerPage={9}

@@ -16,7 +16,7 @@ const MappageInfomationCardList = ({
     return <p className="text-center">리스트가 없습니다.</p>;
 
   return (
-    <div className="flex gap-[93px] justify-center flex-wrap mx-auto">
+    <div className="flex max-xm:gap-10 xm:gap-10 sm:gap-[90px] justify-center flex-wrap mx-auto">
       {posts.map((post) => (
         <InformationCard
           key={post.id}
