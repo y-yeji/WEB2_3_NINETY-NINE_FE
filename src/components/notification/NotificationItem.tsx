@@ -69,7 +69,7 @@ const NotificationItem = ({
   return (
     <li
       className={`${
-        isScrollable ? "w-[376px]" : "w-[400px]"
+        isScrollable ? "w-[376px]" : "max-xm:w-auto xm:w-auto xl:w-[400px]"
       } h-[60px] px-[10px] py-2 rounded mb-[10px] ${
         !notification.read ? "bg-white" : "bg-base-1"
       }`}
@@ -98,7 +98,7 @@ const NotificationItem = ({
           <p
             className={`body-small-r ${
               notification.read ? "text-gray-30" : "text-blue-5"
-            }`}
+            } max-xm:line-clamp-1`}
           >
             {notification.content}
           </p>
