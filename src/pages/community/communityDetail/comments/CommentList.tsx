@@ -148,7 +148,7 @@ const CommentList: React.FC<CommentListProps> = ({
               <div className="flex justify-between mb-2.5">
                 <div className="flex items-center gap-2">
                   <div
-                    className="w-[25px] h-[25px] rounded-full overflow-hidden userProfile-shadow"
+                    className="w-[25px] h-[25px] rounded-full overflow-hidden userProfile-shadow cursor-pointer"
                     onClick={() => handleUserProfileClick(comment.userId)}
                   >
                     <img
@@ -158,7 +158,7 @@ const CommentList: React.FC<CommentListProps> = ({
                     />
                   </div>
                   <span
-                    className="body-normal-m"
+                    className="body-normal-m cursor-pointer"
                     onClick={() => handleUserProfileClick(comment.userId)}
                   >
                     {comment.userNickname}
