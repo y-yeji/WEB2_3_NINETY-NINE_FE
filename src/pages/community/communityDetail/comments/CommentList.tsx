@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { formatDate } from "../../../../utils/dateUtils";
 import api from "../../../../api/api";
 import { PostComment } from "../../../../types/comment";
 import { useAuthStore } from "../../../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import { useModalStore } from "../../../../stores/modalStore";
 import Icon from "../../../../assets/icons/Icon";
+import { formatCommentDate } from "../../../../utils/commentDateUtils";
 
 interface CommentListProps {
   comments: PostComment[];
@@ -14,7 +14,7 @@ interface CommentListProps {
   accessToken: string;
   onCommentUpdate: () => void;
   onCommentDelete: () => void;
-  isLoggedIn?: boolean; // 새로 추가된 prop
+  isLoggedIn?: boolean;
 }
 
 const CommentList: React.FC<CommentListProps> = ({
@@ -24,7 +24,7 @@ const CommentList: React.FC<CommentListProps> = ({
   accessToken,
   onCommentUpdate,
   onCommentDelete,
-  isLoggedIn = false, // 기본값 설정
+  isLoggedIn = false,
 }) => {
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const [editedContent, setEditedContent] = useState("");
@@ -88,7 +88,8 @@ const CommentList: React.FC<CommentListProps> = ({
   const handleDeleteClick = (commentId: number) => {
     if (!isLoggedIn) {
       openModal(
-        "로그인이 필요한 서비스입니다.\n로그인 하러 가시겠어요?",
+        `로그인이 필요한 서비스입니다.
+        로그인 하러 가시겠어요?`,
         "취소하기",
         "로그인하기",
         () => navigate("/login")
@@ -97,7 +98,8 @@ const CommentList: React.FC<CommentListProps> = ({
     }
 
     openModal(
-      "댓글을 삭제하시면 더 이상 볼 수 없습니다.\n정말 삭제 하시겠어요?",
+      `댓글을 삭제하시면 더 이상 볼 수 없습니다.
+      정말 삭제 하시겠어요?`,
       "취소 하기",
       "삭제 하기",
       async () => {
@@ -132,9 +134,8 @@ const CommentList: React.FC<CommentListProps> = ({
 
   return (
     <div className="commentList">
-      <h3 className="text-blue-4 mb-5">댓글</h3>
       {comments.length === 0 ? (
-        <div className="text-center py-10 text-gray-60">
+        <div className="text-center py-10 text-gray-40">
           첫 번째 댓글을 작성해보세요!
         </div>
       ) : (
@@ -142,55 +143,55 @@ const CommentList: React.FC<CommentListProps> = ({
           {comments.map((comment) => (
             <li
               key={comment.id}
-              className="p-5 border-t border-gray-20 relative"
+              className="p-5 border-b border-gray-30 relative"
             >
               <div className="flex justify-between mb-2.5">
                 <div className="flex items-center gap-2">
                   <div
-                    className="w-[30px] h-[30px] rounded-full overflow-hidden cursor-pointer"
+                    className="w-[25px] h-[25px] rounded-full overflow-hidden userProfile-shadow"
                     onClick={() => handleUserProfileClick(comment.userId)}
                   >
                     <img
-                      src={comment.userProfileImage || "/default-image.png"}
-                      alt="프로필 이미지"
                       className="w-full h-full object-cover bg-center"
+                      src={comment.userProfileImage || "/default-image.png"}
+                      alt="유저프로필이미지"
                     />
                   </div>
-                  <div>
-                    <div
-                      className="font-bold cursor-pointer"
-                      onClick={() => handleUserProfileClick(comment.userId)}
-                    >
-                      {comment.userNickname}
-                    </div>
-                    <div className="text-xs text-gray-60">
-                      {formatDate(comment.createdAt)}
-                    </div>
-                  </div>
+                  <span
+                    className="body-normal-m"
+                    onClick={() => handleUserProfileClick(comment.userId)}
+                  >
+                    {comment.userNickname}
+                  </span>
+                  <span className="caption-r text-gray-30">
+                    {formatCommentDate(comment.createdAt)}
+                  </span>
                 </div>
                 {isLoggedIn && user && user.id === comment.userId && (
                   <div className="relative" ref={menuRef}>
                     <button
                       onClick={() => toggleMenu(comment.id)}
-                      className="text-gray-60"
+                      className="text-blue-2"
                     >
                       <Icon name="EllipsisVertical" size={24} />
                     </button>
                     {menuOpenCommentId === comment.id && (
-                      <div className="absolute right-0 w-24 bg-white border border-gray-20 rounded shadow-md z-10">
+                      <ul className="absolute top-[25px] right-[9px] w-[114px] h-16 py-2 px-4 bg-white rounded border border-blue-7 body-small-r text-center">
                         <button
                           onClick={() => handleEditClick(comment)}
-                          className="block w-full text-left p-2 hover:bg-gray-10"
+                          className="mb-2 hover:text-blue-4"
                         >
                           수정하기
                         </button>
-                        <button
-                          onClick={() => handleDeleteClick(comment.id)}
-                          className="block w-full text-left p-2 hover:bg-gray-10"
-                        >
-                          삭제하기
-                        </button>
-                      </div>
+                        <li>
+                          <button
+                            onClick={() => handleDeleteClick(comment.id)}
+                            className=" hover:text-blue-4"
+                          >
+                            삭제하기
+                          </button>
+                        </li>
+                      </ul>
                     )}
                   </div>
                 )}
