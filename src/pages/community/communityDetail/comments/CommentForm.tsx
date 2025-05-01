@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import api from "../../../../api/api";
 import { PostComment } from "../../../../types/comment";
 import { useAuthStore } from "../../../../stores/authStore";
+import ShortButton from "../../../../components/ui/ShortButton";
 
 interface CommentFormProps {
   onSubmit: (comment: PostComment) => void;
@@ -53,27 +54,27 @@ const CommentForm: React.FC<CommentFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-10">
-      <div className="mb-3">
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="w-full h-[104px] p-4 border border-gray-20 rounded-lg resize-none"
-          placeholder="댓글을 입력하세요"
+    <div className="flex items-end gap-[18px] mb-[60px]">
+      <div className="w-[50px] h-[50px] rounded-full overflow-hidden userProfile-shadow ">
+        <img
+          className="w-full h-full object-cover bg-center"
+          src={user?.s3Bucket || "/default-image.png"}
+          alt="유저 프로필 이미지"
         />
       </div>
-      <div className="flex justify-end">
-        <button
-          type="submit"
-          disabled={isSubmitting || !content.trim()}
-          className={`px-4 py-2 rounded text-white ${
-            isSubmitting || !content.trim() ? "bg-gray-40" : "bg-blue-1"
-          }`}
-        >
-          {isSubmitting ? "등록 중..." : "등록하기"}
-        </button>
-      </div>
-    </form>
+      <form onSubmit={handleSubmit} className="flex items-center gap-6">
+        <div>
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            disabled={isSubmitting}
+            className="w-[907px] h-10 min-h-[40px] border-b border-gray-30 p-2 placeholder:pl-[6px] body-small-r break-words resize-none focus:border-blue-1 focus:placeholder:text-transparent"
+            placeholder="댓글을 입력하세요"
+          />
+        </div>
+        <ShortButton text="댓글 등록" textColor="base-1" bgColor="blue-1" />
+      </form>
+    </div>
   );
 };
 
