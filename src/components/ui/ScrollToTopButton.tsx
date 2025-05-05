@@ -19,7 +19,7 @@ const ScrollToTopButton = () => {
       {showScroll && (
         <button
           onClick={scrollToTop}
-          className="fixed z-20 bottom-6 right-6 w-[45px] h-[45px] p-0  rounded-full transition-all"
+          className="fixed z-15 bottom-6 right-6 w-[45px] h-[45px] p-0  rounded-full transition-all"
         >
           <Icon
             name="ChevronUp"

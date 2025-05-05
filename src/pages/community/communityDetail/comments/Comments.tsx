@@ -121,23 +121,11 @@ const Comments: React.FC<CommentsProps> = ({
 
   return (
     <>
-      {isLoggedIn ? (
-        <CommentForm
-          onSubmit={handleCommentSubmit}
-          socialPostId={socialPostId}
-          accessToken={token || ""}
-        />
-      ) : (
-        <div className="mb-8 text-center p-4 bg-gray-10 rounded-lg">
-          <p className="mb-2">댓글을 작성하려면 로그인이 필요합니다.</p>
-          <button
-            onClick={handleLoginRedirect}
-            className="px-4 py-2 bg-blue-1 text-white rounded hover:bg-blue-2 transition-colors"
-          >
-            로그인하기
-          </button>
-        </div>
-      )}
+      <CommentForm
+        onSubmit={handleCommentSubmit}
+        socialPostId={socialPostId}
+        accessToken={token || ""}
+      />
 
       <CommentList
         comments={comments}

@@ -31,7 +31,7 @@ const CommunityEditPost = () => {
 
     if (postId) fetchPostData();
   }, [postId]);
-
+  
   const handleImageUpload = (images: (File | string)[]) => {
     setImageUrls(images);
     setUpdated(true);
@@ -82,6 +82,8 @@ const CommunityEditPost = () => {
     if (confirmCancel) navigate(`/socialPosts/${postId}`);
   };
 
+
+  console.log(imageUrls);
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <div className="mt-[100px]">

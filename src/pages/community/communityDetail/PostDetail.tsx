@@ -7,7 +7,7 @@ import api from "../../../api/api";
 import { useModalStore } from "../../../stores/modalStore";
 import { useLikeState } from "../../../hooks/useLikeState";
 import { useAuthStore } from "../../../stores/authStore";
-import { PostCardProps } from "../../../types/Post";
+import { PostCardProps } from "../../../types/post";
 import DOMPurify from "dompurify";
 
 interface PostDetailProps {
@@ -67,7 +67,8 @@ const PostDetail: React.FC<PostDetailProps> = ({
     e.stopPropagation();
     e.preventDefault();
     openModal(
-      "포스트를 삭제하시면 더 이상 볼 수 없습니다.\n정말 삭제 하시겠어요?",
+      `포스트를 삭제하시면 더 이상 볼 수 없습니다.
+      정말 삭제 하시겠어요?`,
       "취소 하기",
       "삭제 하기",
       async () => {
@@ -92,7 +93,8 @@ const PostDetail: React.FC<PostDetailProps> = ({
     if (!isLoggedIn) {
       setIsLoading(false);
       openModal(
-        "로그인이 필요한 서비스입니다.\n로그인 하러 가시겠어요?",
+        `로그인이 필요한 서비스입니다.
+        로그인 하러 가시겠어요?`,
         "취소하기",
         "로그인하기",
         () => navigate("/login")
@@ -127,7 +129,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
             <div className="flex items-center gap-5">
               <div className="flex items-center gap-2">
                 <img
-                  className="w-[30px] h-[30px] rounded-full cursor-pointer"
+                  className="w-[30px] h-[30px] rounded-full cursor-pointer userProfile-shadow"
                   src={postDetail?.userProfileImage || "/default-image.png"}
                   alt="유저프로필 이미지"
                   onClick={handleUserProfileClick}
@@ -156,7 +158,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
                   />
                 </button>
                 {isPostMenuOpen && (
-                  <ul className="w-[114px] h-16 absolute top-[26px] right-2 py-2 px-6 bg-white rounded border border-blue-7 body-small-r text-center">
+                  <ul className="w-[114px] h-16 absolute top-[26px] right-2 py-2 px-4 bg-white rounded border border-blue-7 body-small-r text-center">
                     <li className="mb-2 hover:text-blue-4">
                       <button onClick={handleEditClick}>포스트 수정</button>
                     </li>

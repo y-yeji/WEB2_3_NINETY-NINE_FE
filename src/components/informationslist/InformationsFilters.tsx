@@ -6,6 +6,7 @@ interface InformationsFiltersProps {
   selectedStatus: string;
   onLocationChange: (value: string) => void;
   onStatusChange: (value: string) => void;
+  sizeClassName?: string;
 }
 
 const InformationsFilters: React.FC<InformationsFiltersProps> = ({
@@ -36,18 +37,20 @@ const InformationsFilters: React.FC<InformationsFiltersProps> = ({
   const statuses = ["진행 중", "오픈 예정"];
 
   return (
-    <div className="flex ml-[18.5px] gap-5 w-full">
+    <div className="flex sm:ml-[18.5px] sm:gap-5 xm:gap-2 max-xm:flex-col max-xm:gap-4">
       <Dropdown
         data={locations}
         onSelect={onLocationChange}
-        sizeClassName="w-[164px] h-[32px]"
+        sizeClassName="sm:[164px] h-[32px] xm:w-[128px]"
         selectedOption={selectedLocation}
+        zIndex={10}
       />
       <Dropdown
         data={statuses}
         onSelect={onStatusChange}
-        sizeClassName="w-[124px] h-[32px]"
+        sizeClassName="sm:w-[124px] h-[32px] xm:w-[105px]"
         selectedOption={selectedStatus}
+        zIndex={5}
       />
     </div>
   );

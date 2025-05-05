@@ -4,7 +4,7 @@ import Comments from "./comments/Comments";
 import PostDetail from "./PostDetail";
 import { useParams } from "react-router-dom";
 import ScrollToTopButton from "../../../components/ui/ScrollToTopButton";
-import { PostCardProps } from "../../../types/Post";
+import { PostCardProps } from "../../../types/post";
 
 type PostDetailContent = PostCardProps["post"];
 

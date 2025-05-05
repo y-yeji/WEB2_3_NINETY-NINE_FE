@@ -29,8 +29,8 @@ const Map = ({ center, posts }: MapProps) => {
         src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&libraries=services&autoload=false`}
       />
 
-      <div className="relative">
-        <div ref={container} style={{ width: "1082px", height: "560px" }}></div>
+      <div className="flex flex-col items-center justify-center w-full">
+        <div ref={container}></div>
 
         {Object.keys(searchErrors).length > 0 && (
           <p className="caption-r text-red mt-[15px] text-center">
