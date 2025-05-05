@@ -44,12 +44,12 @@ const Login = () => {
     setErrors({ ...errors, [e.target.name]: "" });
   };
   return (
-    <div className="mx-10 mt-64 h-[50vh] w-full flex flex-col items-center justify-center">
-      <h2 className="text-4xl my-[60px] font-dm italic text-blue-1">
+    <div className="w-full min-h-screen flex flex-col items-center px-4 pt-20 sm:pt-32 md:pt-64">
+      <h2 className="text-3xl sm:text-4xl mb-12 font-dm italic text-blue-1">
         On culture
       </h2>
-
-      <div className="w-full max-w-md flex flex-col items-center gap-6">
+  
+      <div className="w-[90%] sm:max-w-sm md:max-w-md flex flex-col items-center gap-6">
         <InputField
           label="이메일"
           name="email"
@@ -58,7 +58,7 @@ const Login = () => {
           onChange={handleChange}
           errorMessage={errors.email}
         />
-
+  
         <InputField
           label="비밀번호"
           name="password"
@@ -68,16 +68,16 @@ const Login = () => {
           onChange={handleChange}
           errorMessage={errors.password}
         />
-
+  
         <CustomButton text="로그인" bgColor="bg-blue-7" onClick={handleLogin} />
         <CustomButton
           text="이메일 회원가입"
           bgColor="bg-blue-7"
           onClick={() => navigate("/signup")}
         />
-
+  
         <DividerWithText text="간편 로그인" />
-
+  
         <CustomButton
           text="Google로 시작하기"
           bgColor="bg-white"
@@ -99,6 +99,7 @@ const Login = () => {
       </div>
     </div>
   );
+  
 };
 
 export default Login;
