@@ -31,6 +31,7 @@ const CommentList: React.FC<CommentListProps> = ({
   const [menuOpenCommentId, setMenuOpenCommentId] = useState<number | null>(
     null
   );
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const { openModal } = useModalStore();
@@ -43,8 +44,21 @@ const CommentList: React.FC<CommentListProps> = ({
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    if (screenWidth >= 640) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      if (screenWidth >= 640) {
+        document.removeEventListener("mousedown", handleClickOutside);
+      }
+    };
+  }, [screenWidth]);
+
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const handleEditClick = (comment: PostComment) => {
@@ -175,24 +189,57 @@ const CommentList: React.FC<CommentListProps> = ({
                     >
                       <Icon name="EllipsisVertical" size={24} />
                     </button>
-                    {menuOpenCommentId === comment.id && (
-                      <ul className="absolute top-[25px] right-[9px] w-[114px] h-16 py-2 px-4 bg-white rounded border border-blue-7 body-small-r text-center">
+                    <div>
+                      {menuOpenCommentId && screenWidth < 640 && (
+                        <div className="fixed inset-0 bg-blue-7/30 z-5 transition-opacity duration-300" />
+                      )}
+                      <ul
+                        className={`sm:hidden max-xm:w-full xm:w-full max-xm:h-[158px] xm:h-[158px] max-xm:py-5 xm:py-5 max-xm:px-5 xm:px-5 fixed left-0 right-0 bottom-0 bg-white rounded-t-lg border border-blue-7 body-small-r text-center z-30 transition-transform duration-300 ease-in-out
+                        ${menuOpenCommentId === comment.id ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
+                        style={{ willChange: "transform, opacity" }}
+                      >
+                        <button
+                          onClick={() => handleEditClick(comment)}
+                          className="mb-4 hover:text-blue-4"
+                        >
+                          댓글 수정
+                        </button>
+                        <li>
+                          <button
+                            onClick={() => handleDeleteClick(comment.id)}
+                            className="mb-[22px] hover:text-blue-4"
+                          >
+                            댓글 삭제
+                          </button>
+                        </li>
+                        <li className="max-w:[333px] h-10 py-2 border border-blue-7 rounded-lg text-blue-4 ">
+                          <button
+                            className="w-full"
+                            onClick={() => toggleMenu(comment.id)}
+                          >
+                            닫기
+                          </button>
+                        </li>
+                      </ul>
+                      <ul
+                        className={`hidden sm:block ${menuOpenCommentId === comment.id ? "sm:block" : "sm:hidden"} w-[114px] h-16 absolute top-[26px] right-2 py-2 px-4 bg-white rounded border border-blue-7 body-small-r text-center z-30`}
+                      >
                         <button
                           onClick={() => handleEditClick(comment)}
                           className="mb-2 hover:text-blue-4"
                         >
-                          수정하기
+                          댓글 수정
                         </button>
                         <li>
                           <button
                             onClick={() => handleDeleteClick(comment.id)}
                             className=" hover:text-blue-4"
                           >
-                            삭제하기
+                            댓글 삭제
                           </button>
                         </li>
                       </ul>
-                    )}
+                    </div>
                   </div>
                 )}
               </div>
@@ -206,15 +253,15 @@ const CommentList: React.FC<CommentListProps> = ({
                   <div className="flex justify-end gap-2 mt-2">
                     <button
                       onClick={() => setEditingCommentId(null)}
-                      className="px-4 py-2 border border-gray-20 rounded"
+                      className="px-4 py-2 body-small-r border border-gray-20 rounded"
                     >
-                      취소
+                      수정 취소
                     </button>
                     <button
                       onClick={() => handleEditSubmit(comment.id)}
-                      className="px-4 py-2 bg-blue-1 text-white rounded"
+                      className="px-4 py-2 body-small-r bg-blue-1 text-white rounded"
                     >
-                      저장
+                      댓글 등록
                     </button>
                   </div>
                 </div>
