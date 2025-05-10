@@ -31,6 +31,8 @@ const PostDetail: React.FC<PostDetailProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
   const { isLiked, likeCount, toggleLike } = useLikeState(
     parseInt(socialPostId),
     postDetail?.likeStatus || false,
@@ -50,11 +52,26 @@ const PostDetail: React.FC<PostDetailProps> = ({
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    if (screenWidth >= 640) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      if (screenWidth >= 640) {
+        document.removeEventListener("mousedown", handleClickOutside);
+      }
+    };
+  }, [screenWidth]);
+
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const togglePostMenu = () => setIsPostMenuOpen(!isPostMenuOpen);
+  const togglePostMenu = () => {
+    setIsPostMenuOpen((prev) => !prev);
+  };
 
   const handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -157,8 +174,30 @@ const PostDetail: React.FC<PostDetailProps> = ({
                     className="text-blue-1"
                   />
                 </button>
-                {isPostMenuOpen && (
-                  <ul className="w-[114px] h-16 absolute top-[26px] right-2 py-2 px-4 bg-white rounded border border-blue-7 body-small-r text-center">
+                <div>
+                  {isPostMenuOpen && screenWidth < 640 && (
+                    <div className="fixed inset-0 bg-blue-7/30 z-5 transition-opacity duration-300" />
+                  )}
+                  <ul
+                    className={`sm:hidden max-xm:w-full xm:w-full max-xm:h-[158px] xm:h-[158px] max-xm:py-5 xm:py-5 max-xm:px-5 xm:px-5 fixed left-0 right-0 bottom-0 bg-white rounded-t-lg border border-blue-7 body-small-r text-center z-30 transition-transform duration-300 ease-in-out
+                  ${isPostMenuOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
+                    style={{ willChange: "transform, opacity" }}
+                  >
+                    <li className="mb-4 hover:text-blue-4">
+                      <button onClick={handleEditClick}>포스트 수정</button>
+                    </li>
+                    <li className="mb-[22px] hover:text-blue-4">
+                      <button onClick={handleDeletePost}>포스트 삭제</button>
+                    </li>
+                    <li className="max-w:[333px] h-10 py-2 border border-blue-7 rounded-lg text-blue-4 ">
+                      <button className="w-full" onClick={togglePostMenu}>
+                        닫기
+                      </button>
+                    </li>
+                  </ul>
+                  <ul
+                    className={`hidden sm:block ${isPostMenuOpen ? "sm:block" : "sm:hidden"} w-[114px] h-16 absolute top-[26px] right-2 py-2 px-4 bg-white rounded border border-blue-7 body-small-r text-center z-30`}
+                  >
                     <li className="mb-2 hover:text-blue-4">
                       <button onClick={handleEditClick}>포스트 수정</button>
                     </li>
@@ -166,7 +205,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
                       <button onClick={handleDeletePost}>포스트 삭제</button>
                     </li>
                   </ul>
-                )}
+                </div>
               </div>
             )}
           </div>

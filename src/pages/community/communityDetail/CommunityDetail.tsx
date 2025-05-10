@@ -71,7 +71,7 @@ const CommunityDetail: React.FC = () => {
   };
 
   return (
-    <article className="w-[1120px] mx-auto mt-[156px]">
+    <article className="mt-[156px]">
       {postDetailContent && (
         <PostDetail
           postDetail={postDetailContent}
