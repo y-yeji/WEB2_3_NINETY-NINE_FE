@@ -26,46 +26,46 @@ const InputField = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="relative w-full max-w-[500px]">
-    {label && (
-      <label htmlFor={name} className="block pl-2 text-blue-1 body-l-r mb-2">
-        {label}
-      </label>
-    )}
-  
-    <div className="relative">
-      <input
-        id={name}
-        name={name}
-        type={type === "password" && showPassword ? "text" : type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        className={twMerge(`
-          w-full h-[50px] px-4 pr-10
+    <div className="relative w-[335px] sm:w-[500px]">
+      {label && (
+        <label htmlFor={name} className="block pl-2 text-blue-1 body-l-r mb-2">
+          {label}
+        </label>
+      )}
+
+      <div className="relative">
+        <input
+          id={name}
+          name={name}
+          type={type === "password" && showPassword ? "text" : type}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          className={twMerge(`
+          w-[335px] h-[40px] sm:w-[500px] sm:h-[50px]
+          px-4 pr-10
           border border-blue-7 rounded-[8px]
           focus:outline-none focus:ring-1 focus:ring-blue-1
           text-body-s-r placeholder-gray-30
           ${customStyle}
         `)}
-      />
-  
-      {type === "password" && (
-        <button
-          type="button"
-          className="absolute inset-y-0 right-3 flex items-center"
-          onClick={() => setShowPassword(!showPassword)}
-        >
-          <Icon name={showPassword ? "Eye" : "EyeOff"} />
-        </button>
+        />
+
+        {type === "password" && (
+          <button
+            type="button"
+            className="absolute inset-y-0 right-3 flex items-center"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            <Icon name={showPassword ? "Eye" : "EyeOff"} />
+          </button>
+        )}
+      </div>
+
+      {errorMessage && (
+        <p className="text-red-500 text-sm mt-1 pl-2">{errorMessage}</p>
       )}
     </div>
-  
-    {errorMessage && (
-      <p className="text-red-500 text-sm mt-1 pl-2">{errorMessage}</p>
-    )}
-  </div>
-  
   );
 };
 
