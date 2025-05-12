@@ -9,7 +9,10 @@ const NotFound = () => {
       </p>
       <Link
         to="/"
-        className="px-6 py-4 text-lg text-gray-80 bg-blue-7 rounded-[8px]  hover:text-base-1 hover:bg-blue-4 transition"
+        className="w-[100px] h-[35px] text-sm flex items-center justify-center 
+             bg-blue-7 text-gray-80 rounded-[8px] transition
+             hover:text-base-1 hover:bg-blue-4
+             sm:w-auto sm:h-auto sm:px-6 sm:py-4 sm:text-lg"
       >
         홈으로 돌아가기
       </Link>
