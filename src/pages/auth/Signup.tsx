@@ -83,8 +83,8 @@ const Signup = () => {
           },
         }
       );
-      openModal("회원가입이 완료되었습니다.🎉", "", "닫기", 
-        () => navigate("/login")  
+      openModal("회원가입이 완료되었습니다.🎉", "", "닫기", () =>
+        navigate("/login")
       );
     } catch (error) {
       console.error("회원가입 실패:", error);
@@ -99,12 +99,12 @@ const Signup = () => {
   };
 
   return (
-    <div className="mx-10 mt-64 h-[50vh] w-full flex flex-col items-center justify-center">
-      <h2 className="text-4xl  my-[60px] font-dm italic text-blue-1">
+    <div className="w-full min-h-screen flex flex-col items-center px-4 sm:px-6 md:px-8 pt-20 sm:pt-32 md:pt-64">
+      <h2 className="text-3xl sm:text-4xl mb-12 font-dm italic text-blue-1">
         On culture
       </h2>
 
-      <div className="w-full max-w-md flex flex-col items-center gap-8">
+      <div className="w-full max-w-[500px] flex flex-col items-center gap-8">
         <InputField
           label="이메일"
           name="email"
@@ -139,7 +139,8 @@ const Signup = () => {
           onChange={handleChange}
           errorMessage={errors.confirmPassword}
         />
-        <div className="w-full max-w-md flex flex-col items-center gap-10">
+
+        <div className="w-full flex flex-col items-center gap-6 mt-4">
           <CustomButton
             text="회원가입"
             bgColor="bg-blue-7"
