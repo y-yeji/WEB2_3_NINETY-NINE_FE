@@ -326,24 +326,15 @@ const InfoCardDetail = () => {
   };
 
   return (
-    <div className="w-[1280px] h-full relative overflow-hidden bg-white">
-      {usingFallback && (
-        <div className="bg-yellow-100 p-4 mb-4 rounded-md text-yellow-800">
-          <p>
-            서버에서 정보를 가져오는 데 문제가 발생했습니다. 제한된 정보만
-            표시됩니다.
-          </p>
-        </div>
-      )}
-
+    <div className="w-full max-w-[375px] sm:max-w-[640px] md:max-w-[768px] lg:max-w-[1024px] xl:max-w-[1280px] mx-auto px-4 sm:px-0 relative overflow-hidden bg-white">
       <InfoCardHeader
         showInfo={showInfo}
         isBookmarked={isBookmarked}
         toggleBookmark={toggleBookmark}
       />
 
-      <div className="flex flex-col items-center mt-12">
-        <div className="w-[1120px] flex justify-center relative">
+      <div className="flex flex-col items-center mt-6 sm:mt-12">
+        <div className="w-full max-w-[746px] flex justify-center relative">
           <button
             onClick={() => setActiveTab("review")}
             className={`flex-1 text-center pb-5 ${
@@ -361,7 +352,7 @@ const InfoCardDetail = () => {
             <p className="h3-b">후기</p>
           </button>
         </div>
-        <div className="relative w-[1120px] h-[4px] bg-gray-20">
+        <div className="relative w-full max-w-[746px] h-[4px] bg-gray-20">
           <div
             className={`absolute h-full bg-blue-6 transition-all duration-300 ${
               activeTab === "review" ? "left-0 w-1/2" : "left-1/2 w-1/2"
