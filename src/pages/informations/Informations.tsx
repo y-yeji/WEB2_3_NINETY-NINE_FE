@@ -50,8 +50,8 @@ const Informations = () => {
   };
 
   return (
-    <div className="w-[1280px] mx-auto bg-white">
-      <div className="mt-[156px] w-[1020px] mx-auto">
+    <div className="w-full max-w-[1280px] mx-auto bg-white px-4 sm:px-6 lg:px-8">
+      <div className="mt-32 sm:mt-20 md:mt-36 w-full max-w-[1020px] mx-auto">
         <EventsHeader
           title={category && (categoryTitles[category] || category)}
         />
@@ -65,7 +65,7 @@ const Informations = () => {
 
         <EventsGrid events={events} loading={loading} />
 
-        <div className="w-full flex justify-center mt-24">
+        <div className="w-full flex justify-center mt-12 sm:mt-16 lg:mt-24 mb-12">
           {totalItems > 0 && (
             <Pagination
               totalItems={totalItems}

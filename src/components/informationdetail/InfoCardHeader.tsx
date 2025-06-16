@@ -80,17 +80,19 @@ const InfoCardHeader = ({
   };
 
   return (
-    <div className="w-[1120px] h-[470px] mx-auto mt-[130px] rounded-[10px] bg-[#f9f9f9] border border-blue-7 p-9 flex relative">
-      <img
-        src={showInfo.posterUrl}
-        alt="전시 포스터"
-        className="w-[300px] h-[400px] ml-20"
-        onError={(e) => {
-          e.currentTarget.src = "/default-image.png";
-        }}
-      />
-      <div className="flex flex-col justify-between ml-32">
-        <p className="h3-b font-bold text-left text-gray-80 mb-12 md:mb-16 lg:mb-2 mt-3">
+    <div className="w-full max-w-[375px] sm:max-w-[640px] md:max-w-[768px] lg:max-w-[1024px] xl:max-w-[1280px] mx-auto mt-[130px] rounded-[10px] bg-[#f9f9f9] border border-blue-7 p-4 sm:p-9 flex flex-col sm:flex-row relative">
+      <div className="w-full sm:w-[300px] flex justify-center sm:ml-20 mb-6 sm:mb-0">
+        <img
+          src={showInfo.posterUrl}
+          alt="전시 포스터"
+          className="w-[250px] sm:w-[300px] h-auto max-h-[400px] object-contain"
+          onError={(e) => {
+            e.currentTarget.src = "/default-image.png";
+          }}
+        />
+      </div>
+      <div className="flex flex-col justify-between w-full sm:ml-32">
+        <p className="h3-b font-bold text-left text-gray-80 mb-6 sm:mb-12 md:mb-16 lg:mb-2 mt-3 text-center sm:text-left">
           {showInfo.title}
         </p>
         <div className="flex flex-col gap-3">

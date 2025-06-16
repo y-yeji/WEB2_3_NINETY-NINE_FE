@@ -47,7 +47,6 @@ const Notification = forwardRef<HTMLDivElement, NotificationProps>(
         ref={ref}
         className="notificaiton fixed max-xm:top-[-20px] xm:top-[-20px] sm:top-[-20px] xl:top-[-25px] max-xm:right-0 xm:right-0 xl:right-[352px] z-30 max-xm:w-[100%] xm:w-[100%] xm:translate-x-0 sm:w-[460px] max-xm:h-[100%] xm:h-[100%] xl:h-[486px] mt-[84px] pt-[22px] px-[25px] bg-blue-7 border border-base-2 rounded text-blue-1 shadow-user-postcard-shadow"
       >
-        {/* 닫기 버튼 */}
         <button onClick={onClose} className="absolute top-4 right-5">
           <Icon name="X" size={20} />
         </button>

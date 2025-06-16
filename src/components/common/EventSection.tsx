@@ -54,7 +54,6 @@ const EventSection = ({ category, route, data }: EventSectionProps) => {
       >
         {data.length > 0 ? (
           data.map((item) => {
-            // 중요: 여기서 카테고리를 매핑하는 대신 route를 사용
             return (
               <SwiperSlide
                 key={item.id}
@@ -62,7 +61,7 @@ const EventSection = ({ category, route, data }: EventSectionProps) => {
               >
                 <InformationCard
                   id={item.id}
-                  category={route} // item.genre 대신 route 값 사용
+                  category={route}
                   title={
                     route === "popupstores"
                       ? formatTitle(item.title, "popupstores")

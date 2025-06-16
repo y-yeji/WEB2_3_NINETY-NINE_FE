@@ -5,14 +5,14 @@ interface InfoCardDetailInfoProps {
   description?: string | null;
   location?: string;
   venue?: string;
-  detailImage?: string | null; // API에서 받아온 이미지 URL을 위한 prop 추가
+  detailImage?: string | null;
 }
 
 const InfoCardDetailInfo: React.FC<InfoCardDetailInfoProps> = ({
   description = null,
   location = "",
   venue = "",
-  detailImage = null, // 기본값은 null로 설정
+  detailImage = null,
 }) => {
   const [isImageLoaded, setIsImageLoaded] = useState(true);
 
@@ -26,14 +26,14 @@ const InfoCardDetailInfo: React.FC<InfoCardDetailInfoProps> = ({
   };
 
   return (
-    <div className="w-[1120px] flex flex-col items-center">
+    <div className="w-full max-w-[375px] sm:max-w-[640px] md:max-w-[768px] lg:max-w-[1024px] xl:max-w-[1120px] flex flex-col items-center px-4 sm:px-0">
       <div className="w-full mt-10">
-        <p className="h4-b text-gray-80 ml-10">상세 정보</p>
+        <p className="h4-b text-gray-80 sm:ml-10">상세 정보</p>
         <div className="w-full border-t border-blue-7 mt-4"></div>
 
         {description && (
           <div className="w-full flex flex-col items-center mt-10 mb-10">
-            <div className="w-[746px] text-center">
+            <div className="w-full sm:w-[746px] text-center">
               <div className="body-small-m text-gray-80 mt-2 whitespace-pre-wrap">
                 {description}
               </div>
@@ -47,18 +47,18 @@ const InfoCardDetailInfo: React.FC<InfoCardDetailInfoProps> = ({
             <img
               src={detailImage}
               alt="이벤트 이미지"
-              className="w-[746px] h-auto"
-              onError={() => setIsImageLoaded(false)} // 이미지 로드 실패 시 숨기기
+              className="w-full sm:w-[746px] h-auto"
+              onError={() => setIsImageLoaded(false)}
             />
           </div>
         )}
       </div>
 
       <div className="w-full mt-20 mb-28">
-        <p className="h4-b text-gray-80 ml-10">찾아가는 길</p>
+        <p className="h4-b text-gray-80 sm:ml-10">찾아가는 길</p>
         <div className="w-full border-t border-blue-7 mt-4"></div>
         <div className="flex justify-center mt-8">
-          <div className="w-[746px]">
+          <div className="w-full sm:w-[746px] px-4 sm:px-0">
             {venue && (
               <p className="body-large-b font-semibold text-gray-80 mb-4">
                 🧭 {venue}
