@@ -21,13 +21,13 @@ const CommentEditForm: React.FC<CommentEditFormProps> = ({
       <div className="flex justify-end gap-2 mt-2">
         <button
           onClick={onCancel}
-          className="px-2 py-1 text-sm border border-gray-30 rounded"
+          className="px-2 py-1 body-small-r border border-gray-30 rounded"
         >
           취소
         </button>
         <button
           onClick={onSave}
-          className="px-2 py-1 text-sm bg-blue-1 text-white rounded"
+          className="px-2 py-1 body-small-r bg-blue-1 text-white rounded"
         >
           저장
         </button>

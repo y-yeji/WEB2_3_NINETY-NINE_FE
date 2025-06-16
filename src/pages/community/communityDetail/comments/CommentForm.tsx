@@ -54,7 +54,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
   };
 
   return (
-    <div className="flex items-end gap-[18px] mb-[60px]">
+    <div className="flex xm:justify-around sm:justify-center items-end max-xm:gap-2 xm:gap-2 sm:gap-[18px] mb-[60px]">
       <div className="w-[50px] h-[50px] rounded-full overflow-hidden userProfile-shadow ">
         <img
           className="w-full h-full object-cover bg-center"
@@ -62,13 +62,16 @@ const CommentForm: React.FC<CommentFormProps> = ({
           alt="유저 프로필 이미지"
         />
       </div>
-      <form onSubmit={handleSubmit} className="flex items-center gap-6">
-        <div>
+      <form
+        onSubmit={handleSubmit}
+        className="flex items-center w-full max-w-[1184px] max-xm:gap-4 xm:gap-4 sm:gap-6"
+      >
+        <div className="flex-1">
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
             disabled={isSubmitting}
-            className="w-[907px] h-10 min-h-[40px] border-b border-gray-30 p-2 placeholder:pl-[6px] body-small-r break-words resize-none focus:border-blue-1 focus:placeholder:text-transparent"
+            className="w-full h-10 min-h-[40px] border-b border-gray-30 p-2 placeholder:pl-[6px] body-small-r break-words resize-none focus:border-blue-1 focus:placeholder:text-transparent"
             placeholder="댓글을 입력하세요"
           />
         </div>

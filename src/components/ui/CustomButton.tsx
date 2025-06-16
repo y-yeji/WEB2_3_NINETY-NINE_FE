@@ -19,13 +19,22 @@ const CustomButton = ({
 }: CustomButtonProps) => {
   return (
     <button
-      className={twMerge(`w-[500px] h-[50px] flex items-center justify-center gap-2 text-blue-1 body-l-r ${bgColor} rounded-[8px] 
-                    ${borderColor ? `border ${borderColor}` : ""} hover:text-base-1 hover:bg-blue-4 transition ${customStyle}`)}
-      onClick={onClick}
-    >
-      {iconSrc && <img src={iconSrc} alt={text} className="w-6 h-6" />}
-      {text}
-    </button>
+  className={twMerge(`
+    w-[335px] h-[40px] sm:w-[500px] sm:h-[50px]
+    flex items-center justify-center gap-2
+    text-blue-1 body-l-r
+    ${bgColor} rounded-[8px]
+    ${borderColor ? `border ${borderColor}` : ""}
+    hover:text-base-1 hover:bg-blue-4
+    transition
+    ${customStyle}
+  `)}
+  onClick={onClick}
+>
+  {iconSrc && <img src={iconSrc} alt={text} className="w-6 h-6" />}
+  {text}
+</button>
+
   );
 };
 
