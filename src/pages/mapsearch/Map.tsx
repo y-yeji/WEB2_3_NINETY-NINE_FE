@@ -7,7 +7,7 @@ const KAKAO_APP_KEY = import.meta.env.VITE_APP_KAKAOMAP_KEY;
 
 declare global {
   interface Window {
-    kakao: any;
+    kakao: typeof kakao;
   }
 }
 interface MapProps {
@@ -16,22 +16,25 @@ interface MapProps {
 }
 
 const Map = ({ center, posts }: MapProps) => {
-  // 카카오맵 초기화 및 기본 설정을 위한 커스텀 훅 사용
-  const { container, mapRef } = useKakaoMap(center);
-
-  // 마커 관리 및 표시를 위한 커스텀 훅 사용
-  const { searchErrors } = useMapMarkers(mapRef, posts);
+  const { container, initMap, mapRef, mapSize, isMapReady } =
+    useKakaoMap(center);
+  const { searchErrors } = useMapMarkers(mapRef, posts, isMapReady);
 
   return (
     <div>
       <Script
         async
         src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&libraries=services&autoload=false`}
+        onLoad={initMap}
       />
-
       <div className="flex flex-col items-center justify-center w-full">
-        <div ref={container}></div>
-
+        <div
+          ref={container}
+          style={{
+            width: `${mapSize.width}px`,
+            height: `${mapSize.height}px`,
+          }}
+        ></div>
         {Object.keys(searchErrors).length > 0 && (
           <p className="caption-r text-red mt-[15px] text-center">
             일부 위치를 찾을 수 없습니다.

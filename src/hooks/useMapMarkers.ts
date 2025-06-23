@@ -3,11 +3,12 @@ import { MapPost } from "../types/mapSearch";
 import { useAddressSearch } from "./useAddressSearch";
 
 export const useMapMarkers = (
-  mapRef: React.MutableRefObject<any>,
-  posts?: MapPost[]
+  mapRef: React.MutableRefObject<kakao.maps.Map | null>,
+  posts?: MapPost[],
+  isMapReady?: boolean
 ) => {
   const [searchErrors, setSearchErrors] = useState<Record<number, string>>({});
-  const markersRef = useRef<any[]>([]);
+  const markersRef = useRef<kakao.maps.Marker[]>([]);
   const { searchAddress } = useAddressSearch();
 
   // 해시태그 추출 함수
@@ -25,7 +26,7 @@ export const useMapMarkers = (
     const hashtagText = hashtags.join(", ");
 
     return `
-      <div style="padding:10px; font-size:14px; line-height:1.5;">
+      <div style="padding:10px; body-small-r;">
         <strong>${post.description}</strong>
         <p>${hashtagText || "해시태그 없음"}</p>
       </div>
@@ -58,7 +59,7 @@ export const useMapMarkers = (
       const infowindow = new window.kakao.maps.InfoWindow({ content });
 
       window.kakao.maps.event.addListener(marker, "click", () => {
-        infowindow.open(mapRef.current, marker);
+        infowindow.open(mapRef.current!, marker);
       });
 
       markersRef.current.push(marker);
@@ -104,11 +105,11 @@ export const useMapMarkers = (
           });
 
           const infowindow = new window.kakao.maps.InfoWindow({
-            content: `<div style="padding:5px;font-size:12px;">${post.title}</div>`,
+            content: `<div style="padding:5px; font-size:12px;">${post.title}</div>`,
           });
 
           window.kakao.maps.event.addListener(marker, "click", () => {
-            infowindow.open(mapRef.current, marker);
+            infowindow.open(mapRef.current!, marker);
           });
 
           markersRef.current.push(marker);
@@ -124,7 +125,7 @@ export const useMapMarkers = (
   };
 
   useEffect(() => {
-    if (mapRef.current && posts) {
+    if (isMapReady && posts) {
       processPostsLocations();
     }
 
@@ -132,7 +133,7 @@ export const useMapMarkers = (
       markersRef.current.forEach((marker) => marker.setMap(null));
       markersRef.current = [];
     };
-  }, [mapRef.current, posts]);
+  }, [isMapReady, posts]);
 
   return { searchErrors, markersRef };
 };
