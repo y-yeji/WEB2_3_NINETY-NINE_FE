@@ -7,7 +7,7 @@ const KAKAO_APP_KEY = import.meta.env.VITE_APP_KAKAOMAP_KEY;
 
 declare global {
   interface Window {
-    kakao: any;
+    kakao: typeof kakao;
   }
 }
 interface MapProps {
@@ -35,7 +35,6 @@ const Map = ({ center, posts }: MapProps) => {
             height: `${mapSize.height}px`,
           }}
         ></div>
-
         {Object.keys(searchErrors).length > 0 && (
           <p className="caption-r text-red mt-[15px] text-center">
             일부 위치를 찾을 수 없습니다.
