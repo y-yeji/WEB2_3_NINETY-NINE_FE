@@ -4,7 +4,8 @@ import { useAddressSearch } from "./useAddressSearch";
 
 export const useMapMarkers = (
   mapRef: React.MutableRefObject<any>,
-  posts?: MapPost[]
+  posts?: MapPost[],
+  isMapReady?: boolean
 ) => {
   const [searchErrors, setSearchErrors] = useState<Record<number, string>>({});
   const markersRef = useRef<any[]>([]);
@@ -124,7 +125,7 @@ export const useMapMarkers = (
   };
 
   useEffect(() => {
-    if (mapRef.current && posts) {
+    if (isMapReady && posts) {
       processPostsLocations();
     }
 
@@ -132,7 +133,7 @@ export const useMapMarkers = (
       markersRef.current.forEach((marker) => marker.setMap(null));
       markersRef.current = [];
     };
-  }, [mapRef.current, posts]);
+  }, [isMapReady, posts]);
 
   return { searchErrors, markersRef };
 };
