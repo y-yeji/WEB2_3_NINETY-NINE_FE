@@ -2,7 +2,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 
 export const useKakaoMap = (center: { lat: number; lng: number }) => {
   const container = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<any>(null);
+  const mapRef = useRef<kakao.maps.Map | null>(null);
   const [mapSize, setMapSize] = useState({ width: 1082, height: 560 });
   const [isMapReady, setIsMapReady] = useState(false);
 
@@ -19,7 +19,6 @@ export const useKakaoMap = (center: { lat: number; lng: number }) => {
     return () => window.removeEventListener("resize", updateMapSize);
   }, []);
 
-  // 1) SDK 로드 완료 시 호출
   const initMap = useCallback(() => {
     if (!window.kakao || !container.current) return;
     window.kakao.maps.load(() => {
@@ -27,11 +26,11 @@ export const useKakaoMap = (center: { lat: number; lng: number }) => {
         center: new window.kakao.maps.LatLng(center.lat, center.lng),
         level: 10,
       });
+      mapRef.current.panBy(0, 0);
       setIsMapReady(true);
     });
   }, [center]);
 
-  // 2) 지도의 크기 변경 처리
   useEffect(() => {
     if (!container.current || !mapRef.current) return;
     container.current.style.width = `${mapSize.width}px`;

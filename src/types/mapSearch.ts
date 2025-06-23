@@ -26,8 +26,8 @@ export interface MapPost {
   detailImage: string;
   description: string;
   bookmarked: boolean;
-  latitude?: number;
-  longitude?: number;
+  latitude: number;
+  longitude: number;
   category: string;
   apiCategory?: string;
 }
