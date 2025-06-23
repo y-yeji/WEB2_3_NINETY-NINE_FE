@@ -1,46 +1,41 @@
-import { useEffect, useRef } from "react";
-
-const KAKAO_APP_KEY = import.meta.env.VITE_APP_KAKAOMAP_KEY;
+import { useRef, useState, useEffect, useCallback } from "react";
 
 export const useKakaoMap = (center: { lat: number; lng: number }) => {
   const container = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
-  const markersRef = useRef<any[]>([]);
+  const [mapSize, setMapSize] = useState({ width: 1082, height: 560 });
+  const [isMapReady, setIsMapReady] = useState(false);
 
   useEffect(() => {
-    const loadKakaoMap = () => {
-      if (window.kakao && window.kakao.maps) {
-        window.kakao.maps.load(() => {
-          if (container.current) {
-            const mapOptions = {
-              center: new window.kakao.maps.LatLng(center.lat, center.lng),
-              level: 10,
-            };
-            mapRef.current = new window.kakao.maps.Map(
-              container.current,
-              mapOptions
-            );
-          }
-        });
-      }
+    const updateMapSize = () => {
+      const width = window.innerWidth;
+      let mapWidth = Math.max(320, Math.min(width - 40, 1082));
+      let mapHeight = Math.round(mapWidth * 0.52);
+      setMapSize({ width: mapWidth, height: mapHeight });
     };
 
-    if (!window.kakao || !window.kakao.maps) {
-      const script = document.createElement("script");
-      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&libraries=services&autoload=false`;
-      script.async = true;
-      script.onload = loadKakaoMap;
-      document.head.appendChild(script);
-    } else {
-      loadKakaoMap();
-    }
+    updateMapSize();
+    window.addEventListener("resize", updateMapSize);
+    return () => window.removeEventListener("resize", updateMapSize);
+  }, []);
 
-    return () => {
-      markersRef.current.forEach((marker) => marker.setMap(null));
-      markersRef.current = [];
-      mapRef.current = null;
-    };
+  const initMap = useCallback(() => {
+    if (!window.kakao || !container.current) return;
+    window.kakao.maps.load(() => {
+      mapRef.current = new window.kakao.maps.Map(container.current!, {
+        center: new window.kakao.maps.LatLng(center.lat, center.lng),
+        level: 10,
+      });
+      setIsMapReady(true);
+    });
   }, [center]);
 
-  return { container, mapRef, markersRef };
+  useEffect(() => {
+    if (!container.current || !mapRef.current) return;
+    container.current.style.width = `${mapSize.width}px`;
+    container.current.style.height = `${mapSize.height}px`;
+    mapRef.current.relayout();
+  }, [mapSize]);
+
+  return { container, mapRef, initMap, mapSize, isMapReady };
 };
