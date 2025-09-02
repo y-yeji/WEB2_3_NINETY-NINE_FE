@@ -84,4 +84,4 @@
 
 ✨**결과**
 
-![troubleshooting_result_gif (1)](https://github.com/user-attachments/assets/eb119b0c-738e-4f25-8b07-6ca9b4f221e6)
+![troubleshooting_result_gif](https://github.com/user-attachments/assets/10dc0a8c-6e5e-4648-9891-7c6751542e8d)
