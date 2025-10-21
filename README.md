@@ -64,7 +64,8 @@
   
 🔍**원인 분석**
 
-|<img width="418" height="819" alt="like_troubleshooting_image1" src="https://github.com/user-attachments/assets/827dde12-63ca-465f-9539-545a5fc1bc97" /> |<img width="467" height="734" alt="like_troubleshooting_image2" src="https://github.com/user-attachments/assets/fa3911ac-0e52-4723-863b-9d4fbb16b26f" />|
+<img width="390" height="765" alt="like_troubleshooting_image1" src="https://github.com/user-attachments/assets/827dde12-63ca-465f-9539-545a5fc1bc97" /> 
+<img width="390" height="613" alt="like_troubleshooting_image2" src="https://github.com/user-attachments/assets/fa3911ac-0e52-4723-863b-9d4fbb16b26f" />
 
 <br/>
 
@@ -75,6 +76,8 @@
 <br/>
 
 ⚙️**해결 방안**
+<img width="390" height="524" alt="like_troubleshooting_image3" src="https://github.com/user-attachments/assets/0f9fe9ee-2ad1-478b-9e4c-1f9340f21370" />
+<img width="390" height="592" alt="like_troubleshooting_image4" src="https://github.com/user-attachments/assets/5ff77fca-b26a-49c0-9b2a-eaa5eff8716e" />
 
 <img alt="like_troubleshooting_image3" src="https://github.com/user-attachments/assets/9d74d2fc-ff6e-4253-849d-eafc70d463d3" /> 
 <img alt="like_troubleshooting_image4" src="https://github.com/user-attachments/assets/6c59cca8-192a-4123-b984-6c50dbffb348" />
