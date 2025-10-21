@@ -67,7 +67,7 @@
 <div style="display: flex; gap: 10px; align-items: flex-start;">
   <img width="418" height="819" alt="like_troubleshooting_image1" src="https://github.com/user-attachments/assets/827dde12-63ca-465f-9539-545a5fc1bc97" />
   <img width="467" height="734" alt="like_troubleshooting_image2" src="https://github.com/user-attachments/assets/fa3911ac-0e52-4723-863b-9d4fbb16b26f" />
-</div?
+</div>
 
 <br/>
 
