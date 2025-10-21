@@ -54,11 +54,45 @@
 
 ## 🛠️ Troble Shooting
 
+### 🚨 좋아요 상태 / 카운팅 불일치 이슈
+
+📍**문제 요약**
+- Zustand로 좋아요 상태를 관리 했으나, 새로고침 시 초기화 되는 문제로 커스텀 훅과 로컬스토리지를 활용해 좋아요 상태를 저장하는 방식으로 전환.
+- 좋아요 기능 구현 과정 중 사용자 간의 좋아요 상태와 카운팅 수가 일치하지 않는 이슈 발생.
+
+<br/>
+  
+🔍**원인 분석**
+
+<img alt="like_troubleshooting_image1" src="https://github.com/user-attachments/assets/afb9e92f-97b3-4f51-a608-43974cafc906" style="vertical-align: top;"/>
+<img alt="like_troubleshooting_image2" src="https://github.com/user-attachments/assets/a9cc5a7d-abde-4295-b639-cd52847b3edc" style="vertical-align: top;"/>
+<br/>
+
+- 로컬스토리지 기반 클라이언트 상태 관리로 개인 브라우저에 한정되어 좋아요 상태와 카운트가 서버와 동기화 되지않아 사용자간의 데이터 불일치가 발생.
+- 서버 동기화 타이밍 문제로 좋아요 토글 후 서버에 API 요청은 되었으나, 다른 사용자간 같은 게시글을 볼 때 즉시 반영되지않는 이슈 발생.
+- 서버와의 실시간 또는 주기적인 동기화가 부족하여 사용자간의 좋아요 상태 불일치가 지속.
+
+<br/>
+
+⚙️**해결 방안**
+
+<img alt="like_troubleshooting_image3" src="https://github.com/user-attachments/assets/9d74d2fc-ff6e-4253-849d-eafc70d463d3" style="vertical-align: top;"/>
+<img alt="like_troubleshooting_image4" src="https://github.com/user-attachments/assets/6c59cca8-192a-4123-b984-6c50dbffb348" style="vertical-align: top;"/>
+
+<br/>
+
+- 낙관적 업데이트를 유지하여 좋아요 클릭시 UI가 즉시 반영되도록 처리함.
+- 폴링(Polling) 적용으로 커뮤니티페이지에서 useEffect훅과 setInterval을 활용하여 일정 주기로 게시글 목룍 API를 호출.
+
+<br/>
+
 ### 🚨 카카오 맵 인스턴스 중복 생성
 
 📍**문제 요약**
 - Kakao Maps SDK를 사용하는 지도 인스턴스가 중복 생성되는 현상 발생.
 - 이로 인해 지도 확대/축소 또는 이동 시 새로운 지도 인스턴스가 반복적으로 생성되어 성능 저하 및 사용자 경험 악화 초래.
+
+<br/>
 
 🔍**원인 분석**
 
