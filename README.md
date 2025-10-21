@@ -66,8 +66,6 @@
 
 <img width="390" height="765" align="top" alt="like_troubleshooting_image1" src="https://github.com/user-attachments/assets/827dde12-63ca-465f-9539-545a5fc1bc97" /> 
 <img width="390" height="613" align="top" alt="like_troubleshooting_image2" src="https://github.com/user-attachments/assets/fa3911ac-0e52-4723-863b-9d4fbb16b26f" />
-
-<br/>
      
 - 로컬스토리지 기반 클라이언트 상태 관리로 개인 브라우저에 한정되어 좋아요 상태와 카운트가 서버와 동기화 되지않아 사용자간의 데이터 불일치가 발생.
 - 서버 동기화 타이밍 문제로 좋아요 토글 후 서버에 API 요청은 되었으나, 다른 사용자간 같은 게시글을 볼 때 즉시 반영되지않는 이슈 발생.
@@ -79,8 +77,6 @@
 
 <img width="390" height="524" align="top" alt="like_troubleshooting_image3" src="https://github.com/user-attachments/assets/0f9fe9ee-2ad1-478b-9e4c-1f9340f21370" />
 <img width="390" height="592" align="top" alt="like_troubleshooting_image4" src="https://github.com/user-attachments/assets/5ff77fca-b26a-49c0-9b2a-eaa5eff8716e" />
-
-<br/>
 
 - 낙관적 업데이트를 유지하여 좋아요 클릭시 UI가 즉시 반영되도록 처리함.
 - 폴링(Polling) 적용으로 커뮤니티페이지에서 useEffect훅과 setInterval을 활용하여 일정 주기로 게시글 목룍 API를 호출.
@@ -100,8 +96,6 @@
 <img width="390" height="103" align="top" alt="troubleshooting_image_1" src="https://github.com/user-attachments/assets/9b97f2fd-b12f-4250-93f3-5dadc4a1e8e9" />
 <img width="390" height="264" align="top" alt="troubleshooting_image_2" src="https://github.com/user-attachments/assets/cae6ca06-8761-45bd-b9e6-0b53379ab6b1" />
 
-<br/>
-
 -  Map 컴포넌트에서 Kakao Maps SDK를 <script> 태그로 로드하는 동시에 useKakaoMap 훅 내부에서도 window.kakao.maps.load()를 호출.
 -  SDK가 아직 완전히 로드되지 않았는데도 지도 초기화를 시도하면서 지도 인스턴스가 중복 생성되는 타이밍 이슈 발생.
 -  SDK가 아직 로드되지 않았는데도 초기화 시도로 인해 지도 초기화 로직이 컴포넌트 렌더링 흐름과 분리되지않음으로 인스턴스가 중복 생성.
@@ -112,8 +106,6 @@
 
 <img  alt="troubleshooting_image_3" align="top" src="https://github.com/user-attachments/assets/871965d2-2482-43e8-9198-728a73285187" /> 
 <img  alt="troubleshooting_image_4" align="top" src="https://github.com/user-attachments/assets/775cbee0-aeb8-4c8c-bab4-a72ae5ae9a4c" />
-
-<br/>
 
 - Kakao Maps SDK는 Map 컴포넌트의 <Script> 태그에서만 로드하도록 변경하여 중복 로드를 방지.
 - useKakaoMap 훅에서는 initMap이라는 지도 초기화 함수를 분리하고, <Script>의 onLoad 이벤트에서만 호출되도록 구조 개선.
