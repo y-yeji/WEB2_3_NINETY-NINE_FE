@@ -64,8 +64,11 @@
   
 🔍**원인 분석**
 
-<img alt="like_troubleshooting_image1" src="https://github.com/user-attachments/assets/afb9e92f-97b3-4f51-a608-43974cafc906" style="vertical-align: top;"/>
-<img alt="like_troubleshooting_image2" src="https://github.com/user-attachments/assets/a9cc5a7d-abde-4295-b639-cd52847b3edc" style="vertical-align: top;"/>
+<div style="display: flex; gap: 10px; align-items: flex-start;">
+  <img alt="like_troubleshooting_image1" src="https://github.com/user-attachments/assets/afb9e92f-97b3-4f51-a608-43974cafc906" />
+  <img alt="like_troubleshooting_image2" src="https://github.com/user-attachments/assets/a9cc5a7d-abde-4295-b639-cd52847b3edc" />
+</div?
+
 <br/>
 
 - 로컬스토리지 기반 클라이언트 상태 관리로 개인 브라우저에 한정되어 좋아요 상태와 카운트가 서버와 동기화 되지않아 사용자간의 데이터 불일치가 발생.
