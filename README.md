@@ -77,7 +77,7 @@
 
 ⚙️**해결 방안**
 
-<img alt="like_troubleshooting_image3" src="https://github.com/user-attachments/assets/9d74d2fc-ff6e-4253-849d-eafc70d463d3" /> <img alt="like_troubleshooting_image4" src="https://github.com/user-attachments/assets/6c59cca8-192a-4123-b984-6c50dbffb348" style=" />
+<img alt="like_troubleshooting_image3" src="https://github.com/user-attachments/assets/9d74d2fc-ff6e-4253-849d-eafc70d463d3" /> <img alt="like_troubleshooting_image4" src="https://github.com/user-attachments/assets/6c59cca8-192a-4123-b984-6c50dbffb348" />
 
 <br/>
 
