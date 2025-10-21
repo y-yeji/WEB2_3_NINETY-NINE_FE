@@ -64,7 +64,8 @@
   
 🔍**원인 분석**
 
-<img width="418" height="819" alt="like_troubleshooting_image1" src="https://github.com/user-attachments/assets/827dde12-63ca-465f-9539-545a5fc1bc97" /> <img width="467" height="734" alt="like_troubleshooting_image2" src="https://github.com/user-attachments/assets/fa3911ac-0e52-4723-863b-9d4fbb16b26f" />
+<img width="418" height="819" alt="like_troubleshooting_image1" src="https://github.com/user-attachments/assets/827dde12-63ca-465f-9539-545a5fc1bc97" /> 
+<img width="467" height="734" alt="like_troubleshooting_image2" src="https://github.com/user-attachments/assets/fa3911ac-0e52-4723-863b-9d4fbb16b26f" />
 
 
 <br/>
@@ -77,7 +78,8 @@
 
 ⚙️**해결 방안**
 
-<img alt="like_troubleshooting_image3" src="https://github.com/user-attachments/assets/9d74d2fc-ff6e-4253-849d-eafc70d463d3" /> <img alt="like_troubleshooting_image4" src="https://github.com/user-attachments/assets/6c59cca8-192a-4123-b984-6c50dbffb348" />
+<img alt="like_troubleshooting_image3" src="https://github.com/user-attachments/assets/9d74d2fc-ff6e-4253-849d-eafc70d463d3" /> 
+<img alt="like_troubleshooting_image4" src="https://github.com/user-attachments/assets/6c59cca8-192a-4123-b984-6c50dbffb348" />
 
 <br/>
 
@@ -96,7 +98,8 @@
 
 🔍**원인 분석**
 
-<img alt="troubleshooting_image_1" src="https://github.com/user-attachments/assets/1e5e1975-215c-4892-9bb8-886dea9f85c0" /> <img alt="troubleshooting_image_2" src="https://github.com/user-attachments/assets/f0d79f41-9231-4406-ba63-08ecfb775126" />
+<img alt="troubleshooting_image_1" src="https://github.com/user-attachments/assets/1e5e1975-215c-4892-9bb8-886dea9f85c0" /> 
+<img alt="troubleshooting_image_2" src="https://github.com/user-attachments/assets/f0d79f41-9231-4406-ba63-08ecfb775126" />
 <br/>
 
 -  Map 컴포넌트에서 Kakao Maps SDK를 <script> 태그로 로드하는 동시에 useKakaoMap 훅 내부에서도 window.kakao.maps.load()를 호출.
@@ -107,7 +110,8 @@
 
 ⚙️**해결 방안**
 
-<img  alt="troubleshooting_image_3" src="https://github.com/user-attachments/assets/871965d2-2482-43e8-9198-728a73285187" /> <img  alt="troubleshooting_image_4" src="https://github.com/user-attachments/assets/775cbee0-aeb8-4c8c-bab4-a72ae5ae9a4c" />
+<img  alt="troubleshooting_image_3" src="https://github.com/user-attachments/assets/871965d2-2482-43e8-9198-728a73285187" /> 
+<img  alt="troubleshooting_image_4" src="https://github.com/user-attachments/assets/775cbee0-aeb8-4c8c-bab4-a72ae5ae9a4c" />
 <br/>
 
 - Kakao Maps SDK는 Map 컴포넌트의 <Script> 태그에서만 로드하도록 변경하여 중복 로드를 방지.
